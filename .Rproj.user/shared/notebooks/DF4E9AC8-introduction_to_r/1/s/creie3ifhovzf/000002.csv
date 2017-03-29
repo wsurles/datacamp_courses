@@ -1,0 +1,37 @@
+"0","# Create the variable days_vector
+days_vector <- c(""Mon"",""Tues"",""Wed"",""Thur"",""Fri"")
+# Assign the names of the day to the roulette and poker_vectors
+names(poker_vector) <- days_vector
+names(roulette_vector) <- days_vector
+# Print the named vectors to the console
+poker_vector
+"
+"1"," Mon "
+"1","Tues "
+"1"," Wed "
+"1","Thur "
+"1"," Fri "
+"1","
+"
+"1"," 140 "
+"1"," -50 "
+"1","  20 "
+"1","-120 "
+"1"," 240 "
+"1","
+"
+"0","roulette_vector"
+"1"," Mon "
+"1","Tues "
+"1"," Wed "
+"1","Thur "
+"1"," Fri "
+"1","
+"
+"1"," -24 "
+"1"," -50 "
+"1"," 100 "
+"1","-350 "
+"1","  10 "
+"1","
+"

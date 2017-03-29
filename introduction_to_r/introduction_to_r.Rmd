@@ -1,0 +1,833 @@
+---
+title: "Introduction to R"
+author: "William Surles"
+date: "2017-03-28"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+---
+
+***
+> This document was updated on **`r Sys.Date()`**.
+
+***
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+```
+
+# Introduction
+
+  - I am copying my work from the class to this document
+  - This will make it much easier for me to find and refernce what I have done/learned  
+  - Most of this is simply me copying the working solutions from the class examples or practice
+  - I may insert a few of my own thoughts and comments along the way
+  - This all comes from [Introduction to R](https://campus.datacamp.com/courses/free-introduction-to-r) course on DataCamp
+    - I highly recommend the [DataCamp](https://www.datacamp.com/home) courses
+    - They step you through the work and include videos and much more description than I include here
+    - This doc is no replacement for working through the classes on your own!
+  
+  
+# Intro to Basics
+
+## How it Works
+
+  - This section has some pretty juicy R charts here.   
+  - This was hott stuff back in 1996 
+    - Many of these styles of charts are still usefull now for data exploration
+    - Thought I would not use base R graphics to make them
+    - I'd start with ggplot2 or ggvis
+    - Still its fun to see these charts. Don't wory about the code to make them for now. 
+
+```{r results='hide'}
+
+# The hashtag is used to add comments
+
+# Show some demo graphs generated with R
+demo("graphics")
+
+```
+
+## Arthmetic with R
+
+Yeah, it does all the usual stuff.
+
+```{r}
+
+# An addition
+5 + 5
+
+# A substraction
+5 - 5
+
+# A multiplication
+3 * 5
+
+# A division
+(5 + 5)/2
+
+# Exponentiation
+2^5
+
+# Modulo
+17%%4
+
+```
+
+## Variable assignment
+
+```{r}
+
+# Assign the value 42 to x
+x <- 42
+
+# Print out the value of the variable x
+x
+
+```
+
+## Variable assignment 2
+
+```{r}
+
+# Assign the value 5 to the variable called my_apples
+my_apples <- 5
+my_apples
+
+```
+
+## Variable assignment 3
+
+```{r}
+# Assign a value to the variables called my_apples and my_oranges
+my_apples <- 5
+my_oranges <- 6
+
+# Add these two variables together and print the result
+my_fruit <- my_apples + my_oranges
+my_fruit
+
+```
+
+## Apples and oranges
+
+  - This would fail because you can't add character vectors.
+  - Rstudio won't even knit the document. 
+  - It will throw an error in the code.
+  - I have `eval=F` so this will run and just paste the error below
+
+```{r, eval=F}
+
+# Assign a value to the variable called my_apples
+my_apples <- 'apples'
+my_oranges <- 'oranges'
+
+# Add a character
+my_fruit <- my_apples + my_oranges
+
+```
+
+`Error in my_apples + my_oranges : non-numeric argument to binary operator`
+
+## Basic data types in R
+
+```{r}
+
+# What's the answer to the universe
+my_numeric <- 42
+
+# The quotation marks indicate that the variable is of type character
+my_character <- "forty-two"
+
+my_logical <- FALSE
+
+
+```
+
+## Whats's that data type?
+
+```{r}
+
+# Declare variables of different types
+my_numeric <- 42
+class(my_numeric)
+
+my_character <- "forty-two"
+class(my_character)
+
+my_logical <- FALSE
+class(my_logical)
+
+
+```
+
+
+# Vectors
+
+  - Note: I almost **always** use dataframes
+  - But I guess its still good to know the other data types 
+  - They all have there uses
+
+## Create a vector
+
+```{r}
+
+Vegas <- as.character("Here we go!")
+Vegas
+
+```
+
+## Create a vector (2)
+
+```{r}
+
+numeric_vector <- c(1, 10, 49)
+character_vector <- c("a", "b", "c")
+boolean_vector <- c(T,F,T)
+
+# Print the vectors
+numeric_vector
+character_vector
+boolean_vector
+
+```
+
+## Create a vector (3)
+
+```{r}
+
+# Poker winnings from Monday to Friday
+poker_vector <- c(140, -50, 20, -120, 240)
+poker_vector
+
+# Roulette winnings form Monday to Friday
+roulette_vector <- c(-24, -50, 100, -350, 10)
+roulette_vector
+
+```
+
+## Naming a vector
+
+```{r}
+
+## Name the vectors
+names(poker_vector) <- c("Mon","Tues","Wed","Thur","Fri")
+poker_vector
+
+names(roulette_vector) <- c("Mon","Tues","Wed","Thur","Fri")
+roulette_vector
+
+```
+
+## Naming a vector (2)
+
+```{r}
+
+# Create the variable days_vector
+days_vector <- c("Mon","Tues","Wed","Thur","Fri")
+
+# Assign the names of the day to the roulette and poker_vectors
+names(poker_vector) <- days_vector
+poker_vector
+
+names(roulette_vector) <- days_vector
+roulette_vector
+
+```
+
+## Calculating total winnings
+
+```{r}
+## First, just an example
+A_vector <- c(1, 2, 3)
+B_vector <- c(4, 5, 6)
+
+# Take the sum of A_vector and B_vector
+total_vector <- A_vector + B_vector
+total_vector
+
+```
+
+## Calculating total winnings (2)
+
+```{r}
+
+# Name poker and roulette
+days <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+names(roulette_vector) <- days
+names(poker_vector) <- days
+
+total_daily <- poker_vector + roulette_vector
+total_daily
+
+```
+
+## Calculating total winnings (3)
+
+```{r}
+
+total_poker <- sum(poker_vector)
+total_roulette <- sum(roulette_vector)
+
+total_week <- sum(roulette_vector) + sum(poker_vector)
+total_week
+
+```
+
+## Comparing total winnings
+
+```{r}
+
+# Check if you realized higher total gains in poker then in roulette
+answer <- total_poker > total_roulette
+answer
+
+```
+
+## Vector selection: the good times
+
+```{r}
+
+# Define new variable based on a selection
+poker_wednesday <- poker_vector["Wednesday"]
+poker_wednesday
+
+```
+
+## Vector selection: the good times (2)
+
+```{r}
+
+# Define new variable based on a selection
+poker_midweek <- poker_vector[c("Tuesday","Wednesday","Thursday")]       
+poker_midweek 
+
+```
+
+## Vector selection: the good times (3)
+
+```{r}
+
+# Define new variable based on a selection
+roulette_selection_vector <- roulette_vector[2:5]
+roulette_selection_vector 
+
+```
+
+## Vector selection: the good times (4)
+
+```{r}
+
+average_midweek_gain <- mean(poker_vector[c("Monday","Tuesday","Wednesday")])
+average_midweek_gain
+
+```
+
+## Selection by comparison - Step 1
+
+```{r}
+
+# What days of the week did you make money on poker
+selection_vector <- poker_vector > 0
+selection_vector
+
+```
+
+## Selection by comparison - Step 2
+
+```{r}
+
+# What days of the week did you make money on poker
+selection_vector <- poker_vector > 0
+
+# Select from poker_vector these days
+poker_winning_days <- poker_vector[selection_vector]
+poker_winning_days
+
+```
+
+## Advanced selection
+
+```{r}
+
+# Show me
+roulette_winning_days <- roulette_vector[roulette_vector > 0]
+roulette_winning_days
+
+```
+
+# Matrices
+
+## What's a matrix?
+
+```{r}
+
+# Construction of a matrix with 3 rows containing the numbers 1 up to 9
+matrix(1:9, byrow=T, nrow=3)
+
+```
+
+## Analyzing matrices, you shall
+
+```{r}
+
+# Box office Star Wars: In Millions!
+# The first element: US, the second element: Non-US 
+new_hope = c(460.998007, 314.4)
+empire_strikes = c(290.475067, 247.900000)
+return_jedi = c(309.306177,165.8)
+
+# Add your code below to construct the matrix
+star_wars_matrix = matrix(c(new_hope, empire_strikes, return_jedi), byrow=T, nrow=3)
+star_wars_matrix
+
+```
+
+## Naming a matrix
+
+```{r}
+
+# Add your code here such that rows and columns of star_wars_matrix have a
+# name!
+rownames(star_wars_matrix) = c('A New Hope','The Empire Strikes Back','Return of the Jedi')
+colnames(star_wars_matrix) = c('US','non-US')
+star_wars_matrix
+
+```
+
+## Calculating the worldwide box office
+
+```{r}
+
+# Box office Star Wars: In Millions (!) 
+# Construct matrix: 
+box_office_all = c(461, 314.4,290.5, 247.9,309.3,165.8)
+movie_names = c("A New Hope","The Empire Strikes Back","Return of the Jedi")
+col_titles = c("US","non-US")
+
+star_wars_matrix = matrix(box_office_all, nrow=3, byrow=TRUE, dimnames=list(movie_names,col_titles))
+star_wars_matrix
+
+worldwide_vector = rowSums(star_wars_matrix)
+worldwide_vector
+```
+
+## Adding a column for the worldwide box office
+
+```{r}
+
+# Bind the new variable worldwide_vector as a column to star_wars_matrix
+all_wars_matrix = cbind(star_wars_matrix, worldwide_vector)
+all_wars_matrix
+
+```
+
+## Adding a row
+  - In the course they had the star_wars_matrix2 pre loaded
+  - Here I just copy the original
+  - this works to show what rbind does
+  
+```{r}
+
+# Matrix containing first trilogy box office
+star_wars_matrix  
+
+# Create a Matrix containing second trilogy box office
+box_office_all = c(474.5, 552.5, 310.7, 338.7, 380.3, 468.5)
+movie_names = c("The Phantom Menace","Attack of the Clones","Revenge of the Sixth")
+col_titles = c("US","non-US")
+
+star_wars_matrix2 = matrix(box_office_all, nrow=3, byrow=TRUE, dimnames=list(movie_names,col_titles))
+star_wars_matrix2
+
+# Combine both Star Wars trilogies in one matrix
+all_wars_matrix = rbind(star_wars_matrix, star_wars_matrix2)
+all_wars_matrix
+
+```
+
+## The total box office revenue for the entire saga
+
+```{r}
+
+# Print box office Star Wars: In Millions (!) for 2 trilogies
+all_wars_matrix
+
+total_revenue_vector = colSums(all_wars_matrix)
+total_revenue_vector
+
+```
+
+## Selection of matix elements
+
+```{r}
+
+mean_non_us_all  =  mean(star_wars_matrix[,2])
+mean_non_us_all
+
+mean_non_us_some = mean(star_wars_matrix[1:2,2])
+mean_non_us_some
+
+```
+
+## A little arithmetic with matrices
+
+```{r}
+
+visitors = star_wars_matrix/5
+visitors
+
+```
+
+## A little arithmetic with matrices (2)
+
+```{r}
+
+ticket_prices_matrix = matrix(c(5,5,6,6,7,7), nrow=3, byrow=TRUE, dimnames=list(movie_names,col_titles)) 
+ticket_prices_matrix
+
+visitors = star_wars_matrix/ticket_prices_matrix
+visitors
+
+average_us_visitor = mean(visitors[,1])
+average_us_visitor
+
+average_non_us_visitor = mean(visitors[,2])
+average_non_us_visitor
+
+```
+
+
+# Factors
+
+## What's a factor and why would you use it?
+
+R uses factors for categorical variables!
+
+## What's a factor and why would you use it? (2)
+
+```{r}
+
+gender_vector = c("Male","Female","Female","Male","Male")
+
+factor_gender_vector = factor(gender_vector)
+factor_gender_vector
+
+```
+
+## What's a factor and why would you use it? (3)
+
+```{r}
+
+animals_vector = c("Elephant", "Giraffe", "Donkey", "Horse")
+factor_animals_vector = factor(animals_vector)
+factor_animals_vector
+
+temperature_vector = c("High", "Low", "High", "Low", "Medium")
+factor_temperature_vector = factor(temperature_vector, order = TRUE, levels = c("Low", 
+    "Medium", "High"), labels = c("L","M","H"))
+factor_temperature_vector
+
+```
+
+## Factor levels
+
+```{r}
+
+survey_vector = c("M", "F", "F", "M", "M")
+factor_survey_vector = factor(survey_vector)
+factor_survey_vector
+
+levels(factor_survey_vector) = c("Female","Male")
+factor_survey_vector
+
+```
+
+## Summarizing a factor
+
+```{r}
+
+# Type your code here for survey_vector
+summary(survey_vector)
+
+# Type your code here for factor_survey_vector
+summary(factor_survey_vector)
+
+```
+
+## Battle of the sexes
+
+```{r}
+
+# Male
+factor_survey_vector[1] 
+
+# Female
+factor_survey_vector[2] 
+
+# Battle of the sexes: Male 'larger' than female?
+factor_survey_vector[1] > factor_survey_vector[2] 
+
+```
+
+## Ordered Factors
+
+```{r}
+
+# Create 'speed_vector'
+speed_vector <- c('Fast','Slow','Slow','Fast','Ultra-fast')
+
+factor_speed_vector <- factor(speed_vector, ordered = T, levels = c('Slow','Fast','Ultra-fast'))
+factor_speed_vector
+
+# R prints automagically in the right order
+summary(factor_speed_vector) 
+
+```
+
+
+## Comparing ordered factors
+
+```{r}
+
+# Is data analyst 2 faster than data analyst 5?
+compare_them <- speed_vector[2] > speed_vector[5]
+compare_them
+
+```
+
+# Data frames
+
+## What's a data frame?
+
+```{r}
+
+mtcars  # Built-in R dataset stored in a data frame
+
+```
+
+## Quick, hae a look at your data set
+
+```{r}
+
+# Have a quick look at your data
+head(mtcars)
+
+```
+
+## Have a look at the structure
+
+```{r}
+
+# Investigate the structure of the mtcars dataset to get started!
+str(mtcars)
+
+```
+
+## Create a data frame
+
+```{r}
+
+planets = c("Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", 
+    "Neptune")
+
+type = c("Terrestrial planet", "Terrestrial planet", "Terrestrial planet", "Terrestrial planet", 
+    "Gas giant", "Gas giant", "Gas giant", "Gas giant")
+
+diameter = c(0.382, 0.949, 1, 0.532, 11.209, 9.449, 4.007, 3.883)
+
+rotation = c(58.64, -243.02, 1, 1.03, 0.41, 0.43, -0.72, 0.67)
+
+rings = c(FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
+
+# Create the data frame:
+planets_df = data.frame(planets, type, diameter, rotation, rings)
+planets_df
+
+```
+
+## Create a data frame (2)
+
+```{r}
+
+# Check the structure of planets.df
+str(planets_df)
+
+```
+
+## Selection of data frame elements
+
+```{r}
+
+# The planets_df data frame from the previous exercise is pre-loaded
+closest_planets_df <- planets_df[1:3,]
+closest_planets_df
+
+furthest_planets_df <- planets_df[6:8,]
+furthest_planets_df
+
+```
+
+## Selection of data frame elements (2)
+
+```{r}
+
+# The planets_df data frame from the previous exercise is pre-loaded: 
+furthest_planets_diameter = planets_df$diameter[3:8]
+
+```
+
+## Only planets with rings
+
+```{r}
+
+# Create the rings_vector
+rings_vector = planets_df$rings
+
+```
+
+## Only planets with rings (2)
+
+```{r}
+
+# Select the information on planets with rings:
+planets_with_rings_df =  planets_df[planets_df$rings,]
+
+```
+
+## Only planets with rings but shorter
+
+```{r}
+
+# Planets smaller than earth:
+small_planets_df  = subset(planets_df, diameter < 1)
+
+```
+
+## Sorting
+
+```{r}
+
+# Just play around with the order function in the console to see how it
+# works
+a <- c(100,9,101)
+order(a)
+
+```
+
+## Sorting your data frame
+
+```{r}
+
+# What is the correct ordering based on the planets_df$diameter variable?
+positions =  order(planets_df$diameter, decreasing = T)
+positions
+
+# Create new "ordered" data frame:
+largest_first_df = planets_df[positions,]
+largest_first_df
+
+```
+
+
+# Lists
+
+## Lists, why would you need them?
+
+They are useful sometimes.
+
+## Lists, why would you need them? (2)
+
+  - A list in R is similar to your to-do list at work or school: 
+    - the different items on that list most likely differ in length, characteristic, type of activity that has to do be done, ...
+  - A list in R allows you to gather a variety of objects under one name (that is, the name of the list) in an ordered way. 
+    - These objects can be matrices, vectors, data frames, even other lists, etc. 
+    - It is not even required that these objects are related to each other in any way.
+  - You could say that a list is some kind super data type: 
+    - you can store practically any piece of information in it!
+
+## Creating a list
+
+```{r}
+
+# Vector with numerics from 1 up to 10
+my_vector <- 1:10 
+my_vector
+
+# Matrix with numerics from 1 up to 9
+my_matrix <- matrix(1:9, ncol = 3)
+my_matrix
+
+# First 10 elements of the built-in data frame 'mtcars'
+my_df <- mtcars[1:10,]
+my_df
+
+# Construct list with these different elements:
+my_list <- list(my_vector, my_matrix, my_df)
+my_list
+
+```
+
+## Creating a named list
+
+```{r}
+
+# Construct 'my_list' with these different elements:
+my_list <- list(vec = my_vector, mat = my_matrix, df = my_df)
+
+# Print 'my_list' to the console
+my_list
+
+```
+
+## Creating a named list (2)
+
+```{r}
+
+# The vectors 'actors' and 'reviews' are pre-loaded in the workspace
+actors <- c("Jack Nicholson", "Shelley Duvall", "Danny Lloyd", "Scatman Crothers", "Barry Nelson")
+
+reviews <- data.frame(
+  scores = c(4.5, 4.0, 5.0),
+  sources = c("IMDb1", "IMDb2", "IMDb3"),
+  comments = c("Best Horror Film I Have Ever Seen",
+               "A truly brilliant and scary film from Stanley Kubrick",
+               "A masterpiece of psychological horror")
+)
+
+# Create the list 'shining_list'
+shining_list <- list(
+    moviename = "The Shining",
+    actors = actors,
+    reviews = reviews)
+
+shining_list
+```
+
+## Selecting elements from a list
+
+```{r}
+
+# Define 'last_actor'
+last_actor <- shining_list$actors[length(shining_list$actors)]
+last_actor
+
+# Define 'second_review'
+second_review <- shining_list$reviews[2,]
+second_review
+
+```
+
+## Adding more movie information to the list
+
+```{r}
+
+# We forgot something; add the year to shining_list
+shining_list_full <- c(shining_list, year = 1980)
+
+# Have a look at shining_list_full
+str(shining_list_full)
+
+```

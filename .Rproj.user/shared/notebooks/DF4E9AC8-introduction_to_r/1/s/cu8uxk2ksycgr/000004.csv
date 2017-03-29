@@ -1,0 +1,22 @@
+"0","days <- c(""Monday"", ""Tuesday"", ""Wednesday"", ""Thursday"", ""Friday"")
+names(roulette_vector) <- days
+names(poker_vector) <- days
+# Up to you now:
+total_daily <- poker_vector + roulette_vector
+# Show me:
+total_daily
+"
+"1","   Monday "
+"1","  Tuesday "
+"1","Wednesday "
+"1"," Thursday "
+"1","   Friday "
+"1","
+"
+"1","      116 "
+"1","     -100 "
+"1","      120 "
+"1","     -470 "
+"1","      250 "
+"1","
+"
