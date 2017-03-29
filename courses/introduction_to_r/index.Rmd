@@ -15,24 +15,29 @@ output:
 ***
 
 ```{r setup, include=FALSE}
+library(shiny)
+library(codetools)
 knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
 ```
 
 # Introduction
 
-  - I am copying my work from the class to this document
-  - This will make it much easier for me to find and refernce what I have done/learned  
-  - Most of this is simply me copying the working solutions from the class examples or practice
-  - I may insert a few of my own thoughts and comments along the way
   - This all comes from [Introduction to R](https://campus.datacamp.com/courses/free-introduction-to-r) course on DataCamp
     - I highly recommend the [DataCamp](https://www.datacamp.com/home) courses
     - They step you through the work and include videos and much more description than I include here
     - This doc is no replacement for working through the classes on your own!
+  - I am copying my work from the class to this document
+  - This will make it much easier for me to find and refernce what I have done/learned  
+  - And I may insert a few of my own thoughts and comments about things along the way
   
   
+&nbsp; &nbsp;
+
+***  
+
 # Intro to Basics
 
-## How it Works
+### How it Works
 
   - This section has some pretty juicy R charts here.   
   - This was hott stuff back in 1996 
@@ -50,7 +55,7 @@ demo("graphics")
 
 ```
 
-## Arthmetic with R
+### Arthmetic with R
 
 Yeah, it does all the usual stuff.
 
@@ -76,7 +81,7 @@ Yeah, it does all the usual stuff.
 
 ```
 
-## Variable assignment
+### Variable assignment
 
 ```{r}
 
@@ -88,7 +93,7 @@ x
 
 ```
 
-## Variable assignment 2
+### Variable assignment 2
 
 ```{r}
 
@@ -98,7 +103,7 @@ my_apples
 
 ```
 
-## Variable assignment 3
+### Variable assignment 3
 
 ```{r}
 # Assign a value to the variables called my_apples and my_oranges
@@ -111,7 +116,7 @@ my_fruit
 
 ```
 
-## Apples and oranges
+### Apples and oranges
 
   - This would fail because you can't add character vectors.
   - Rstudio won't even knit the document. 
@@ -131,7 +136,7 @@ my_fruit <- my_apples + my_oranges
 
 `Error in my_apples + my_oranges : non-numeric argument to binary operator`
 
-## Basic data types in R
+### Basic data types in R
 
 ```{r}
 
@@ -146,7 +151,7 @@ my_logical <- FALSE
 
 ```
 
-## Whats's that data type?
+### Whats's that data type?
 
 ```{r}
 
@@ -163,14 +168,17 @@ class(my_logical)
 
 ```
 
+&nbsp; &nbsp;
+
+***  
 
 # Vectors
 
   - Note: I almost **always** use dataframes
   - But I guess its still good to know the other data types 
-  - They all have there uses
+  - They all have their uses
 
-## Create a vector
+### Create a vector
 
 ```{r}
 
@@ -179,7 +187,7 @@ Vegas
 
 ```
 
-## Create a vector (2)
+### Create a vector (2)
 
 ```{r}
 
@@ -194,7 +202,7 @@ boolean_vector
 
 ```
 
-## Create a vector (3)
+### Create a vector (3)
 
 ```{r}
 
@@ -208,7 +216,7 @@ roulette_vector
 
 ```
 
-## Naming a vector
+### Naming a vector
 
 ```{r}
 
@@ -221,7 +229,7 @@ roulette_vector
 
 ```
 
-## Naming a vector (2)
+### Naming a vector (2)
 
 ```{r}
 
@@ -237,7 +245,7 @@ roulette_vector
 
 ```
 
-## Calculating total winnings
+### Calculating total winnings
 
 ```{r}
 ## First, just an example
@@ -250,7 +258,7 @@ total_vector
 
 ```
 
-## Calculating total winnings (2)
+### Calculating total winnings (2)
 
 ```{r}
 
@@ -264,7 +272,7 @@ total_daily
 
 ```
 
-## Calculating total winnings (3)
+### Calculating total winnings (3)
 
 ```{r}
 
@@ -276,7 +284,7 @@ total_week
 
 ```
 
-## Comparing total winnings
+### Comparing total winnings
 
 ```{r}
 
@@ -286,7 +294,7 @@ answer
 
 ```
 
-## Vector selection: the good times
+### Vector selection: the good times
 
 ```{r}
 
@@ -296,7 +304,7 @@ poker_wednesday
 
 ```
 
-## Vector selection: the good times (2)
+### Vector selection: the good times (2)
 
 ```{r}
 
@@ -306,7 +314,7 @@ poker_midweek
 
 ```
 
-## Vector selection: the good times (3)
+### Vector selection: the good times (3)
 
 ```{r}
 
@@ -316,7 +324,7 @@ roulette_selection_vector
 
 ```
 
-## Vector selection: the good times (4)
+### Vector selection: the good times (4)
 
 ```{r}
 
@@ -325,7 +333,7 @@ average_midweek_gain
 
 ```
 
-## Selection by comparison - Step 1
+### Selection by comparison - Step 1
 
 ```{r}
 
@@ -335,7 +343,7 @@ selection_vector
 
 ```
 
-## Selection by comparison - Step 2
+### Selection by comparison - Step 2
 
 ```{r}
 
@@ -348,7 +356,7 @@ poker_winning_days
 
 ```
 
-## Advanced selection
+### Advanced selection
 
 ```{r}
 
@@ -358,9 +366,13 @@ roulette_winning_days
 
 ```
 
+&nbsp; &nbsp;
+
+***
+
 # Matrices
 
-## What's a matrix?
+### What's a matrix?
 
 ```{r}
 
@@ -369,7 +381,7 @@ matrix(1:9, byrow=T, nrow=3)
 
 ```
 
-## Analyzing matrices, you shall
+### Analyzing matrices, you shall
 
 ```{r}
 
@@ -385,7 +397,7 @@ star_wars_matrix
 
 ```
 
-## Naming a matrix
+### Naming a matrix
 
 ```{r}
 
@@ -397,7 +409,7 @@ star_wars_matrix
 
 ```
 
-## Calculating the worldwide box office
+### Calculating the worldwide box office
 
 ```{r}
 
@@ -414,7 +426,7 @@ worldwide_vector = rowSums(star_wars_matrix)
 worldwide_vector
 ```
 
-## Adding a column for the worldwide box office
+### Adding a column for the worldwide box office
 
 ```{r}
 
@@ -424,7 +436,7 @@ all_wars_matrix
 
 ```
 
-## Adding a row
+### Adding a row
   - In the course they had the star_wars_matrix2 pre loaded
   - Here I just copy the original
   - this works to show what rbind does
@@ -448,7 +460,7 @@ all_wars_matrix
 
 ```
 
-## The total box office revenue for the entire saga
+### The total box office revenue for the entire saga
 
 ```{r}
 
@@ -460,7 +472,7 @@ total_revenue_vector
 
 ```
 
-## Selection of matix elements
+### Selection of matix elements
 
 ```{r}
 
@@ -472,7 +484,7 @@ mean_non_us_some
 
 ```
 
-## A little arithmetic with matrices
+### A little arithmetic with matrices
 
 ```{r}
 
@@ -481,7 +493,7 @@ visitors
 
 ```
 
-## A little arithmetic with matrices (2)
+### A little arithmetic with matrices (2)
 
 ```{r}
 
@@ -499,14 +511,17 @@ average_non_us_visitor
 
 ```
 
+&nbsp; &nbsp;
+
+***
 
 # Factors
 
-## What's a factor and why would you use it?
+### What's a factor and why would you use it?
 
 R uses factors for categorical variables!
 
-## What's a factor and why would you use it? (2)
+### What's a factor and why would you use it? (2)
 
 ```{r}
 
@@ -517,7 +532,7 @@ factor_gender_vector
 
 ```
 
-## What's a factor and why would you use it? (3)
+### What's a factor and why would you use it? (3)
 
 ```{r}
 
@@ -532,7 +547,7 @@ factor_temperature_vector
 
 ```
 
-## Factor levels
+### Factor levels
 
 ```{r}
 
@@ -545,7 +560,7 @@ factor_survey_vector
 
 ```
 
-## Summarizing a factor
+### Summarizing a factor
 
 ```{r}
 
@@ -557,7 +572,7 @@ summary(factor_survey_vector)
 
 ```
 
-## Battle of the sexes
+### Battle of the sexes
 
 ```{r}
 
@@ -572,7 +587,7 @@ factor_survey_vector[1] > factor_survey_vector[2]
 
 ```
 
-## Ordered Factors
+### Ordered Factors
 
 ```{r}
 
@@ -588,7 +603,7 @@ summary(factor_speed_vector)
 ```
 
 
-## Comparing ordered factors
+### Comparing ordered factors
 
 ```{r}
 
@@ -598,9 +613,13 @@ compare_them
 
 ```
 
+&nbsp; &nbsp;
+
+***
+
 # Data frames
 
-## What's a data frame?
+### What's a data frame?
 
 ```{r}
 
@@ -608,7 +627,7 @@ mtcars  # Built-in R dataset stored in a data frame
 
 ```
 
-## Quick, hae a look at your data set
+### Quick, hae a look at your data set
 
 ```{r}
 
@@ -617,7 +636,7 @@ head(mtcars)
 
 ```
 
-## Have a look at the structure
+### Have a look at the structure
 
 ```{r}
 
@@ -626,7 +645,7 @@ str(mtcars)
 
 ```
 
-## Create a data frame
+### Create a data frame
 
 ```{r}
 
@@ -648,7 +667,7 @@ planets_df
 
 ```
 
-## Create a data frame (2)
+### Create a data frame (2)
 
 ```{r}
 
@@ -657,7 +676,7 @@ str(planets_df)
 
 ```
 
-## Selection of data frame elements
+### Selection of data frame elements
 
 ```{r}
 
@@ -670,7 +689,7 @@ furthest_planets_df
 
 ```
 
-## Selection of data frame elements (2)
+### Selection of data frame elements (2)
 
 ```{r}
 
@@ -679,7 +698,7 @@ furthest_planets_diameter = planets_df$diameter[3:8]
 
 ```
 
-## Only planets with rings
+### Only planets with rings
 
 ```{r}
 
@@ -688,7 +707,7 @@ rings_vector = planets_df$rings
 
 ```
 
-## Only planets with rings (2)
+### Only planets with rings (2)
 
 ```{r}
 
@@ -697,7 +716,7 @@ planets_with_rings_df =  planets_df[planets_df$rings,]
 
 ```
 
-## Only planets with rings but shorter
+### Only planets with rings but shorter
 
 ```{r}
 
@@ -706,7 +725,7 @@ small_planets_df  = subset(planets_df, diameter < 1)
 
 ```
 
-## Sorting
+### Sorting
 
 ```{r}
 
@@ -717,7 +736,7 @@ order(a)
 
 ```
 
-## Sorting your data frame
+### Sorting your data frame
 
 ```{r}
 
@@ -731,14 +750,17 @@ largest_first_df
 
 ```
 
+&nbsp; &nbsp;
+
+***
 
 # Lists
 
-## Lists, why would you need them?
+### Lists, why would you need them?
 
 They are useful sometimes.
 
-## Lists, why would you need them? (2)
+### Lists, why would you need them? (2)
 
   - A list in R is similar to your to-do list at work or school: 
     - the different items on that list most likely differ in length, characteristic, type of activity that has to do be done, ...
@@ -748,7 +770,7 @@ They are useful sometimes.
   - You could say that a list is some kind super data type: 
     - you can store practically any piece of information in it!
 
-## Creating a list
+### Creating a list
 
 ```{r}
 
@@ -770,7 +792,7 @@ my_list
 
 ```
 
-## Creating a named list
+### Creating a named list
 
 ```{r}
 
@@ -782,7 +804,7 @@ my_list
 
 ```
 
-## Creating a named list (2)
+### Creating a named list (2)
 
 ```{r}
 
@@ -806,7 +828,7 @@ shining_list <- list(
 shining_list
 ```
 
-## Selecting elements from a list
+### Selecting elements from a list
 
 ```{r}
 
@@ -820,7 +842,7 @@ second_review
 
 ```
 
-## Adding more movie information to the list
+### Adding more movie information to the list
 
 ```{r}
 
