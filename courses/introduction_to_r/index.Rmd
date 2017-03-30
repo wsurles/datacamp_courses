@@ -29,7 +29,24 @@ knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
   - I am copying my work from the class to this document
   - This will make it much easier for me to find and refernce what I have done/learned  
   - And I may insert a few of my own thoughts and comments about things along the way
-  
+
+## Whats Covered
+
+  - Intro
+    - Arithmetic
+    - Variable assignment
+    - Basic data types
+  - Vectors
+    - Creating, naming, aritmetic, selection
+  - Matrices
+    - Creating, naming, aritmetic, selection
+  - Factors
+    - Creating, levles, aritmetic, ordering
+  - Data frames
+    - Creating, looking, selection, sorting
+  - Lists
+    - Creating, naming, selection
+    
   
 &nbsp; &nbsp;
 

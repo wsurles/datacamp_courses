@@ -1,0 +1,1521 @@
+---
+title: "Intermediate R"
+author: "William Surles"
+date: "2017-03-29"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+---
+
+***
+> This document was updated on **`r Sys.Date()`**.
+
+***
+
+```{r setup, include=FALSE}
+library(shiny)
+library(codetools)
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+```
+
+# Introduction
+
+  - This all comes from the [Intermediate R](https://www.datacamp.com/courses/intermediate-r) course on DataCamp
+    - I highly recommend the [DataCamp](https://www.datacamp.com/home) courses
+    - Go do the course for yourself to get more details and videos on these topics
+  - I am copying my work from the class to this document and adding comments
+
+## Whats Covered
+
+  - Conditionals and Control Flow
+    - Relational Operators. `==` `<` `>` 
+    - Logical Operators. `and` `or` `not`
+    - Conditional Statements. `if` `else`
+  - Loops
+    - While loops
+    - For loops
+    - Breaks
+  - Functions
+  - Apply statements
+    - lapply, sapply, vapply
+  - Utilities
+    - Errors
+    - Regular Expressions and grep/sub
+    - Times and Dates
+    
+  
+  
+&nbsp; &nbsp;
+
+***  
+
+# Conditionals and Control Flow
+
+## Relational Operators
+  - These are used to compare objects
+  - They are common in any langage and are a basis of programming
+
+### Equality
+
+```{r}
+
+# Comparison of logicals
+TRUE == FALSE
+
+# Comparison of numerics
+-6 * 14 != 17 - 101
+
+# Comparison of character strings
+"useR" == "user"
+
+# Compare a logical with a numeric
+TRUE == 1
+
+```
+
+### Greater and less than
+
+```{r}
+
+# Comparison of numerics
+-6 * 5 + 2 >= -10 + 1
+
+# Comparison of character strings
+"raining" <= "raining dogs"
+
+# Comparison of logicals
+TRUE > FALSE
+
+```
+
+### Compare vectors
+
+```{r}
+
+# The linkedin and facebook vectors have already been created for you
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+facebook <- c(17, 7, 5, 16, 8, 13, 14)
+
+# Popular days
+linkedin > 15
+
+# Quiet days
+linkedin <= 5
+
+# LinkedIn more popular than Facebook
+linkedin > facebook
+
+```
+
+### Compare matrices
+
+```{r}
+
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+facebook <- c(17, 7, 5, 16, 8, 13, 14)
+
+views <- matrix(c(linkedin, facebook), nrow = 2, byrow = TRUE)
+
+# When does views equal 13?
+views == 13
+
+# When is views less than or equal to 14?
+views <= 14
+
+# How often does facebook equal or exceed linkedin times two?
+sum(facebook >= linkedin * 2)
+
+```
+
+## Logical Operators
+
+  - These are also super common and a basis of programming
+  - They let us combine multiple relational statements
+
+### & and |
+
+```{r}
+
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+
+last <- tail(linkedin, 1)
+
+# Is last under 5 or above 10?
+last < 5 | last > 10
+
+# Is last between 15 (exclusive) and 20 (inclusive)?
+last > 15 & last <= 20
+
+# Is last between 0 and 5 or between 10 and 15?
+(last > 0 & last < 5) | (last > 10 & last < 15)
+
+```
+
+### & and | (2)
+
+```{r}
+
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+facebook <- c(17, 7, 5, 16, 8, 13, 14)
+
+# linkedin exceeds 10 but facebook below 10
+linkedin > 10 & facebook < 10
+
+# When were one or both visited at least 12 times?
+linkedin > 12 | facebook > 12
+
+# When is views between 11 (exclusive) and 14 (inclusive)?
+views > 11 & views <= 14
+
+```
+
+### Reverse the result: !
+
+```{r}
+
+!TRUE
+!(5 > 3)
+!!FALSE
+
+x <- 5
+y <- 7
+!(!(x < 4) & !!!(y > 12))
+
+```
+
+### Blend it all together
+
+```{r}
+
+second <- c(3, 23, 18, 18, 25, 20, 17, 27, 6, 35, 17, 6, 1, 12, 15, 17, 12, 8)
+
+# Build a logical vector, TRUE if value in second is extreme: extremes
+extremes <- second > 25 | second < 5
+
+# Count the number of TRUEs in extremes
+sum(extremes)
+
+```
+
+## Conditional Statements
+
+  - Used to execute statements based on result of relational statements
+  - All of this is basis of programming and can be used in all the languages
+  
+### The if statement
+
+```{r}
+
+# Variables related to your last day of recordings
+medium <- "LinkedIn"
+num_views <- 14
+
+# Examine the if statement for medium
+if (medium == "LinkedIn") {
+  print("Showing LinkedIn information")
+}
+
+# Write the if statement for num_views
+if (num_views > 15) {
+  print("You're popular!")
+}
+
+```
+
+### And an else
+
+```{r}
+
+# Variables related to your last day of recordings
+medium <- "LinkedIn"
+num_views <- 14
+
+# Control structure for medium
+if (medium == "LinkedIn") {
+  print("Showing LinkedIn information")
+} else {
+  print("Unknown medium")
+}
+
+# Control structure for num_views
+if (num_views > 15) {
+  print("You're popular!")
+} else {
+  print("Try to be more visible!")
+}
+
+```
+
+### Customize further: else if
+
+```{r}
+
+# Variables related to your last day of recordings
+medium <- "LinkedIn"
+num_views <- 14
+
+# Control structure for medium
+if (medium == "LinkedIn") {
+  print("Showing LinkedIn information")
+} else if (medium == "Facebook") {
+  # Add code to print correct string when condition is True
+  print("Showing Facebook information")
+} else {
+  print("Unknown medium")
+}
+
+# Control structure for num_views
+if (num_views > 15) {
+  print("You're popular!")
+} else if (num_views <= 15 & num_views > 10) {
+  # Add code to print correct string when condition is TRUE
+  print("Your number of views is average")
+} else {
+  print("Try to be more visible!")
+}
+
+```
+
+### Else if 2.0
+
+```{r}
+
+numbers <- c(6, 100, 4, 2500)
+
+for (number in numbers) {
+  
+  if (number < 10) {
+    if (number < 5) {
+      result <- "extra small"
+    } else {
+      result <- "small"
+    }
+  } else if (number < 100) {
+    result <- "medium"
+  } else {
+    result <- "large"
+  }
+  
+  print(result)
+}
+
+```
+
+### Take control!
+
+```{r}
+
+# Variables related to your last day of recordings
+li <- 15
+fb <- 9
+
+# Code the control-flow construct
+if (li >= 15 & fb >= 15) {
+  sms <- (li + fb) * 2
+} else if (li < 10 & fb < 10) {
+  sms <- (li + fb) / 2
+} else {
+  sms <- (li + fb)
+}
+
+# Print the resulting sms to the console
+print(sms)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+
+# Loops
+
+## While loop
+
+  - it runs as long as the while condition is true
+
+### Write a while loop
+
+```{r}
+
+# Initialize the speed variable
+speed <- 64
+
+# Code the while loop
+while (speed > 30 ) {
+  print('Slow down!')
+  speed <- speed - 7
+}
+print(speed)
+
+```
+
+### Throw in more conditionals
+
+```{r}
+
+# Initialize the speed variable
+speed <- 64
+
+# Extend/adapt the while loop
+while (speed > 30) {
+  print(paste("Your speed is",speed))
+  if (speed > 48) {
+    print("Slow down big time!")
+    speed <- speed - 11
+  } else {
+    print("Slow down!")
+    speed <- speed - 6
+  }
+}
+
+```
+
+### Stop the while loop: break
+
+```{r}
+
+# Initialize the speed variable
+speed <- 88
+
+while (speed > 30) {
+  print(paste("Your speed is",speed))
+  
+  # Break the while loop when speed exceeds 80
+  if (speed > 80) {
+    break
+  }
+  
+  if (speed > 48) {
+    print("Slow down big time!")
+    speed <- speed - 11
+  } else {
+    print("Slow down!")
+    speed <- speed - 6
+  }
+}
+
+```
+
+### Build a while loop from scratch
+
+```{r}
+
+# Initialize i as 1 
+i <- 1
+
+# Code the while loop
+while (i <= 10) {
+  triple <- i * 3
+  print(triple)
+  
+  if (triple %% 8 == 0) {
+    break
+  }
+  i <- i + 1
+}
+
+```
+
+## For loop
+
+  - Execute a statement, changing a variable each time.
+    - Run once for each variable in the list
+    - This list can just be a sequence like 1:5 or variables in a list like a bunch of names
+    - This is so fundamental to programming in any language
+  - However I never use loops in R
+    - I always modify data with array functions. They are WAY faster
+    - dplyr and other similar libraries do the looping in C
+    - If you are looping on an array in R, you should probably rethink your approach. 
+
+### Loop over a vector
+
+```{r}
+
+# The linkedin vector has already been defined for you
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+
+# Loop version 1
+for (views in linkedin) {
+  print(views)
+}
+
+# Loop version 2
+for (i in 1:length(linkedin)) {
+  print(linkedin[i])
+}
+
+```
+
+### Loop over a list
+
+```{r}
+
+# The nyc list is already specified
+nyc <- list(pop = 8405837, 
+            boroughs = c("Manhattan", "Bronx", "Brooklyn", "Queens", "Staten Island"), 
+            capital = FALSE)
+
+# Loop version 1
+for (value in nyc) {
+  print(value)
+}
+
+# Loop version 2
+for (i in 1:length(nyc)) {
+  print(nyc[[i]])
+}
+
+```
+
+### Loop over a matrix
+
+```{r}
+
+# The tic-tac-toe matrix has already been defined for you
+ttt <- matrix(c("O", NA, "X", NA, "O", NA, "X", "O", "X"), nrow = 3, ncol = 3)
+
+# define the double for loop
+for (i in 1:nrow(ttt)) {
+  for (j in 1:ncol(ttt)) {
+  print(paste("On row",i,"and column",j,"the board contains",ttt[i,j]))
+  }
+}
+
+```
+
+### mix it up with control flow
+
+```{r}
+
+# The linkedin vector has already been defined for you
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+
+# Code the for loop with conditionals
+for (i in 1:length(linkedin)) {
+  if (linkedin[i] > 10) {
+    print("You're popular!")
+  } else {
+    print("Be more visible!")
+  }
+  print(linkedin[i])
+}
+
+```
+
+### Next, you break it
+
+```{r}
+
+# The linkedin vector has already been defined for you
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+
+# Extend the for loop
+for (li in linkedin) {
+  if (li > 10) {
+    print("You're popular!")
+  } else {
+    print("Be more visible!")
+  }
+  
+  # Add code to conditionally break iteration
+  if (li > 16) {
+    print("This is ridiculous, I'm outta here!")
+    break
+  }
+  
+  # Add code to conditionally skip iteration
+  if (li < 5) {
+    print("This is too embarrassing!")
+    next
+  }
+  
+  print(li)
+}
+
+```
+
+### Build a loop from scratch
+
+```{r}
+
+# Pre-defined variables
+rquote <- "R's internals are irrefutably intriguing"
+chars <- strsplit(rquote, split = "")[[1]]
+
+# Your solution here
+rcount <- 0
+for (c in chars) {
+  if (c == 'u') {
+    break
+  }
+  if (c == 'r' | c == 'R') {
+    rcount <- rcount + 1
+  }
+}
+
+# Print the resulting rcount variable to the console
+print(rcount)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+
+# Functions
+
+### Introduction to Functions
+
+  - You have already been using these a bunch. 
+
+### Function documentation
+
+```{r}
+
+# Consult the documentation on the mean() function
+?mean
+
+# Inspect the arguments of the mean() function
+args(mean)
+
+```
+
+### Use a function
+
+```{r}
+
+# The linkedin and facebook vectors have already been created for you
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+facebook <- c(17, 7, 5, 16, 8, 13, 14)
+
+# Calculate average number of views
+avg_li <- mean(linkedin)
+avg_fb <- mean(facebook)
+
+# Inspect avg_li and avg_fb
+avg_li
+avg_fb
+
+
+# Calculate the mean of linkedin minus facebook
+mean(linkedin - facebook)
+
+```
+
+### Use a function (2)
+
+```{r}
+
+# The linkedin and facebook vectors have already been created for you
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+facebook <- c(17, 7, 5, 16, 8, 13, 14)
+
+# Calculate the mean of the sum
+avg_sum <- mean(linkedin + facebook)
+
+# Calculate the trimmed mean of the sum
+avg_sum_trimmed <- mean(linkedin + facebook, trim = 0.2)
+
+# Inspect both new variables
+avg_sum
+avg_sum_trimmed
+
+```
+
+### Use a function (3)
+
+```{r}
+
+# The linkedin and facebook vectors have already been created for you
+linkedin <- c(16, 9, 13, 5, NA, 17, 14)
+facebook <- c(17, NA, 5, 16, 8, 13, 14)
+
+# Basic average of linkedin
+mean(linkedin)
+mean(facebook)
+
+# Advanced average of facebook
+mean(linkedin, na.rm = T)
+mean(facebook, na.rm = T)
+
+```
+
+### Functions inside functions
+
+```{r}
+
+# The linkedin and facebook vectors have already been created for you
+linkedin <- c(16, 9, 13, 5, NA, 17, 14)
+facebook <- c(17, NA, 5, 16, 8, 13, 14)
+
+# Calculate the mean absolute deviation
+mean(abs(linkedin - facebook), na.rm = T)
+
+```
+
+### Required, or optional?
+
+Whats true about the `read.table()` function?
+
+> read.table(file, header = FALSE, sep = "", quote = "\"",
+           dec = ".", numerals = c("allow.loss", "warn.loss", "no.loss"),
+           row.names, col.names, as.is = !stringsAsFactors,
+           na.strings = "NA", colClasses = NA, nrows = -1,
+           skip = 0, check.names = TRUE, fill = !blank.lines.skip,
+           strip.white = FALSE, blank.lines.skip = TRUE,
+           comment.char = "#",
+           allowEscapes = FALSE, flush = FALSE,
+           stringsAsFactors = default.stringsAsFactors(),
+           fileEncoding = "", encoding = "unknown", text, skipNul = FALSE)
+
+
+  - `header`, `sep` and `quote` are all optional arguments.
+  - `read.table("myfile.txt", "-", TRUE)` will throw an error.
+  
+## Writing Functions
+
+### Write your own functions
+
+```{r}
+
+# Create a function pow_two()
+pow_two <- function(x) {
+ result <- x^2
+ return(result)
+}
+
+# Use the function 
+pow_two(12)
+
+# Create a function sum_abs()
+sum_abs <- function(x, y) {
+  result <- abs(x) + abs(y)
+  return(result)
+}
+
+# Use the function
+sum_abs(-2, 3)
+
+```
+
+### Write your own functions (2)
+
+```{r}
+
+# Define the function hello()
+hello <- function() {
+  print('Hi there!')
+  return(TRUE)
+}
+
+# Call the function hello()
+hello()
+
+# Define the function my_filter()
+my_filter <- function(x) {
+  if (x >=0) {
+    return(x)
+  } else {
+    return(NULL)
+  }
+}
+
+# Call the function my_filter() twice
+my_filter(5)
+my_filter(-5)
+
+```
+
+### Write you own functions (3)
+
+```{r}
+
+# Extend the pow_two() function
+pow_two <- function(x, print_info = T) {
+  
+  y <- x ^ 2
+  
+  if (print_info == T) {
+    print(paste(x, 'to the power two equals',y))
+  }
+  
+  return(y)
+}
+
+pow_two(5)
+pow_two(5, print_info=F)
+
+```
+
+### Function scoping
+
+  - variable defined inside a function are not available outside of that function
+  - neither are the variable names given to the input
+  - calling x or y outside of this function would fail
+  
+```{r eval=F}
+
+pow_two <- function(x) {
+  y <- x ^ 2
+  return(y)
+}
+pow_two(4)
+
+```
+
+### R passes arguments by value
+
+  - In other words, a function won't change the original variable passed in
+
+```{r}
+
+triple <- function(x) {
+  x <- 3*x
+  x
+}
+
+a <- 5
+triple(a)
+
+a
+
+```
+
+### R you functional?
+
+```{r}
+
+# The linkedin and facebook vectors have already been created for you
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+facebook <- c(17, 7, 5, 16, 8, 13, 14)
+
+# Define the interpret function
+interpret <- function(x) {
+
+ if (x > 15) {
+   print("You're popular!")
+   return(x)
+ } else {
+   print("Try to be more visible!")
+   return(0)
+ }
+ 
+}
+
+# Call the interpret function twice
+interpret(linkedin[1])
+interpret(facebook[2])
+
+```
+
+### R you functional? (2)
+
+```{r}
+
+# The linkedin and facebook vectors have already been created for you
+linkedin <- c(16, 9, 13, 5, 2, 17, 14)
+facebook <- c(17, 7, 5, 16, 8, 13, 14)
+
+# The interpret() can be used inside interpret_all()
+interpret <- function(num_views) {
+  if (num_views > 15) {
+    print("You're popular!")
+    return(num_views)
+  } else {
+    print("Try to be more visible!")
+    return(0)
+  }
+}
+
+# Define the interpret_all() function
+interpret_all <- function(x, show_sum = T) {
+  
+  sum_pop_views <- 0
+  
+  for (i in x) {
+    y <- interpret(i)
+    sum_pop_views <- sum_pop_views + y
+  }
+  
+  if (show_sum == T) {
+    return(sum_pop_views)
+  } else {
+    return(NULL)
+  }
+  
+}
+
+# Call the interpret_all() function on both linkedin and facebook
+interpret_all(facebook)
+interpret_all(linkedin)
+
+```
+
+## R Packages
+
+  - all the functions you use that are not in the workspace are in a package
+  - the base package is installed with R and loaded with you start R
+  - other packages you need to install and load when you want to use their functions
+  - Most of the functions I use are from key packages
+    - There are some very powerful packages
+    - Especially the 'hadleyverse', or packages written by hadley wickham. 
+    - They will make your life easy and your work go well. Learn them all. 
+
+```{r}
+## We first need to make sure our packages are installed
+## 
+```
+
+### Load an R Package
+
+```{r}
+
+# The mtcars vectors have already been prepared for you
+wt <- mtcars$wt
+hp <- mtcars$hp
+
+# Request the currently attached packages
+search()
+
+# Load the ggplot2 package
+library(ggplot2)
+
+# Use the qplot() function. 
+# It will fail if you try before loading ggplot2 library
+qplot(wt,hp)
+
+# Check out the currently attached packages again
+search()
+
+```
+
+### Different ways to load a package
+
+  - Its not picky. These all work.
+
+```{r}
+
+## I already have ggplot2 installed
+## install.packages("ggplot2")
+
+library(ggplot2)
+library("ggplot2")
+require(ggplot2)
+
+
+```
+
+&nbsp; &nbsp;
+
+***  
+
+# The apply family
+
+### lapply
+
+  - applies a function to each element of a list/vector
+  - less code than writting out a whole loop
+  - also faster
+  - always returns a list
+    - wrap in `unlist()` if you want a vector
+
+### Use Lapply with a built-in R function
+
+```{r}
+
+# The vector pioneers has already been created for you
+pioneers <- c("GAUSS:1777", "BAYES:1702", "PASCAL:1623", "PEARSON:1857")
+
+# Split names from birth year: split_math
+split_math <- strsplit(pioneers, ":")
+
+# Convert to lowercase strings: split_low
+split_low <- lapply(split_math, tolower)
+
+# Take a look at the structure of split_low
+str(split_low)
+
+```
+
+### Use lapply with your own function
+
+```{r}
+
+# Code from previous exercise:
+pioneers <- c("GAUSS:1777", "BAYES:1702", "PASCAL:1623", "PEARSON:1857")
+split <- strsplit(pioneers, split = ":")
+split_low <- lapply(split, tolower)
+
+# Write function select_first()
+select_first <- function(x) {
+  return(x[1])
+}
+
+# Apply select_first() over split_low: names
+names <- lapply(split_low, select_first)
+
+# Write function select_second()
+# Write function select_first()
+select_second <- function(x) {
+  return(x[2])
+}
+
+# Apply select_second() over split_low: years
+years <- lapply(split_low, select_second)
+
+```
+
+### lapply and anonymous functions
+
+```{r}
+
+# Definition of split_low
+pioneers <- c("GAUSS:1777", "BAYES:1702", "PASCAL:1623", "PEARSON:1857")
+split <- strsplit(pioneers, split = ":")
+split_low <- lapply(split, tolower)
+
+names <- lapply(split_low, function(x) {x[1]})
+years <- lapply(split_low, function(x) {x[2]})
+
+```
+
+### Use lapply with additional arguments
+
+```{r}
+
+# Definition of split_low
+pioneers <- c("GAUSS:1777", "BAYES:1702", "PASCAL:1623", "PEARSON:1857")
+split <- strsplit(pioneers, split = ":")
+split_low <- lapply(split, tolower)
+
+# Replace the select_*() functions by a single function: select_el
+select_el <- function(x,pos) { 
+  x[pos] 
+}
+
+# Call the select_el() function twice on split_low: names and years
+names <- lapply(split_low, select_el, 1)
+years <- lapply(split_low, select_el, 2)
+
+```
+
+### Apply functions that return NULL
+
+```{r}
+
+lapply(list(1, "a", TRUE), str)
+str(list(1,"a",TRUE))
+str(TRUE)
+
+```
+
+## sapply
+
+  - simple apply
+  - like lapply but returns a vetor if it can
+  - it will name the vector by default
+  - if there are multiple outputs it will return a matrix
+  - its pretty cool
+  - if it can't return a vector or matrix it will return a list
+  - becareful with this if you expect a certain data type returned in a program
+  
+
+### How to use sapply
+
+```{r}
+# temp variable
+temp <- list(
+  c(3, 7,  9,  6, -1),
+  c(6,  9, 12, 13,  5),
+  c(4,  8,  3, -1, -3),
+  c(1,  4,  7,  2, -2),
+  c(5, 7, 9, 4, 2),
+  c(-3,  5,  8,  9,  4),
+  c(3, 6, 9, 4, 1)
+  )
+
+# Use lapply() to find each day's minimum temperature
+lapply(temp, min)
+
+# Use sapply() to find each day's minimum temperature
+sapply(temp, min)
+
+# Use lapply() to find each day's maximum temperature
+lapply(temp, max)
+
+# Use sapply() to find each day's maximum temperature
+sapply(temp, max)
+
+```
+
+### sapply with your own function
+
+```{r}
+
+# temp is already defined in the workspace
+
+# Define a function calculates the average of the min and max of a vector: extremes_avg
+extremes_avg <- function(x) {
+ avg <- mean(c(min(x), max(x)))
+ return(avg)
+}
+
+# Apply extremes_avg() over temp using sapply()
+sapply(temp, extremes_avg)
+
+# Apply extremes_avg() over temp using lapply()
+lapply(temp, extremes_avg)
+
+```
+
+### sapply with function returning vector
+
+```{r}
+
+# temp is already available in the workspace
+
+# Create a function that returns min and max of a vector: extremes
+
+extremes <- function (x) {
+  return(c(min(x),max(x)))
+}
+
+# Apply extremes() over temp with sapply()
+sapply(temp, extremes)
+
+# Apply extremes() over temp with lapply()
+lapply(temp, extremes)
+
+```
+
+### sapply can't simplify, now what?
+
+```{r}
+
+# temp is already prepared for you in the workspace
+
+# Create a function that returns all values below zero: below_zero
+below_zero <- function (x) {
+ val <- x[x <0]
+ return(val)
+}
+
+below_zero(c(1,2,3,-1,-1,-3))
+
+# Apply below_zero over temp using sapply(): freezing_s
+freezing_s <- sapply(temp, below_zero)
+
+# Apply below_zero over temp using lapply(): freezing_l
+freezing_l <- lapply(temp, below_zero)
+
+# Compare freezing_s to freezing_l using identical()
+identical(freezing_s, freezing_l)
+
+```
+
+### sapply with functions that return NULL
+
+```{r}
+
+# temp is already available in the workspace
+
+# Write a function that 'cat()s' out the average temperatures: print_info
+print_info <- function (x) {
+  cat("The average temperature is", mean(x), "\n")
+}
+
+
+# Apply print_info() over temp using lapply()
+lapply(temp, print_info)
+
+# Apply print_info() over temp using sapply()
+sapply(temp, print_info)
+
+```
+
+### Reverse engineering sapply
+
+```{r}
+sapply(list(runif (10), runif (10)), 
+       function(x) c(min = min(x), mean = mean(x), max = max(x)))
+```
+
+## vapply
+
+  - safer than sapply 
+  - you can tell it what the return data type should be
+
+### Use vapply
+
+```{r}
+
+# temp is already available in the workspace
+
+# Code the basics() function
+basics <- function (x) {
+  return(c(min(x), mean(x), max(x)))
+}
+
+
+# Apply basics() over temp using vapply()
+vapply(temp, basics, numeric(3))
+
+```
+
+### Use vapply (2)
+
+```{r}
+
+# temp is already available in the workspace
+
+# Definition of the basics() function
+basics <- function(x) {
+  c(min = min(x), mean = mean(x), median = median(x), max = max(x))
+}
+
+# Fix the error:
+vapply(temp, basics, numeric(4))
+
+```
+
+### From sapply to vapply
+
+```{r}
+
+# temp is already defined in the workspace
+
+# Convert to vapply() expression
+vapply(temp, max, numeric(1))
+
+# Convert to vapply() expression
+vapply(temp, function(x, y) { mean(x) > y }, y = 5, logical(1))
+
+# Definition of get_info (don't change)
+get_info <- function(x, y) { 
+  if (mean(x) > y) {
+    return("Not too cold!")
+  } else {
+    return("Pretty cold!")
+  }
+}
+
+# Convert to vapply() expression
+vapply(temp, get_info, y = 5,character(1))
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+
+# Utilities
+
+### Useful Functions
+
+  - `abs()`
+    - calc the absolute value of a vector
+  - `sum()`
+    - calc the sum of a vector
+  - `mean()`
+    - calc the mean value of a vector
+  - `seq()`
+    - create a sequence
+  - `rep()`
+    - repeat an array
+  - `sort()`
+    - sort a vector
+  - `str()`
+    - see the structure of your datatype
+  - `is.*()`, `as.*()`
+    - check your data type of change it
+  - `append()`, `rev()`
+    - append and reverse vectors
+
+### Mathematical utilities
+
+```{r}
+
+# The errors vector has already been defined for you
+errors <- c(1.9,-2.6,4.0,-9.5,-3.4,7.3)
+
+# Sum of absolute rounded values of errors
+sum(round(abs(errors)))
+
+```
+
+### Find the error
+
+```{r}
+
+# Don't edit these two lines
+vec1 <- c(1.5,2.5,8.4,3.7,6.3)
+vec2 <- rev(vec1)
+
+# Fix the error
+mean(c(abs(vec1), abs(vec2)))
+
+```
+
+### Data Utilities
+
+```{r}
+
+# The linkedin and facebook vectors have already been created for you
+linkedin <- list(16, 9, 13, 5, 2, 17, 14)
+facebook <- list(17, 7, 5, 16, 8, 13, 14)
+
+# Convert linkedin and facebook to a vector: li_vec and fb_vec
+li_vec <- as.numeric(linkedin)
+fb_vec <- as.numeric(facebook)
+
+
+# Append fb_vec to li_vec: social_vec
+social_vec <- append(li_vec, fb_vec)
+
+# Sort social_vec
+sort(social_vec, decreasing=T)
+```
+
+### Find the error (2)
+
+```{r}
+# Fix me
+round(sum(unlist(list(1.1,3,5))))
+
+# Fix me
+rep(seq(1, 7, by = 2), times = 7)
+
+```
+
+### Beat Gauss using R
+
+```{r}
+
+# Create first sequence: seq1
+seq1 <- seq(1,500,by=3)
+
+# Create second sequence: seq2
+seq2 <- seq(1200,900,by=-7)
+
+# Calculate total sum of the sequences
+sum(c(seq1,seq2))
+
+```
+
+## Regular Expressions
+
+  - These are just sequences of characters and meta-characters that can match a pattern
+  - They are use for
+    - pattern existence
+    - pattern replacement
+    - pattern extraction
+  
+### grepl & grep
+
+```{r}
+
+# The emails vector has already been defined for you
+emails <- c("john.doe@ivyleague.edu", "education@world.gov", "dalai.lama@peace.org", 
+            "invalid.edu", "quant@bigdatacollege.edu", "cookie.monster@sesame.tv")
+
+# Use grepl() to match for "edu"
+grepl("edu",emails)
+
+# Use grep() to match for "edu", save result to hits
+hits <- grep("edu",emails)
+
+# Subset emails using hits
+emails[hits]
+
+```
+
+### grepl & grep (2)
+
+```{r}
+
+# The emails vector has already been defined for you
+emails <- c("john.doe@ivyleague.edu", "education@world.gov", "dalai.lama@peace.org", 
+            "invalid.edu", "quant@bigdatacollege.edu", "cookie.monster@sesame.tv")
+
+# Use grep() to match for .edu addresses more robustly
+grep("@.*\\.edu$",emails)
+
+# Use grepl() to match for .edu addresses more robustly, save result to hits
+hits <- grepl("@.*\\.edu$",emails)
+
+# Subset emails using hits
+emails[hits]
+
+```
+
+### sub and gsub
+
+```{r}
+
+# The emails vector has already been defined for you
+emails <- c("john.doe@ivyleague.edu", "education@world.gov", "dalai.lama@peace.org", 
+            "invalid.edu", "quant@bigdatacollege.edu", "cookie.monster@sesame.tv")
+
+# Use sub() to convert the email domains to datacamp.edu (attempt 1)
+sub("@.*\\.edu$","datacamp.edu",emails)
+
+# Use sub() to convert the email domains to datacamp.edu (attempt 2)
+sub("@.*\\.edu$","@datacamp.edu",emails)
+
+```
+
+### sub and gsub (2)
+
+```{r}
+
+awards <- c("Won 1 Oscar.",
+  "Won 1 Oscar. Another 9 wins & 24 nominations.",
+  "1 win and 2 nominations.",
+  "2 wins & 3 nominations.",
+  "Nominated for 2 Golden Globes. 1 more win & 2 nominations.",
+  "4 wins & 1 nomination.")
+
+sub(".*\\s([0-9]+)\\snomination.*$", "\\1", awards)
+
+```
+
+## Times and Dates
+
+### Right here, right now
+
+```{r}
+
+# Get the current date: today
+today <- Sys.Date()
+
+# See what today looks like under the hood
+unclass(today)
+
+# Get the current time: now
+now <- Sys.time()
+
+# See what now looks like under the hood
+unclass(now)
+
+```
+
+### Create and format times
+
+```{r}
+
+# Definition of character strings representing dates
+str1 <- "May 23, '96"
+str2 <- "2012-3-15"
+str3 <- "30/January/2006"
+
+# Convert the strings to dates: date1, date2, date3
+date1 <- as.Date(str1, format = "%b %d, '%y")
+date2 <- as.Date(str2, format = "%Y-%m-%d")
+date3 <- as.Date(str3, format = "%d/%B/%Y")
+
+# Convert dates to formatted strings
+format(date1, "%A")
+format(date2, "%d")
+format(date3, "%b %Y")
+
+```
+
+
+
+```{r}
+
+# Definition of character strings representing times
+str1 <- "May 23, '96 hours:23 minutes:01 seconds:45"
+str2 <- "2012-3-12 14:23:08"
+
+# Convert the strings to POSIXct objects: time1, time2
+time1 <- as.POSIXct(str1, format = "%B %d, '%y hours:%H minutes:%M seconds:%S")
+time2 <- as.POSIXct(str2, format = "%Y-%m-%d %T")
+
+# Convert times to formatted strings
+format(time1, "%M")
+format(time2, "%I:%M %p")
+
+```
+
+### Calculations with Dates
+
+```{r}
+
+# day1, day2, day3, day4 and day5 are already available in the workspace
+day1 <- as.Date("2017-03-12")
+day2 <- as.Date("2017-03-14")
+day3 <- as.Date("2017-03-19")
+day4 <- as.Date("2017-03-25")
+day5 <- as.Date("2017-03-30")
+
+# Difference between last and first pizza day
+day5-day1
+
+# Create vector pizza
+pizza <- c(day1, day2, day3, day4, day5)
+
+# Create differences between consecutive pizza days: day_diff
+day_diff <- diff(pizza)
+
+# Average period between two consecutive pizza days
+mean(day_diff)
+
+```
+
+### Calculations with Times
+
+```{r}
+
+# login and logout are already defined in the workspace
+login <- c(as.POSIXct("2017-03-16 10:18:04 UTC"), 
+            as.POSIXct("2017-03-21 09:14:18 UTC"),
+            as.POSIXct("2017-03-21 12:21:51 UTC"), 
+            as.POSIXct("2017-03-21 12:37:24 UTC"),
+            as.POSIXct("2017-03-23 21:37:55 UTC"))
+
+logout <- c(as.POSIXct("2017-03-16 10:56:29 UTC"),
+            as.POSIXct("2017-03-21 09:14:52 UTC"),
+            as.POSIXct("2017-03-21 12:35:48 UTC"), 
+            as.POSIXct("2017-03-21 13:17:22 UTC"),
+            as.POSIXct("2017-03-23 22:08:47 UTC"))
+ 
+# Calculate the difference between login and logout: time_online
+time_online <- logout - login
+
+# Inspect the variable time_online
+time_online
+
+# Calculate the total time online
+sum(time_online)
+
+# Calculate the average time online
+mean(time_online)
+
+```
+
+### Time is of the essence
+
+```{r}
+
+astro <- c("20-Mar-2015", "25-Jun-2015", "23-Sep-2015", "22-Dec-2015")
+names(astro) <- c("spring", "summer","fall","winter") 
+astro
+
+meteo <- c("March 1, 15", "June 1, 15", "September 1, 15", "December 1, 15")
+names(meteo) <- c("spring", "summer", "fall", "winter")
+meteo
+    
+# Convert astro to vector of Date objects: astro_dates
+astro_dates <- as.Date(astro, "%d-%b-%Y")
+
+# Convert meteo to vector of Date objects: meteo_dates
+meteo_dates <- as.Date(meteo, "%B %d, %y")
+
+# Calculate the maximum absolute difference between astro_dates and meteo_dates
+max(abs(astro_dates - meteo_dates))
+
+```
