@@ -1,8 +1,6 @@
 .Rhistory
 .Rproj.user/
 .DS_Store
-courses/introduction_to_r/index_cache/
-courses/introduction_to_r/index_files/
 */*/*_cache/
 */*/*_files/
 *rsconnect/
