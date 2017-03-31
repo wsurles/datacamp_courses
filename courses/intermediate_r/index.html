@@ -154,7 +154,7 @@ $(document).ready(function () {
 
 <hr />
 <blockquote>
-<p>This document was updated on <strong>2017-03-30</strong>.</p>
+<p>This document was updated on <strong>2017-03-31</strong>.</p>
 </blockquote>
 <hr />
 <div id="introduction" class="section level1">
@@ -554,16 +554,16 @@ while (i &lt;=<span class="st"> </span><span class="dv">10</span>) {
 <div id="for-loop" class="section level2">
 <h2>For loop</h2>
 <ul>
-<li>Execute a statement, changing a variable each time.
+<li>Run once for each variable in the list
 <ul>
-<li>Run once for each variable in the list</li>
 <li>This list can just be a sequence like 1:5 or variables in a list like a bunch of names</li>
 <li>This is so fundamental to programming in any language</li>
 </ul></li>
-<li>However I never use loops in R
+<li>However I actualy never use loops in R
 <ul>
-<li>I always modify data with array functions. They are WAY faster</li>
-<li>dplyr and other similar libraries do the looping in C</li>
+<li>I always modify data arrays with array functions. They are WAY faster</li>
+<li>The apply functions covered later are one way to do it.</li>
+<li>dplyr is the best way. All the loopig happens in C code so its super fast.</li>
 <li>If you are looping on an array in R, you should probably rethink your approach.</li>
 </ul></li>
 </ul>
@@ -641,7 +641,7 @@ for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(ttt)) {
 ## [1] &quot;On row 3 and column 3 the board contains X&quot;</code></pre>
 </div>
 <div id="mix-it-up-with-control-flow" class="section level3">
-<h3>mix it up with control flow</h3>
+<h3>Mix it up with control flow</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The linkedin vector has already been defined for you</span>
 linkedin &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">16</span>, <span class="dv">9</span>, <span class="dv">13</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">17</span>, <span class="dv">14</span>)
 
@@ -714,8 +714,11 @@ for (li in linkedin) {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Pre-defined variables</span>
 rquote &lt;-<span class="st"> &quot;R's internals are irrefutably intriguing&quot;</span>
 chars &lt;-<span class="st"> </span><span class="kw">strsplit</span>(rquote, <span class="dt">split =</span> <span class="st">&quot;&quot;</span>)[[<span class="dv">1</span>]]
-
-<span class="co"># Your solution here</span>
+chars</code></pre></div>
+<pre><code>##  [1] &quot;R&quot; &quot;'&quot; &quot;s&quot; &quot; &quot; &quot;i&quot; &quot;n&quot; &quot;t&quot; &quot;e&quot; &quot;r&quot; &quot;n&quot; &quot;a&quot; &quot;l&quot; &quot;s&quot; &quot; &quot; &quot;a&quot; &quot;r&quot; &quot;e&quot;
+## [18] &quot; &quot; &quot;i&quot; &quot;r&quot; &quot;r&quot; &quot;e&quot; &quot;f&quot; &quot;u&quot; &quot;t&quot; &quot;a&quot; &quot;b&quot; &quot;l&quot; &quot;y&quot; &quot; &quot; &quot;i&quot; &quot;n&quot; &quot;t&quot; &quot;r&quot;
+## [35] &quot;i&quot; &quot;g&quot; &quot;u&quot; &quot;i&quot; &quot;n&quot; &quot;g&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Your solution here</span>
 rcount &lt;-<span class="st"> </span><span class="dv">0</span>
 for (c in chars) {
   if (c ==<span class="st"> 'u'</span>) {
@@ -745,6 +748,7 @@ for (c in chars) {
 <div id="function-documentation" class="section level3">
 <h3>Function documentation</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Consult the documentation on the mean() function</span>
+<span class="co"># In Rstudio this will open the help window</span>
 ?mean
 
 <span class="co"># Inspect the arguments of the mean() function</span>
@@ -818,13 +822,37 @@ facebook &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv
 </div>
 <div id="required-or-optional" class="section level3">
 <h3>Required, or optional?</h3>
-<p>Whats true about the <code>read.table()</code> function?</p>
-<blockquote>
-<p>read.table(file, header = FALSE, sep = “”, quote = “&quot;”, dec = “.”, numerals = c(“allow.loss”, “warn.loss”, “no.loss”), row.names, col.names, as.is = !stringsAsFactors, na.strings = “NA”, colClasses = NA, nrows = -1, skip = 0, check.names = TRUE, fill = !blank.lines.skip, strip.white = FALSE, blank.lines.skip = TRUE, comment.char = “#”, allowEscapes = FALSE, flush = FALSE, stringsAsFactors = default.stringsAsFactors(), fileEncoding = “”, encoding = “unknown”, text, skipNul = FALSE)</p>
-</blockquote>
 <ul>
-<li><code>header</code>, <code>sep</code> and <code>quote</code> are all optional arguments.</li>
+<li>There are required and optional arguments to a function</li>
+<li>Some (or actually most) of the optional arguments have a default value
+<ul>
+<li>this will be set automatically</li>
+<li>for example, <code>read.table</code> has <code>header = FALSE</code> by default</li>
+</ul></li>
+</ul>
+<p>The begining of the <code>read.table</code> function definition looks like this:</p>
+<p><code>read.table(file, header = FALSE, sep = &quot;&quot;, quote = &quot;\&quot;&quot;,...</code></p>
+<p>In the <code>read.table()</code> function:</p>
+<ul>
+<li><code>file</code> is required</li>
+<li><code>header</code>, <code>sep</code>, and <code>quote</code> are optional arguments
+<ul>
+<li><code>header</code> is defaulted to <code>FALSE</code></li>
+<li><code>sep</code> is defaulted to and empty string <code>&quot;&quot;</code></li>
+<li><code>quote</code> is defaulted to <code>&quot;</code></li>
+</ul></li>
+<li>You do not have to write all the argument names
+<ul>
+<li><code>read.table(&quot;myfile.txt&quot;, TRUE, &quot;-&quot;)</code> will work.</li>
+</ul></li>
+<li>But the order matters if you use that shortcut
+<ul>
 <li><code>read.table(&quot;myfile.txt&quot;, &quot;-&quot;, TRUE)</code> will throw an error.</li>
+</ul></li>
+<li>You can use any order if you specify all the names and values
+<ul>
+<li><code>read.table(&quot;myfile.txt&quot;, sep = &quot;-&quot;, header = TRUE)</code> will work.</li>
+</ul></li>
 </ul>
 </div>
 <div id="writing-functions" class="section level2">
@@ -900,9 +928,11 @@ pow_two &lt;-<span class="st"> </span>function(x, <span class="dt">print_info =<
 <div id="function-scoping" class="section level3">
 <h3>Function scoping</h3>
 <ul>
-<li>variable defined inside a function are not available outside of that function</li>
-<li>neither are the variable names given to the input</li>
-<li>calling x or y outside of this function would fail</li>
+<li>Variables defined inside a function are not available outside of that function
+<ul>
+<li>Nor are the variable names given to the input</li>
+<li>Calling x or y outside of this function would fail</li>
+</ul></li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pow_two &lt;-<span class="st"> </span>function(x) {
   y &lt;-<span class="st"> </span>x ^<span class="st"> </span><span class="dv">2</span>
@@ -919,6 +949,7 @@ pow_two &lt;-<span class="st"> </span>function(x, <span class="dt">print_info =<
   x &lt;-<span class="st"> </span><span class="dv">3</span>*x
   x
 }
+
 a &lt;-<span class="st"> </span><span class="dv">5</span>
 <span class="kw">triple</span>(a)</code></pre></div>
 <pre><code>## [1] 15</code></pre>
@@ -1011,18 +1042,14 @@ interpret_all &lt;-<span class="st"> </span>function(x, <span class="dt">show_su
 <div id="r-packages" class="section level2">
 <h2>R Packages</h2>
 <ul>
-<li>all the functions you use that are not in the workspace are in a package</li>
-<li>the base package is installed with R and loaded with you start R</li>
-<li>other packages you need to install and load when you want to use their functions</li>
-<li>Most of the functions I use are from key packages
+<li>Many great functions are available through packages</li>
+<li>The base package is installed with R and loaded when you start R</li>
+<li>The others you need to load yourself when you want them</li>
+<li>I think the reason R is so useful today is becasue it has amazing packages
 <ul>
-<li>There are some very powerful packages</li>
-<li>Especially the ‘hadleyverse’, or packages written by hadley wickham.</li>
-<li>They will make your life easy and your work go well. Learn them all.</li>
+<li>Especially the ones made by Hadley Wicklam or the folks at Rstudio</li>
 </ul></li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## We first need to make sure our packages are installed
-## </code></pre></div>
 <div id="load-an-r-package" class="section level3">
 <h3>Load an R Package</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The mtcars vectors have already been prepared for you</span>
@@ -1031,10 +1058,10 @@ hp &lt;-<span class="st"> </span>mtcars$hp
 
 <span class="co"># Request the currently attached packages</span>
 <span class="kw">search</span>()</code></pre></div>
-<pre><code>##  [1] &quot;.GlobalEnv&quot;        &quot;package:codetools&quot; &quot;package:shiny&quot;    
-##  [4] &quot;package:stats&quot;     &quot;package:graphics&quot;  &quot;package:grDevices&quot;
-##  [7] &quot;package:utils&quot;     &quot;package:datasets&quot;  &quot;package:methods&quot;  
-## [10] &quot;Autoloads&quot;         &quot;package:base&quot;</code></pre>
+<pre><code>##  [1] &quot;.GlobalEnv&quot;        &quot;package:ggplot2&quot;   &quot;package:codetools&quot;
+##  [4] &quot;package:shiny&quot;     &quot;package:stats&quot;     &quot;package:graphics&quot; 
+##  [7] &quot;package:grDevices&quot; &quot;package:utils&quot;     &quot;package:datasets&quot; 
+## [10] &quot;package:methods&quot;   &quot;Autoloads&quot;         &quot;package:base&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the ggplot2 package</span>
 <span class="kw">library</span>(ggplot2)
 
@@ -1086,17 +1113,58 @@ pioneers &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st
 
 <span class="co"># Split names from birth year: split_math</span>
 split_math &lt;-<span class="st"> </span><span class="kw">strsplit</span>(pioneers, <span class="st">&quot;:&quot;</span>)
-
-<span class="co"># Convert to lowercase strings: split_low</span>
+split_math</code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;GAUSS&quot; &quot;1777&quot; 
+## 
+## [[2]]
+## [1] &quot;BAYES&quot; &quot;1702&quot; 
+## 
+## [[3]]
+## [1] &quot;PASCAL&quot; &quot;1623&quot;  
+## 
+## [[4]]
+## [1] &quot;PEARSON&quot; &quot;1857&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Convert to lowercase strings: split_low</span>
 split_low &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_math, tolower)
-
-<span class="co"># Take a look at the structure of split_low</span>
+split_low</code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;gauss&quot; &quot;1777&quot; 
+## 
+## [[2]]
+## [1] &quot;bayes&quot; &quot;1702&quot; 
+## 
+## [[3]]
+## [1] &quot;pascal&quot; &quot;1623&quot;  
+## 
+## [[4]]
+## [1] &quot;pearson&quot; &quot;1857&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Take a look at the structure of split_low</span>
 <span class="kw">str</span>(split_low)</code></pre></div>
 <pre><code>## List of 4
 ##  $ : chr [1:2] &quot;gauss&quot; &quot;1777&quot;
 ##  $ : chr [1:2] &quot;bayes&quot; &quot;1702&quot;
 ##  $ : chr [1:2] &quot;pascal&quot; &quot;1623&quot;
 ##  $ : chr [1:2] &quot;pearson&quot; &quot;1857&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># For comparision, if you wrote out the whole loop</span>
+split_low2 &lt;-<span class="st"> </span><span class="kw">list</span>()
+
+for (i in <span class="dv">1</span>:<span class="kw">length</span>(split_math)) {
+  split_low2[[i]] &lt;-<span class="st"> </span><span class="kw">tolower</span>(split_math[[i]])
+}
+
+split_low2</code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;gauss&quot; &quot;1777&quot; 
+## 
+## [[2]]
+## [1] &quot;bayes&quot; &quot;1702&quot; 
+## 
+## [[3]]
+## [1] &quot;pascal&quot; &quot;1623&quot;  
+## 
+## [[4]]
+## [1] &quot;pearson&quot; &quot;1857&quot;</code></pre>
 </div>
 <div id="use-lapply-with-your-own-function" class="section level3">
 <h3>Use lapply with your own function</h3>
@@ -1112,15 +1180,38 @@ select_first &lt;-<span class="st"> </span>function(x) {
 
 <span class="co"># Apply select_first() over split_low: names</span>
 names &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_low, select_first)
-
-<span class="co"># Write function select_second()</span>
+names</code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;gauss&quot;
+## 
+## [[2]]
+## [1] &quot;bayes&quot;
+## 
+## [[3]]
+## [1] &quot;pascal&quot;
+## 
+## [[4]]
+## [1] &quot;pearson&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Write function select_second()</span>
 <span class="co"># Write function select_first()</span>
 select_second &lt;-<span class="st"> </span>function(x) {
   <span class="kw">return</span>(x[<span class="dv">2</span>])
 }
 
 <span class="co"># Apply select_second() over split_low: years</span>
-years &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_low, select_second)</code></pre></div>
+years &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_low, select_second)
+years</code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;1777&quot;
+## 
+## [[2]]
+## [1] &quot;1702&quot;
+## 
+## [[3]]
+## [1] &quot;1623&quot;
+## 
+## [[4]]
+## [1] &quot;1857&quot;</code></pre>
 </div>
 <div id="lapply-and-anonymous-functions" class="section level3">
 <h3>lapply and anonymous functions</h3>
@@ -1130,7 +1221,32 @@ split &lt;-<span class="st"> </span><span class="kw">strsplit</span>(pioneers, <
 split_low &lt;-<span class="st"> </span><span class="kw">lapply</span>(split, tolower)
 
 names &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_low, function(x) {x[<span class="dv">1</span>]})
-years &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_low, function(x) {x[<span class="dv">2</span>]})</code></pre></div>
+years &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_low, function(x) {x[<span class="dv">2</span>]})
+
+names</code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;gauss&quot;
+## 
+## [[2]]
+## [1] &quot;bayes&quot;
+## 
+## [[3]]
+## [1] &quot;pascal&quot;
+## 
+## [[4]]
+## [1] &quot;pearson&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">years</code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;1777&quot;
+## 
+## [[2]]
+## [1] &quot;1702&quot;
+## 
+## [[3]]
+## [1] &quot;1623&quot;
+## 
+## [[4]]
+## [1] &quot;1857&quot;</code></pre>
 </div>
 <div id="use-lapply-with-additional-arguments" class="section level3">
 <h3>Use lapply with additional arguments</h3>
@@ -1146,7 +1262,32 @@ select_el &lt;-<span class="st"> </span>function(x,pos) {
 
 <span class="co"># Call the select_el() function twice on split_low: names and years</span>
 names &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_low, select_el, <span class="dv">1</span>)
-years &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_low, select_el, <span class="dv">2</span>)</code></pre></div>
+years &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_low, select_el, <span class="dv">2</span>)
+
+names</code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;gauss&quot;
+## 
+## [[2]]
+## [1] &quot;bayes&quot;
+## 
+## [[3]]
+## [1] &quot;pascal&quot;
+## 
+## [[4]]
+## [1] &quot;pearson&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">years</code></pre></div>
+<pre><code>## [[1]]
+## [1] &quot;1777&quot;
+## 
+## [[2]]
+## [1] &quot;1702&quot;
+## 
+## [[3]]
+## [1] &quot;1623&quot;
+## 
+## [[4]]
+## [1] &quot;1857&quot;</code></pre>
 </div>
 <div id="apply-functions-that-return-null" class="section level3">
 <h3>Apply functions that return NULL</h3>
@@ -1173,13 +1314,12 @@ years &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_low, se
 <div id="sapply" class="section level2">
 <h2>sapply</h2>
 <ul>
-<li>simple apply</li>
-<li>like lapply but returns a vetor if it can</li>
-<li>it will name the vector by default</li>
-<li>if there are multiple outputs it will return a matrix</li>
-<li>its pretty cool</li>
-<li>if it can’t return a vector or matrix it will return a list</li>
-<li>becareful with this if you expect a certain data type returned in a program</li>
+<li>Stands for Simple apply</li>
+<li>Like lapply, but returns a vetor if it can</li>
+<li>It will name the vector by default</li>
+<li>If there are multiple outputs it will return a matrix</li>
+<li>If it can’t return a vector or matrix it will return a list</li>
+<li>Becareful with this if you expect a certain data type returned in a program</li>
 </ul>
 <div id="how-to-use-sapply" class="section level3">
 <h3>How to use sapply</h3>
@@ -1249,7 +1389,7 @@ temp &lt;-<span class="st"> </span><span class="kw">list</span>(
 <h3>sapply with your own function</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># temp is already defined in the workspace</span>
 
-<span class="co"># Define a function calculates the average of the min and max of a vector: extremes_avg</span>
+<span class="co"># Define a function that calculates the average of the min and max of a vector: extremes_avg</span>
 extremes_avg &lt;-<span class="st"> </span>function(x) {
  avg &lt;-<span class="st"> </span><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">min</span>(x), <span class="kw">max</span>(x)))
  <span class="kw">return</span>(avg)
@@ -1333,11 +1473,51 @@ below_zero &lt;-<span class="st"> </span>function (x) {
 <pre><code>## [1] -1 -1 -3</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Apply below_zero over temp using sapply(): freezing_s</span>
 freezing_s &lt;-<span class="st"> </span><span class="kw">sapply</span>(temp, below_zero)
-
-<span class="co"># Apply below_zero over temp using lapply(): freezing_l</span>
+freezing_s</code></pre></div>
+<pre><code>## [[1]]
+## [1] -1
+## 
+## [[2]]
+## numeric(0)
+## 
+## [[3]]
+## [1] -1 -3
+## 
+## [[4]]
+## [1] -2
+## 
+## [[5]]
+## numeric(0)
+## 
+## [[6]]
+## [1] -3
+## 
+## [[7]]
+## numeric(0)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Apply below_zero over temp using lapply(): freezing_l</span>
 freezing_l &lt;-<span class="st"> </span><span class="kw">lapply</span>(temp, below_zero)
-
-<span class="co"># Compare freezing_s to freezing_l using identical()</span>
+freezing_l</code></pre></div>
+<pre><code>## [[1]]
+## [1] -1
+## 
+## [[2]]
+## numeric(0)
+## 
+## [[3]]
+## [1] -1 -3
+## 
+## [[4]]
+## [1] -2
+## 
+## [[5]]
+## numeric(0)
+## 
+## [[6]]
+## [1] -3
+## 
+## [[7]]
+## numeric(0)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Compare freezing_s to freezing_l using identical()</span>
 <span class="kw">identical</span>(freezing_s, freezing_l)</code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 </div>
@@ -1412,18 +1592,25 @@ print_info &lt;-<span class="st"> </span>function (x) {
 </div>
 <div id="reverse-engineering-sapply" class="section level3">
 <h3>Reverse engineering sapply</h3>
+<ul>
+<li>this uses an anonymous function</li>
+<li>the result will have 3 rows and 2 columns</li>
+</ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sapply</span>(<span class="kw">list</span>(<span class="kw">runif</span> (<span class="dv">10</span>), <span class="kw">runif</span> (<span class="dv">10</span>)), 
        function(x) <span class="kw">c</span>(<span class="dt">min =</span> <span class="kw">min</span>(x), <span class="dt">mean =</span> <span class="kw">mean</span>(x), <span class="dt">max =</span> <span class="kw">max</span>(x)))</code></pre></div>
 <pre><code>##           [,1]       [,2]
-## min  0.1621473 0.09923808
-## mean 0.6327206 0.59560638
-## max  0.9959489 0.99097691</code></pre>
+## min  0.1497697 0.03695026
+## mean 0.4802390 0.56706037
+## max  0.8623240 0.84919343</code></pre>
 </div>
 </div>
 <div id="vapply" class="section level2">
 <h2>vapply</h2>
 <ul>
-<li>safer than sapply</li>
+<li>this is safer than sapply
+<ul>
+<li>becasue sapply can return a vector or a list (if result lengths differ)</li>
+</ul></li>
 <li>you can tell it what the return data type should be</li>
 </ul>
 <div id="use-vapply" class="section level3">
@@ -1434,7 +1621,6 @@ print_info &lt;-<span class="st"> </span>function (x) {
 basics &lt;-<span class="st"> </span>function (x) {
   <span class="kw">return</span>(<span class="kw">c</span>(<span class="kw">min</span>(x), <span class="kw">mean</span>(x), <span class="kw">max</span>(x)))
 }
-
 
 <span class="co"># Apply basics() over temp using vapply()</span>
 <span class="kw">vapply</span>(temp, basics, <span class="kw">numeric</span>(<span class="dv">3</span>))</code></pre></div>
@@ -1452,7 +1638,7 @@ basics &lt;-<span class="st"> </span>function(x) {
   <span class="kw">c</span>(<span class="dt">min =</span> <span class="kw">min</span>(x), <span class="dt">mean =</span> <span class="kw">mean</span>(x), <span class="dt">median =</span> <span class="kw">median</span>(x), <span class="dt">max =</span> <span class="kw">max</span>(x))
 }
 
-<span class="co"># Fix the error:</span>
+<span class="co"># This time there are 4 values</span>
 <span class="kw">vapply</span>(temp, basics, <span class="kw">numeric</span>(<span class="dv">4</span>))</code></pre></div>
 <pre><code>##        [,1] [,2] [,3] [,4] [,5] [,6] [,7]
 ## min    -1.0    5 -3.0 -2.0  2.0 -3.0  1.0
@@ -1463,10 +1649,36 @@ basics &lt;-<span class="st"> </span>function(x) {
 <div id="from-sapply-to-vapply" class="section level3">
 <h3>From sapply to vapply</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># temp is already defined in the workspace</span>
-
-<span class="co"># Convert to vapply() expression</span>
+temp</code></pre></div>
+<pre><code>## [[1]]
+## [1]  3  7  9  6 -1
+## 
+## [[2]]
+## [1]  6  9 12 13  5
+## 
+## [[3]]
+## [1]  4  8  3 -1 -3
+## 
+## [[4]]
+## [1]  1  4  7  2 -2
+## 
+## [[5]]
+## [1] 5 7 9 4 2
+## 
+## [[6]]
+## [1] -3  5  8  9  4
+## 
+## [[7]]
+## [1] 3 6 9 4 1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sapply() expression</span>
+<span class="kw">sapply</span>(temp, max)</code></pre></div>
+<pre><code>## [1]  9 13  8  7  9  9  9</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Convert to vapply() expression</span>
 <span class="kw">vapply</span>(temp, max, <span class="kw">numeric</span>(<span class="dv">1</span>))</code></pre></div>
 <pre><code>## [1]  9 13  8  7  9  9  9</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sapply() expression</span>
+<span class="kw">sapply</span>(temp, function(x, y) { <span class="kw">mean</span>(x) &gt;<span class="st"> </span>y }, <span class="dt">y =</span> <span class="dv">5</span>)</code></pre></div>
+<pre><code>## [1] FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Convert to vapply() expression</span>
 <span class="kw">vapply</span>(temp, function(x, y) { <span class="kw">mean</span>(x) &gt;<span class="st"> </span>y }, <span class="dt">y =</span> <span class="dv">5</span>, <span class="kw">logical</span>(<span class="dv">1</span>))</code></pre></div>
 <pre><code>## [1] FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE</code></pre>
@@ -1479,8 +1691,12 @@ get_info &lt;-<span class="st"> </span>function(x, y) {
   }
 }
 
-<span class="co"># Convert to vapply() expression</span>
-<span class="kw">vapply</span>(temp, get_info, <span class="dt">y =</span> <span class="dv">5</span>,<span class="kw">character</span>(<span class="dv">1</span>))</code></pre></div>
+<span class="co"># sapply() expression</span>
+<span class="kw">sapply</span>(temp, get_info, <span class="dt">y =</span> <span class="dv">5</span>)</code></pre></div>
+<pre><code>## [1] &quot;Pretty cold!&quot;  &quot;Not too cold!&quot; &quot;Pretty cold!&quot;  &quot;Pretty cold!&quot; 
+## [5] &quot;Not too cold!&quot; &quot;Pretty cold!&quot;  &quot;Pretty cold!&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Convert to vapply() expression</span>
+<span class="kw">vapply</span>(temp, get_info, <span class="dt">y =</span> <span class="dv">5</span>, <span class="kw">character</span>(<span class="dv">1</span>))</code></pre></div>
 <pre><code>## [1] &quot;Pretty cold!&quot;  &quot;Not too cold!&quot; &quot;Pretty cold!&quot;  &quot;Pretty cold!&quot; 
 ## [5] &quot;Not too cold!&quot; &quot;Pretty cold!&quot;  &quot;Pretty cold!&quot;</code></pre>
 <p>   </p>
@@ -1492,6 +1708,7 @@ get_info &lt;-<span class="st"> </span>function(x, y) {
 <h1>Utilities</h1>
 <div id="useful-functions" class="section level3">
 <h3>Useful Functions</h3>
+<p>The class video goes through some useful functions. I’ll list them here. There are many more than this.</p>
 <ul>
 <li><code>abs()</code>
 <ul>
@@ -1511,7 +1728,7 @@ get_info &lt;-<span class="st"> </span>function(x, y) {
 </ul></li>
 <li><code>rep()</code>
 <ul>
-<li>repeat</li>
+<li>repeat an array</li>
 </ul></li>
 <li><code>sort()</code>
 <ul>
@@ -1563,8 +1780,9 @@ fb_vec &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(facebook
 
 <span class="co"># Append fb_vec to li_vec: social_vec</span>
 social_vec &lt;-<span class="st"> </span><span class="kw">append</span>(li_vec, fb_vec)
-
-<span class="co"># Sort social_vec</span>
+social_vec</code></pre></div>
+<pre><code>##  [1] 16  9 13  5  2 17 14 17  7  5 16  8 13 14</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Sort social_vec</span>
 <span class="kw">sort</span>(social_vec, <span class="dt">decreasing=</span>T)</code></pre></div>
 <pre><code>##  [1] 17 17 16 16 14 14 13 13  9  8  7  5  5  2</code></pre>
 </div>
@@ -1581,19 +1799,33 @@ social_vec &lt;-<span class="st"> </span><span class="kw">append</span>(li_vec, 
 <h3>Beat Gauss using R</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create first sequence: seq1</span>
 seq1 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>,<span class="dv">500</span>,<span class="dt">by=</span><span class="dv">3</span>)
-
-<span class="co"># Create second sequence: seq2</span>
-seq2 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1200</span>,<span class="dv">900</span>,<span class="dt">by=</span>-<span class="dv">7</span>)
-
-<span class="co"># Calculate total sum of the sequences</span>
-<span class="kw">sum</span>(<span class="kw">c</span>(seq1,seq2))</code></pre></div>
+seq1</code></pre></div>
+<pre><code>##   [1]   1   4   7  10  13  16  19  22  25  28  31  34  37  40  43  46  49
+##  [18]  52  55  58  61  64  67  70  73  76  79  82  85  88  91  94  97 100
+##  [35] 103 106 109 112 115 118 121 124 127 130 133 136 139 142 145 148 151
+##  [52] 154 157 160 163 166 169 172 175 178 181 184 187 190 193 196 199 202
+##  [69] 205 208 211 214 217 220 223 226 229 232 235 238 241 244 247 250 253
+##  [86] 256 259 262 265 268 271 274 277 280 283 286 289 292 295 298 301 304
+## [103] 307 310 313 316 319 322 325 328 331 334 337 340 343 346 349 352 355
+## [120] 358 361 364 367 370 373 376 379 382 385 388 391 394 397 400 403 406
+## [137] 409 412 415 418 421 424 427 430 433 436 439 442 445 448 451 454 457
+## [154] 460 463 466 469 472 475 478 481 484 487 490 493 496 499</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create second sequence: seq2</span>
+seq2 &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1200</span>, <span class="dv">900</span>, <span class="dt">by=</span>-<span class="dv">7</span>)
+seq2</code></pre></div>
+<pre><code>##  [1] 1200 1193 1186 1179 1172 1165 1158 1151 1144 1137 1130 1123 1116 1109
+## [15] 1102 1095 1088 1081 1074 1067 1060 1053 1046 1039 1032 1025 1018 1011
+## [29] 1004  997  990  983  976  969  962  955  948  941  934  927  920  913
+## [43]  906</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Calculate total sum of the sequences</span>
+<span class="kw">sum</span>(<span class="kw">c</span>(seq1, seq2))</code></pre></div>
 <pre><code>## [1] 87029</code></pre>
 </div>
 <div id="regular-expressions" class="section level2">
 <h2>Regular Expressions</h2>
 <ul>
 <li>These are just sequences of characters and meta-characters that can match a pattern</li>
-<li>They are use for
+<li>They are used for
 <ul>
 <li>pattern existence</li>
 <li>pattern replacement</li>
@@ -1611,8 +1843,9 @@ emails &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">
 <pre><code>## [1]  TRUE  TRUE FALSE  TRUE  TRUE FALSE</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Use grep() to match for &quot;edu&quot;, save result to hits</span>
 hits &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;edu&quot;</span>,emails)
-
-<span class="co"># Subset emails using hits</span>
+hits</code></pre></div>
+<pre><code>## [1] 1 2 4 5</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Subset emails using hits</span>
 emails[hits]</code></pre></div>
 <pre><code>## [1] &quot;john.doe@ivyleague.edu&quot;   &quot;education@world.gov&quot;     
 ## [3] &quot;invalid.edu&quot;              &quot;quant@bigdatacollege.edu&quot;</code></pre>
@@ -1628,8 +1861,9 @@ emails &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">
 <pre><code>## [1] 1 5</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Use grepl() to match for .edu addresses more robustly, save result to hits</span>
 hits &lt;-<span class="st"> </span><span class="kw">grepl</span>(<span class="st">&quot;@.*</span><span class="ch">\\</span><span class="st">.edu$&quot;</span>,emails)
-
-<span class="co"># Subset emails using hits</span>
+hits</code></pre></div>
+<pre><code>## [1]  TRUE FALSE FALSE FALSE  TRUE FALSE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Subset emails using hits</span>
 emails[hits]</code></pre></div>
 <pre><code>## [1] &quot;john.doe@ivyleague.edu&quot;   &quot;quant@bigdatacollege.edu&quot;</code></pre>
 </div>
@@ -1640,11 +1874,13 @@ emails &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">
             <span class="st">&quot;invalid.edu&quot;</span>, <span class="st">&quot;quant@bigdatacollege.edu&quot;</span>, <span class="st">&quot;cookie.monster@sesame.tv&quot;</span>)
 
 <span class="co"># Use sub() to convert the email domains to datacamp.edu (attempt 1)</span>
+<span class="co"># The @ character is removed</span>
 <span class="kw">sub</span>(<span class="st">&quot;@.*</span><span class="ch">\\</span><span class="st">.edu$&quot;</span>,<span class="st">&quot;datacamp.edu&quot;</span>,emails)</code></pre></div>
 <pre><code>## [1] &quot;john.doedatacamp.edu&quot;     &quot;education@world.gov&quot;     
 ## [3] &quot;dalai.lama@peace.org&quot;     &quot;invalid.edu&quot;             
 ## [5] &quot;quantdatacamp.edu&quot;        &quot;cookie.monster@sesame.tv&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Use sub() to convert the email domains to datacamp.edu (attempt 2)</span>
+<span class="co"># Thats better</span>
 <span class="kw">sub</span>(<span class="st">&quot;@.*</span><span class="ch">\\</span><span class="st">.edu$&quot;</span>,<span class="st">&quot;@datacamp.edu&quot;</span>,emails)</code></pre></div>
 <pre><code>## [1] &quot;john.doe@datacamp.edu&quot;    &quot;education@world.gov&quot;     
 ## [3] &quot;dalai.lama@peace.org&quot;     &quot;invalid.edu&quot;             
@@ -1673,16 +1909,24 @@ today &lt;-<span class="st"> </span><span class="kw">Sys.Date</span>()
 
 <span class="co"># See what today looks like under the hood</span>
 <span class="kw">unclass</span>(today)</code></pre></div>
-<pre><code>## [1] 17255</code></pre>
+<pre><code>## [1] 17256</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the current time: now</span>
 now &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()
 
 <span class="co"># See what now looks like under the hood</span>
 <span class="kw">unclass</span>(now)</code></pre></div>
-<pre><code>## [1] 1490897164</code></pre>
+<pre><code>## [1] 1490983514</code></pre>
 </div>
 <div id="create-and-format-times" class="section level3">
 <h3>Create and format times</h3>
+<ul>
+<li>This will be helpful…
+<ul>
+<li>look up the format values in <code>strptime</code>.</li>
+<li>e.g. <code>?strptime</code></li>
+<li>There are a lot</li>
+</ul></li>
+</ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Definition of character strings representing dates</span>
 str1 &lt;-<span class="st"> &quot;May 23, '96&quot;</span>
 str2 &lt;-<span class="st"> &quot;2012-3-15&quot;</span>
@@ -1693,12 +1937,22 @@ date1 &lt;-<span class="st"> </span><span class="kw">as.Date</span>(str1, <span 
 date2 &lt;-<span class="st"> </span><span class="kw">as.Date</span>(str2, <span class="dt">format =</span> <span class="st">&quot;%Y-%m-%d&quot;</span>)
 date3 &lt;-<span class="st"> </span><span class="kw">as.Date</span>(str3, <span class="dt">format =</span> <span class="st">&quot;%d/%B/%Y&quot;</span>)
 
-<span class="co"># Convert dates to formatted strings</span>
+date1</code></pre></div>
+<pre><code>## [1] &quot;1996-05-23&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">date2</code></pre></div>
+<pre><code>## [1] &quot;2012-03-15&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">date3</code></pre></div>
+<pre><code>## [1] &quot;2006-01-30&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Convert dates to formatted strings</span>
+
+<span class="co"># Get the day of week</span>
 <span class="kw">format</span>(date1, <span class="st">&quot;%A&quot;</span>)</code></pre></div>
 <pre><code>## [1] &quot;Thursday&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">format</span>(date2, <span class="st">&quot;%d&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the day of the month</span>
+<span class="kw">format</span>(date2, <span class="st">&quot;%d&quot;</span>)</code></pre></div>
 <pre><code>## [1] &quot;15&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">format</span>(date3, <span class="st">&quot;%b %Y&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the month abv and year</span>
+<span class="kw">format</span>(date3, <span class="st">&quot;%b %Y&quot;</span>)</code></pre></div>
 <pre><code>## [1] &quot;Jan 2006&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Definition of character strings representing times</span>
 str1 &lt;-<span class="st"> &quot;May 23, '96 hours:23 minutes:01 seconds:45&quot;</span>
@@ -1708,10 +1962,17 @@ str2 &lt;-<span class="st"> &quot;2012-3-12 14:23:08&quot;</span>
 time1 &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(str1, <span class="dt">format =</span> <span class="st">&quot;%B %d, '%y hours:%H minutes:%M seconds:%S&quot;</span>)
 time2 &lt;-<span class="st"> </span><span class="kw">as.POSIXct</span>(str2, <span class="dt">format =</span> <span class="st">&quot;%Y-%m-%d %T&quot;</span>)
 
-<span class="co"># Convert times to formatted strings</span>
+time1</code></pre></div>
+<pre><code>## [1] &quot;1996-05-23 23:01:45 EDT&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">time2</code></pre></div>
+<pre><code>## [1] &quot;2012-03-12 14:23:08 EDT&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Convert times to formatted strings</span>
+
+<span class="co"># Get the minnute</span>
 <span class="kw">format</span>(time1, <span class="st">&quot;%M&quot;</span>)</code></pre></div>
 <pre><code>## [1] &quot;01&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">format</span>(time2, <span class="st">&quot;%I:%M %p&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Get the hour:minute and AM/PM</span>
+<span class="kw">format</span>(time2, <span class="st">&quot;%I:%M %p&quot;</span>)</code></pre></div>
 <pre><code>## [1] &quot;02:23 PM&quot;</code></pre>
 </div>
 <div id="calculations-with-dates" class="section level3">
@@ -1728,11 +1989,14 @@ day5-day1</code></pre></div>
 <pre><code>## Time difference of 18 days</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create vector pizza</span>
 pizza &lt;-<span class="st"> </span><span class="kw">c</span>(day1, day2, day3, day4, day5)
-
-<span class="co"># Create differences between consecutive pizza days: day_diff</span>
+pizza</code></pre></div>
+<pre><code>## [1] &quot;2017-03-12&quot; &quot;2017-03-14&quot; &quot;2017-03-19&quot; &quot;2017-03-25&quot; &quot;2017-03-30&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create differences between consecutive pizza days: day_diff</span>
 day_diff &lt;-<span class="st"> </span><span class="kw">diff</span>(pizza)
-
-<span class="co"># Average period between two consecutive pizza days</span>
+day_diff</code></pre></div>
+<pre><code>## Time differences in days
+## [1] 2 5 6 5</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Average period between two consecutive pizza days</span>
 <span class="kw">mean</span>(day_diff)</code></pre></div>
 <pre><code>## Time difference of 4.5 days</code></pre>
 </div>
@@ -1779,14 +2043,47 @@ meteo</code></pre></div>
 ##     &quot;March 1, 15&quot;      &quot;June 1, 15&quot; &quot;September 1, 15&quot;  &quot;December 1, 15&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Convert astro to vector of Date objects: astro_dates</span>
 astro_dates &lt;-<span class="st"> </span><span class="kw">as.Date</span>(astro, <span class="st">&quot;%d-%b-%Y&quot;</span>)
-
-<span class="co"># Convert meteo to vector of Date objects: meteo_dates</span>
+<span class="kw">str</span>(astro)</code></pre></div>
+<pre><code>##  Named chr [1:4] &quot;20-Mar-2015&quot; &quot;25-Jun-2015&quot; &quot;23-Sep-2015&quot; ...
+##  - attr(*, &quot;names&quot;)= chr [1:4] &quot;spring&quot; &quot;summer&quot; &quot;fall&quot; &quot;winter&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(astro_dates)</code></pre></div>
+<pre><code>##  Date[1:4], format: &quot;2015-03-20&quot; &quot;2015-06-25&quot; &quot;2015-09-23&quot; &quot;2015-12-22&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Convert meteo to vector of Date objects: meteo_dates</span>
 meteo_dates &lt;-<span class="st"> </span><span class="kw">as.Date</span>(meteo, <span class="st">&quot;%B %d, %y&quot;</span>)
-
-<span class="co"># Calculate the maximum absolute difference between astro_dates and meteo_dates</span>
+<span class="kw">str</span>(meteo)</code></pre></div>
+<pre><code>##  Named chr [1:4] &quot;March 1, 15&quot; &quot;June 1, 15&quot; &quot;September 1, 15&quot; ...
+##  - attr(*, &quot;names&quot;)= chr [1:4] &quot;spring&quot; &quot;summer&quot; &quot;fall&quot; &quot;winter&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(meteo_dates)</code></pre></div>
+<pre><code>##  Date[1:4], format: &quot;2015-03-01&quot; &quot;2015-06-01&quot; &quot;2015-09-01&quot; &quot;2015-12-01&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Calculate the maximum absolute difference between astro_dates and meteo_dates</span>
 <span class="kw">max</span>(<span class="kw">abs</span>(astro_dates -<span class="st"> </span>meteo_dates))</code></pre></div>
 <pre><code>## Time difference of 24 days</code></pre>
+<p>   </p>
+<hr />
 </div>
+</div>
+<div id="the-end" class="section level2">
+<h2>The End</h2>
+<ul>
+<li>Woof, thats a lot!
+<ul>
+<li>And thats just a sample of some key programming topics in R</li>
+</ul></li>
+<li>Theres a lot more to learn in each of those topics
+<ul>
+<li>Especially the funtions and packages</li>
+<li>There are a lot of key packages to work with dataframes or times</li>
+<li>There are packages for everything really</li>
+</ul></li>
+<li>This doc is useful to me as a reference
+<ul>
+<li>The class was best forlearning these things</li>
+<li>Now I just need to see it again a few times to really get it</li>
+<li>And I can look back here if ever need a little refresher in the future</li>
+</ul></li>
+</ul>
+<p>   </p>
+<hr />
 </div>
 </div>
 

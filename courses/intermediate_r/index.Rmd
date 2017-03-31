@@ -24,7 +24,7 @@ knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
 
   - This all comes from the [Intermediate R](https://www.datacamp.com/courses/intermediate-r) course on DataCamp
     - I highly recommend the [DataCamp](https://www.datacamp.com/home) courses
-    - Go do the course for yourself to get more details and videos on these topics
+    - Go **do** the course for yourself to get more details and videos on these topics
   - I am copying my work from the class to this document and adding comments
 
 ## Whats Covered
@@ -420,13 +420,13 @@ while (i <= 10) {
 
 ## For loop
 
-  - Execute a statement, changing a variable each time.
-    - Run once for each variable in the list
+  - Run once for each variable in the list
     - This list can just be a sequence like 1:5 or variables in a list like a bunch of names
     - This is so fundamental to programming in any language
-  - However I never use loops in R
-    - I always modify data with array functions. They are WAY faster
-    - dplyr and other similar libraries do the looping in C
+  - However I actualy never use loops in R
+    - I always modify data arrays with array functions. They are WAY faster
+    - The apply functions covered later are one way to do it. 
+    - dplyr is the best way. All the loopig happens in C code so its super fast. 
     - If you are looping on an array in R, you should probably rethink your approach. 
 
 ### Loop over a vector
@@ -485,7 +485,7 @@ for (i in 1:nrow(ttt)) {
 
 ```
 
-### mix it up with control flow
+### Mix it up with control flow
 
 ```{r}
 
@@ -543,6 +543,7 @@ for (li in linkedin) {
 # Pre-defined variables
 rquote <- "R's internals are irrefutably intriguing"
 chars <- strsplit(rquote, split = "")[[1]]
+chars
 
 # Your solution here
 rcount <- 0
@@ -575,6 +576,7 @@ print(rcount)
 ```{r}
 
 # Consult the documentation on the mean() function
+# In Rstudio this will open the help window
 ?mean
 
 # Inspect the arguments of the mean() function
@@ -657,23 +659,29 @@ mean(abs(linkedin - facebook), na.rm = T)
 
 ### Required, or optional?
 
-Whats true about the `read.table()` function?
+  - There are required and optional arguments to a function
+  - Some (or actually most) of the optional arguments have a default value 
+    - this will be set automatically
+    - for example, `read.table` has `header = FALSE` by default
+    
+The begining of the `read.table` function definition looks like this:
 
-> read.table(file, header = FALSE, sep = "", quote = "\"",
-           dec = ".", numerals = c("allow.loss", "warn.loss", "no.loss"),
-           row.names, col.names, as.is = !stringsAsFactors,
-           na.strings = "NA", colClasses = NA, nrows = -1,
-           skip = 0, check.names = TRUE, fill = !blank.lines.skip,
-           strip.white = FALSE, blank.lines.skip = TRUE,
-           comment.char = "#",
-           allowEscapes = FALSE, flush = FALSE,
-           stringsAsFactors = default.stringsAsFactors(),
-           fileEncoding = "", encoding = "unknown", text, skipNul = FALSE)
+`read.table(file, header = FALSE, sep = "", quote = "\"",...`
 
+In the `read.table()` function: 
 
-  - `header`, `sep` and `quote` are all optional arguments.
-  - `read.table("myfile.txt", "-", TRUE)` will throw an error.
-  
+  - `file` is required
+  - `header`, `sep`, and `quote` are optional arguments
+    - `header` is defaulted to `FALSE`
+    - `sep` is defaulted to and empty string `""`
+    - `quote` is defaulted to `"`
+  - You do not have to write all the argument names 
+    - `read.table("myfile.txt", TRUE, "-")` will work.
+  - But the order matters if you use that shortcut
+    - `read.table("myfile.txt", "-", TRUE)` will throw an error.
+  - You can use any order if you specify all the names and values
+    - `read.table("myfile.txt", sep = "-", header = TRUE)` will work.
+
 ## Writing Functions
 
 ### Write your own functions
@@ -751,9 +759,9 @@ pow_two(5, print_info=F)
 
 ### Function scoping
 
-  - variable defined inside a function are not available outside of that function
-  - neither are the variable names given to the input
-  - calling x or y outside of this function would fail
+  - Variables defined inside a function are not available outside of that function
+    - Nor are the variable names given to the input
+    - Calling x or y outside of this function would fail
   
 ```{r eval=F}
 
@@ -855,18 +863,11 @@ interpret_all(linkedin)
 
 ## R Packages
 
-  - all the functions you use that are not in the workspace are in a package
-  - the base package is installed with R and loaded with you start R
-  - other packages you need to install and load when you want to use their functions
-  - Most of the functions I use are from key packages
-    - There are some very powerful packages
-    - Especially the 'hadleyverse', or packages written by hadley wickham. 
-    - They will make your life easy and your work go well. Learn them all. 
-
-```{r}
-## We first need to make sure our packages are installed
-## 
-```
+  - Many great functions are available through packages
+  - The base package is installed with R and loaded when you start R
+  - The others you need to load yourself when you want them
+  - I think the reason R is so useful today is becasue it has amazing packages 
+    - Especially the ones made by Hadley Wicklam or the folks at Rstudio
 
 ### Load an R Package
 
@@ -930,12 +931,23 @@ pioneers <- c("GAUSS:1777", "BAYES:1702", "PASCAL:1623", "PEARSON:1857")
 
 # Split names from birth year: split_math
 split_math <- strsplit(pioneers, ":")
+split_math
 
 # Convert to lowercase strings: split_low
 split_low <- lapply(split_math, tolower)
+split_low
 
 # Take a look at the structure of split_low
 str(split_low)
+
+# For comparision, if you wrote out the whole loop
+split_low2 <- list()
+
+for (i in 1:length(split_math)) {
+  split_low2[[i]] <- tolower(split_math[[i]])
+}
+
+split_low2
 
 ```
 
@@ -955,6 +967,7 @@ select_first <- function(x) {
 
 # Apply select_first() over split_low: names
 names <- lapply(split_low, select_first)
+names
 
 # Write function select_second()
 # Write function select_first()
@@ -964,6 +977,7 @@ select_second <- function(x) {
 
 # Apply select_second() over split_low: years
 years <- lapply(split_low, select_second)
+years
 
 ```
 
@@ -978,6 +992,9 @@ split_low <- lapply(split, tolower)
 
 names <- lapply(split_low, function(x) {x[1]})
 years <- lapply(split_low, function(x) {x[2]})
+
+names
+years
 
 ```
 
@@ -999,6 +1016,9 @@ select_el <- function(x,pos) {
 names <- lapply(split_low, select_el, 1)
 years <- lapply(split_low, select_el, 2)
 
+names
+years
+
 ```
 
 ### Apply functions that return NULL
@@ -1013,14 +1033,12 @@ str(TRUE)
 
 ## sapply
 
-  - simple apply
-  - like lapply but returns a vetor if it can
-  - it will name the vector by default
-  - if there are multiple outputs it will return a matrix
-  - its pretty cool
-  - if it can't return a vector or matrix it will return a list
-  - becareful with this if you expect a certain data type returned in a program
-  
+  - Stands for Simple apply
+  - Like lapply, but returns a vetor if it can
+  - It will name the vector by default
+  - If there are multiple outputs it will return a matrix
+  - If it can't return a vector or matrix it will return a list
+  - Becareful with this if you expect a certain data type returned in a program
 
 ### How to use sapply
 
@@ -1056,7 +1074,7 @@ sapply(temp, max)
 
 # temp is already defined in the workspace
 
-# Define a function calculates the average of the min and max of a vector: extremes_avg
+# Define a function that calculates the average of the min and max of a vector: extremes_avg
 extremes_avg <- function(x) {
  avg <- mean(c(min(x), max(x)))
  return(avg)
@@ -1106,9 +1124,11 @@ below_zero(c(1,2,3,-1,-1,-3))
 
 # Apply below_zero over temp using sapply(): freezing_s
 freezing_s <- sapply(temp, below_zero)
+freezing_s
 
 # Apply below_zero over temp using lapply(): freezing_l
 freezing_l <- lapply(temp, below_zero)
+freezing_l
 
 # Compare freezing_s to freezing_l using identical()
 identical(freezing_s, freezing_l)
@@ -1137,6 +1157,9 @@ sapply(temp, print_info)
 
 ### Reverse engineering sapply
 
+  - this uses an anonymous function
+  - the result will have 3 rows and 2 columns
+
 ```{r}
 sapply(list(runif (10), runif (10)), 
        function(x) c(min = min(x), mean = mean(x), max = max(x)))
@@ -1144,7 +1167,8 @@ sapply(list(runif (10), runif (10)),
 
 ## vapply
 
-  - safer than sapply 
+  - this is safer than sapply 
+    - becasue sapply can return a vector or a list (if result lengths differ)
   - you can tell it what the return data type should be
 
 ### Use vapply
@@ -1157,7 +1181,6 @@ sapply(list(runif (10), runif (10)),
 basics <- function (x) {
   return(c(min(x), mean(x), max(x)))
 }
-
 
 # Apply basics() over temp using vapply()
 vapply(temp, basics, numeric(3))
@@ -1175,7 +1198,7 @@ basics <- function(x) {
   c(min = min(x), mean = mean(x), median = median(x), max = max(x))
 }
 
-# Fix the error:
+# This time there are 4 values
 vapply(temp, basics, numeric(4))
 
 ```
@@ -1185,9 +1208,16 @@ vapply(temp, basics, numeric(4))
 ```{r}
 
 # temp is already defined in the workspace
+temp
+
+# sapply() expression
+sapply(temp, max)
 
 # Convert to vapply() expression
 vapply(temp, max, numeric(1))
+
+# sapply() expression
+sapply(temp, function(x, y) { mean(x) > y }, y = 5)
 
 # Convert to vapply() expression
 vapply(temp, function(x, y) { mean(x) > y }, y = 5, logical(1))
@@ -1201,11 +1231,13 @@ get_info <- function(x, y) {
   }
 }
 
+# sapply() expression
+sapply(temp, get_info, y = 5)
+
 # Convert to vapply() expression
-vapply(temp, get_info, y = 5,character(1))
+vapply(temp, get_info, y = 5, character(1))
 
 ```
-
 
 &nbsp; &nbsp;
 
@@ -1214,6 +1246,9 @@ vapply(temp, get_info, y = 5,character(1))
 # Utilities
 
 ### Useful Functions
+
+The class video goes through some useful functions. 
+I'll list them here. There are many more than this. 
 
   - `abs()`
     - calc the absolute value of a vector
@@ -1274,6 +1309,7 @@ fb_vec <- as.numeric(facebook)
 
 # Append fb_vec to li_vec: social_vec
 social_vec <- append(li_vec, fb_vec)
+social_vec
 
 # Sort social_vec
 sort(social_vec, decreasing=T)
@@ -1296,19 +1332,20 @@ rep(seq(1, 7, by = 2), times = 7)
 
 # Create first sequence: seq1
 seq1 <- seq(1,500,by=3)
-
+seq1
 # Create second sequence: seq2
-seq2 <- seq(1200,900,by=-7)
+seq2 <- seq(1200, 900, by=-7)
+seq2
 
 # Calculate total sum of the sequences
-sum(c(seq1,seq2))
+sum(c(seq1, seq2))
 
 ```
 
 ## Regular Expressions
 
   - These are just sequences of characters and meta-characters that can match a pattern
-  - They are use for
+  - They are used for
     - pattern existence
     - pattern replacement
     - pattern extraction
@@ -1326,6 +1363,7 @@ grepl("edu",emails)
 
 # Use grep() to match for "edu", save result to hits
 hits <- grep("edu",emails)
+hits
 
 # Subset emails using hits
 emails[hits]
@@ -1345,6 +1383,7 @@ grep("@.*\\.edu$",emails)
 
 # Use grepl() to match for .edu addresses more robustly, save result to hits
 hits <- grepl("@.*\\.edu$",emails)
+hits
 
 # Subset emails using hits
 emails[hits]
@@ -1360,9 +1399,11 @@ emails <- c("john.doe@ivyleague.edu", "education@world.gov", "dalai.lama@peace.o
             "invalid.edu", "quant@bigdatacollege.edu", "cookie.monster@sesame.tv")
 
 # Use sub() to convert the email domains to datacamp.edu (attempt 1)
+# The @ character is removed
 sub("@.*\\.edu$","datacamp.edu",emails)
 
 # Use sub() to convert the email domains to datacamp.edu (attempt 2)
+# Thats better
 sub("@.*\\.edu$","@datacamp.edu",emails)
 
 ```
@@ -1404,6 +1445,11 @@ unclass(now)
 
 ### Create and format times
 
+  - This will be helpful...
+    - look up the format values in `strptime`. 
+    - e.g. `?strptime`
+    - There are a lot
+
 ```{r}
 
 # Definition of character strings representing dates
@@ -1416,9 +1462,19 @@ date1 <- as.Date(str1, format = "%b %d, '%y")
 date2 <- as.Date(str2, format = "%Y-%m-%d")
 date3 <- as.Date(str3, format = "%d/%B/%Y")
 
+date1
+date2
+date3
+
 # Convert dates to formatted strings
+
+# Get the day of week
 format(date1, "%A")
+
+# Get the day of the month
 format(date2, "%d")
+
+# Get the month abv and year
 format(date3, "%b %Y")
 
 ```
@@ -1435,8 +1491,15 @@ str2 <- "2012-3-12 14:23:08"
 time1 <- as.POSIXct(str1, format = "%B %d, '%y hours:%H minutes:%M seconds:%S")
 time2 <- as.POSIXct(str2, format = "%Y-%m-%d %T")
 
+time1
+time2
+
 # Convert times to formatted strings
+
+# Get the minnute
 format(time1, "%M")
+
+# Get the hour:minute and AM/PM
 format(time2, "%I:%M %p")
 
 ```
@@ -1457,9 +1520,11 @@ day5-day1
 
 # Create vector pizza
 pizza <- c(day1, day2, day3, day4, day5)
+pizza
 
 # Create differences between consecutive pizza days: day_diff
 day_diff <- diff(pizza)
+day_diff
 
 # Average period between two consecutive pizza days
 mean(day_diff)
@@ -1511,11 +1576,36 @@ meteo
     
 # Convert astro to vector of Date objects: astro_dates
 astro_dates <- as.Date(astro, "%d-%b-%Y")
+str(astro)
+str(astro_dates)
 
 # Convert meteo to vector of Date objects: meteo_dates
 meteo_dates <- as.Date(meteo, "%B %d, %y")
+str(meteo)
+str(meteo_dates)
 
 # Calculate the maximum absolute difference between astro_dates and meteo_dates
 max(abs(astro_dates - meteo_dates))
 
 ```
+
+&nbsp; &nbsp;
+
+***  
+
+## The End
+
+  - Woof, thats a lot!
+    - And thats just a sample of some key programming topics in R
+  - Theres a lot more to learn in each of those topics
+    - Especially the funtions and packages
+    - There are a lot of key packages to work with dataframes or times
+    - There are packages for everything really
+  - This doc is useful to me as a reference
+    - The class was best forlearning these things
+    - Now I just need to see it again a few times to really get it
+    - And I can look back here if ever need a little refresher in the future
+    
+&nbsp; &nbsp;
+
+***  
