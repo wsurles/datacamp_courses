@@ -24,7 +24,7 @@ knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
 
   - This all comes from the [Intermediate R](https://www.datacamp.com/courses/intermediate-r) course on DataCamp
     - I highly recommend the [DataCamp](https://www.datacamp.com/home) courses
-    - Go **do** the course for yourself to get more details and videos on these topics
+    - Go *do* the [course](https://www.datacamp.com/courses/intermediate-r) for yourself to get more details and videos on these topics
   - I am copying my work from the class to this document and adding comments
 
 ## Whats Covered
@@ -38,10 +38,15 @@ knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
     - For loops
     - Breaks
   - Functions
+    - Documentation
+    - Required vs optional inputs
+    - Scoping
+    - Writing functions
+    - Loading packages
   - Apply statements
     - lapply, sapply, vapply
   - Utilities
-    - Errors
+    - Useful base functions
     - Regular Expressions and grep/sub
     - Times and Dates
     
