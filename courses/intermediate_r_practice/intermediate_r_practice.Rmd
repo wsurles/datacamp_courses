@@ -1,0 +1,2801 @@
+---
+title: "Intermediate R Practice"
+author: "William Surles"
+date: "2017-07-04"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+---
+
+***
+> This document was updated on **`r Sys.Date()`**.
+
+***
+
+```{r setup, include=FALSE}
+options(width = 100)
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+```
+
+```{r}
+library(dplyr)
+```
+
+# Introduction
+
+  - Course notes for [Intermediate R Practice](https://www.datacamp.com/courses/intermediate-r-practice)
+  - This course covers the topics from the Intermediate R class again
+    - It focuses on application of the skills to answer questions about data
+    - It feels a little forced in some cases as I would normally not use loops to analyze data
+      - I would get my data out of list format first, as I will show here
+    - But it is a really good review of the skills and I feel much more confident in the skills covered after this practice
+      - If nothing else this course highlights how some of these skills can be very usefule, especially the regular expressions
+
+## Whats Covered
+
+  - Conditionals and Control Flow
+    - Relational Operators. `==` `<` `>` 
+    - Logical Operators. `&&` `||` `!`
+    - Conditional Statements. `if` `else`
+  - While and For loops
+  - Functions
+  - Apply statements
+    - lapply, sapply, vapply
+  - Utilities
+    - Regular Expressions and grep/sub
+    - Times and Dates
+    
+&nbsp; &nbsp;
+
+***  
+
+# Conditionals and Control Flow
+
+  - I have loaded the data into the notebook manually
+
+```{r, echo=F, results='hide'}
+
+me <- 89
+
+other_199 <- c(
+ 66,  81,  77,  90,  95,  54,  78,  90,  71,  96,  70,  81,  71,  60,  91,  62,  54,
+ 70,  96,  90,  82,  78, 100,  79,  84,  73,  66,  63,  97,  91,  82,  81,  52,  73,
+ 89,  70,  69,  60,  63,  78,  77,  73,  62,  61,  72,  64,  87,  54,  80,  82,  61,
+ 70,  69,  61,  88,  90,  74,  80,  59,  65,  83,  70,  83,  83,  81,  80,  88,  77,
+ 84,  50,  73,  70,  74,  75,  71,  60,  80,  78,  81,  60,  80,  99,  90,  90,  66,
+ 61,  79,  71,  80,  69,  67,  80,  59,  76,  74,  70,  74,  96,  73,  90,  92,  75,
+ 77,  63,  94,  67,  56,  95,  85,  63,  96,  72,  77,  79,  69,  68,  70,  73,  99,
+ 64,  59,  63,  82,  76,  90,  80,  86,  80,  84,  80,  99,  80,  68,  77,  51,  67,
+ 86,  60,  61,  57,  62,  86,  86,  75,  62,  60,  75,  71,  70,  70,  70,  75,  72,
+ 79,  74,  72,  78,  87,  70,  77,  64,  67,  88,  87,  80,  76,  73,  78,  89,  72,
+ 86,  68,  84,  64,  73,  73,  64,  70,  91,  65,  69,  99,  76,  94,  72,  77,  80,
+ 64)
+
+previous_4 <- structure(c(82L, 66L, 66L, 86L, 76L, 74L, 56L, 80L, 71L, 69L, 
+69L, 72L, 68L, 63L, 83L, 55L, 87L, 79L, 75L, 100L, 61L, 70L, 
+66L, 90L, 85L, 56L, 73L, 72L, 81L, 86L, 60L, 88L, 77L, 80L, 57L, 
+69L, 73L, 61L, 50L, 67L, 98L, 80L, 82L, 69L, 89L, 74L, 89L, 73L, 
+67L, 67L, 90L, 68L, 64L, 85L, 70L, 78L, 96L, 69L, 74L, 71L, 55L, 
+62L, 56L, 83L, 65L, 76L, 83L, 77L, 78L, 52L, 75L, 55L, 50L, 58L, 
+68L, 94L, 90L, 67L, 70L, 58L, 80L, 93L, 65L, 73L, 64L, 56L, 73L, 
+57L, 65L, 56L, 83L, 72L, 61L, 58L, 56L, 92L, 99L, 68L, 61L, 60L, 
+97L, 96L, 51L, 95L, 90L, 89L, 72L, 67L, 50L, 80L, 74L, 72L, 70L, 
+88L, 56L, 79L, 98L, 51L, 66L, 79L, 53L, 53L, 72L, 66L, 87L, 61L, 
+54L, 70L, 54L, 77L, 60L, 88L, 71L, 90L, 51L, 74L, 74L, 86L, 90L, 
+80L, 68L, 75L, 63L, 78L, 65L, 73L, 70L, 69L, 72L, 65L, 88L, 65L, 
+67L, 76L, 68L, 88L, 69L, 83L, 76L, 75L, 51L, 66L, 61L, 58L, 73L, 
+80L, 96L, 61L, 52L, 74L, 72L, 76L, 78L, 54L, 80L, 79L, 66L, 94L, 
+63L, 74L, 67L, 84L, 93L, 70L, 94L, 79L, 60L, 60L, 70L, 60L, 63L, 
+68L, 72L, 90L, 96L, 61L, 66L, 70L, 61L, 63L, 89L, 89L, 65L, 79L, 
+83L, 73L, 79L, 87L, 59L, 77L, 84L, 75L, 70L, 63L, 74L, 70L, 61L, 
+85L, 75L, 72L, 53L, 80L, 80L, 85L, 75L, 77L, 89L, 73L, 72L, 68L, 
+74L, 85L, 81L, 76L, 90L, 66L, 87L, 61L, 73L, 60L, 68L, 70L, 84L, 
+90L, 68L, 74L, 88L, 93L, 66L, 79L, 83L, 77L, 78L, 66L, 56L, 66L, 
+77L, 99L, 91L, 67L, 63L, 87L, 78L, 70L, 68L, 84L, 70L, 65L, 85L, 
+70L, 99L, 60L, 100L, 77L, 92L, 82L, 79L, 89L, 50L, 64L, 87L, 
+63L, 99L, 73L, 85L, 82L, 62L, 64L, 84L, 77L, 71L, 87L, 58L, 70L, 
+87L, 60L, 90L, 68L, 55L, 85L, 96L, 79L, 80L, 71L, 59L, 80L, 70L, 
+79L, 75L, 84L, 77L, 70L, 59L, 74L, 73L, 90L, 69L, 80L, 94L, 57L, 
+99L, 73L, 80L, 74L, 54L, 77L, 84L, 79L, 53L, 89L, 73L, 83L, 85L, 
+79L, 99L, 54L, 90L, 78L, 70L, 79L, 70L, 98L, 60L, 70L, 70L, 92L, 
+86L, 59L, 73L, 98L, 72L, 76L, 62L, 82L, 77L, 78L, 84L, 82L, 78L, 
+76L, 51L, 55L, 82L, 94L, 62L, 81L, 81L, 73L, 99L, 80L, 77L, 80L, 
+79L, 84L, 76L, 84L, 88L, 75L, 52L, 82L, 73L, 76L, 99L, 73L, 70L, 
+75L, 67L, 70L, 83L, 88L, 83L, 78L, 57L, 87L, 63L, 60L, 76L, 76L, 
+77L, 78L, 53L, 66L, 85L, 65L, 75L, 69L, 98L, 66L, 100L, 76L, 
+70L, 89L, 60L, 52L, 80L, 84L, 95L, 68L, 92L, 78L, 55L, 69L, 64L, 
+95L, 71L, 55L, 80L, 70L, 63L, 80L, 73L, 93L, 62L, 80L, 90L, 61L, 
+64L, 75L, 92L, 100L, 76L, 85L, 97L, 67L, 72L, 60L, 89L, 91L, 
+60L, 73L, 87L, 92L, 71L, 72L, 82L, 90L, 63L, 70L, 56L, 75L, 79L, 
+62L, 98L, 63L, 88L, 66L, 58L, 73L, 67L, 80L, 69L, 52L, 77L, 60L, 
+70L, 76L, 84L, 98L, 62L, 70L, 79L, 90L, 88L, 60L, 67L, 75L, 80L, 
+77L, 69L, 72L, 68L, 54L, 90L, 79L, 65L, 71L, 83L, 68L, 60L, 77L, 
+79L, 62L, 69L, 52L, 64L, 77L, 89L, 80L, 71L, 60L, 77L, 89L, 77L, 
+82L, 90L, 73L, 72L, 50L, 50L, 80L, 61L, 76L, 89L, 91L, 65L, 86L, 
+92L, 62L, 87L, 97L, 52L, 76L, 65L, 80L, 71L, 69L, 74L, 98L, 79L, 
+75L, 50L, 80L, 66L, 55L, 85L, 75L, 78L, 97L, 58L, 86L, 74L, 70L, 
+67L, 68L, 58L, 80L, 73L, 74L, 67L, 54L, 62L, 76L, 66L, 83L, 72L, 
+82L, 66L, 66L, 75L, 84L, 81L, 70L, 99L, 84L, 98L, 64L, 68L, 76L, 
+74L, 90L, 99L, 69L, 100L, 51L, 81L, 99L, 70L, 62L, 52L, 70L, 
+70L, 73L, 80L, 64L, 73L, 98L, 74L, 61L, 70L, 80L, 70L, 76L, 73L, 
+64L, 56L, 71L, 96L, 78L, 77L, 99L, 89L, 56L, 92L, 73L, 85L, 71L, 
+67L, 75L, 65L, 90L, 87L, 91L, 77L, 81L, 99L, 98L, 59L, 73L, 56L, 
+70L, 97L, 50L, 71L, 75L, 95L, 89L, 88L, 93L, 88L, 74L, 61L, 96L, 
+97L, 82L, 64L, 85L, 71L, 87L, 51L, 68L, 65L, 79L, 96L, 99L, 94L, 
+80L, 71L, 94L, 64L, 59L, 86L, 70L, 55L, 87L, 75L, 83L, 72L, 69L, 
+63L, 80L, 85L, 67L, 60L, 70L, 82L, 82L, 90L, 51L, 92L, 86L, 85L, 
+62L, 90L, 90L, 68L, 98L, 93L, 80L, 75L, 70L, 66L, 87L, 100L, 
+90L, 85L, 76L, 100L, 52L, 75L, 56L, 74L, 91L, 84L, 81L, 89L, 
+89L, 80L, 70L, 88L, 77L, 59L, 50L, 56L, 83L, 88L, 77L, 95L, 90L, 
+83L, 75L, 78L, 76L, 55L, 73L, 82L, 92L, 90L, 71L, 86L, 66L, 73L, 
+86L, 64L, 71L, 80L, 95L, 69L, 82L, 84L, 84L, 53L, 97L, 78L, 76L, 
+80L, 61L, 70L, 78L, 70L, 79L, 76L, 86L, 69L, 95L, 55L, 74L, 96L, 
+86L, 57L, 79L, 70L, 80L, 73L, 84L, 67L, 89L, 88L, 85L, 64L, 70L, 
+77L, 72L, 55L, 77L, 72L, 73L, 86L, 94L, 50L, 71L, 80L, 74L, 94L, 
+90L, 84L, 88L, 100L, 66L, 68L, 62L, 71L, 60L, 67L, 88L, 78L, 
+87L, 78L, 86L, 76L, 94L), .Dim = c(200L, 4L))
+```
+
+```{r}
+
+## my grade in the class (hypothetically)
+me 
+
+## the other students grades
+glimpse(other_199)
+
+## grades for students over the past 4 years
+glimpse(previous_4)
+head(previous_4)
+
+```
+
+## Grades analysis in R
+
+  - First, we just join all the data to get a matrix of 5 years of data
+  - Normally there would be different numbers each year, but whatev
+  
+```{r}
+
+# Merge me and other_199: my_class
+my_class <- c(me, other_199)
+head(my_class)
+
+# cbind() my_class and previous_4: last_5
+last_5 <- cbind(my_class, previous_4)
+head(last_5)
+
+# Name last_5 appropriately
+nms <- paste0("year_", 1:5)
+
+colnames(last_5) <- nms
+head(last_5)
+```
+
+## Explore your data
+
+  - There is an entire class on this later so this is just the start, 
+  - These 3 functions are pretty useful
+  
+```{r}
+
+# Build histogram of my_class
+hist(my_class)
+
+# Generate summary of last_5
+summary(last_5)
+
+# Build boxplot of last_5
+boxplot(last_5)
+```
+
+## Basic queries 
+  
+  - This uses relational operators to answer very simple questions
+  - I am wrapping some of these in head, just to shorten the results
+
+```{r}
+
+# Is your grade equal to 72?
+me == 72
+
+# Which grades in your class are higher than 75?
+head(my_class > 75, 10)
+
+# Which grades in the last 5 years are below or equal to 64?
+head(last_5 <= 64, 10)
+
+```
+
+## Build aggregates
+
+  - Becuse the boolean arrays are only so useful. Normall a count or porportion is more helpful.
+
+```{r}
+
+# How many grades in your class are higher than 75?
+sum(my_class > 75)
+
+# How many students in your class scored strictly higher than you?
+sum(my_class > me)
+
+# What's the proportion of grades below or equal to 64 in the last 5 years?
+mean(last_5 <= 64)
+
+```
+
+## Logical operator
+
+```{r}
+
+# Is your grade greater than 87 and smaller than or equal to 89?
+me > 87 & me <= 89
+
+# Which grades in your class are below 60 or above 90?
+head(my_class < 60 | my_class > 90, 20)
+
+```
+
+## Build aggregates(2)
+
+```{r}
+
+# What's the proportion of grades in your class that is average?
+mean(my_class >= 70 & my_class <= 85)
+
+# How many students in the last 5 years had a grade of 80 or 90?
+sum(last_5 == 80 | last_5 == 90)
+
+```
+
+## if, else
+
+```{r}
+
+if (me > 80) {
+  print("Good student!")
+} else {
+  print("Better luck next year!")
+}
+
+```
+
+## if, else: DIY
+
+```{r}
+
+# Define n_smart
+n_smart <- sum(my_class >= 80)
+
+# Code the if-else construct
+if (n_smart > 50) {
+  print("smart class")
+} else {
+  print("rather average")
+}
+
+```
+
+## else if
+
+```{r}
+
+# Define prop_less
+prop_less <- mean(my_class < me)
+
+# Code the control construct
+if(prop_less > .90) {
+  print("you're among the best 10 percent")
+} else if (prop_less > .80) {
+  print("you're among the best 20 percent")
+} else {
+  print("need more analysis")
+}
+
+
+```
+
+## Embed if-else clauses
+
+```{r}
+
+# Embedded control structure: fix the error
+if (mean(my_class) < 75) {
+  if (mean(my_class) > me) {
+    print("average year, but still smarter than me")
+  } else {
+    print("average year, but I'm not that bad")
+  }
+} else {
+  if (mean(my_class) > me) {
+    print("smart year, even smarter than me")
+  } else {
+    print("smart year, but I am smarter")
+  }
+}
+
+```
+
+## Operations and controls expertise
+
+```{r}
+
+# Create top_grades
+top_grades <- my_class[my_class >= 85]
+
+# Create worst_grades
+worst_grades <- my_class[my_class < 65]
+
+# Write conditional statement
+if (length(top_grades) > length(worst_grades)) {
+  print("top grades prevail")
+} 
+```
+
+&nbsp; &nbsp;
+
+***  
+
+# Loops
+
+  - I have loaded the data into the notebook manually
+
+```{r, echo=F, results='hide'}
+
+logs <- list(structure(list(success = TRUE, details = structure(list(
+    message = "check"), .Names = "message"), timestamp = structure(1442271667.43207, class = c("POSIXct", 
+"POSIXt"))), .Names = c("success", "details", "timestamp")), 
+    structure(list(success = TRUE, details = structure(list(message = "all good"), .Names = "message"), 
+        timestamp = structure(1442275213.39346, class = c("POSIXct", 
+        "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442278843.47229, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442282478.63858, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442285999.74305, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442289668.86018, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442293400.3281, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442296765.63371, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442300369.37386, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = FALSE, details = structure(list(
+        message = "stack overflow", location = "control room"), .Names = c("message", 
+    "location")), timestamp = structure(1442304053.61872, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442307594.93076, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442311239.45235, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442314998.8012, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442318509.16918, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442322114.63074, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442325747.80094, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442329580.85214, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442333148.23046, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442336830.85628, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = FALSE, details = structure(list(
+        message = "segmentation fault", location = "waste"), .Names = c("message", 
+    "location")), timestamp = structure(1442340478.48111, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442344104.31929, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442347808.63364, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = FALSE, details = structure(list(
+        message = "human error", location = "reactor"), .Names = c("message", 
+    "location")), timestamp = structure(1442351656.34473, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442355229.92537, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442358897.12962, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442362564.81979, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442366247.3068, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442369824.54196, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442373613.23665, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442377367.33987, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442381036.07308, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442384586.79444, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442388126.81468, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442391716.33624, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442395200.71391, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442398873.1383, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442402487.24673, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442406138.39827, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442409894.00923, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442413502.7706, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442416979.75338, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442420588.43106, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442424320.35423, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442427945.2025, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442431539.98714, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442435144.14022, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442438737.23849, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442442496.58945, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442446128.80461, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442449737.47012, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = FALSE, details = structure(list(
+        message = "stack overflow", location = "tubes"), .Names = c("message", 
+    "location")), timestamp = structure(1442453511.53602, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442457227.26855, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442460737.11087, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442464501.33007, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442468239.02558, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442471720.55968, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442475370.43848, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442478869.32623, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442482442.18562, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442485999.92793, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442489681.0897, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442493221.61982, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = FALSE, details = structure(list(
+        message = "segmentation fault", location = "waste"), .Names = c("message", 
+    "location")), timestamp = structure(1442496823.20539, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442500519.2637, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = FALSE, details = structure(list(
+        message = "human error", location = "waste"), .Names = c("message", 
+    "location")), timestamp = structure(1442504062.01691, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442507675.88601, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442511300.87333, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442514920.40155, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442518448.7965, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442522023.70184, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442525547.24996, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442529154.02717, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442532866.13324, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442536496.44837, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442540274.29455, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442543775.11426, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = FALSE, details = structure(list(
+        message = "human error", location = "waste"), .Names = c("message", 
+    "location")), timestamp = structure(1442547438.416, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442550882.44039, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442554480.0724, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442558130.89049, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442561734.49783, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442565493.2596, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442569141.35461, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442572776.04087, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442576397.55859, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442580077.17186, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442583672.2674, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442587329.75573, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442591011.3022, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442594690.06613, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442598327.47824, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442602123.66626, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "all good"), .Names = "message"), timestamp = structure(1442605778.01847, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "ok"), .Names = "message"), timestamp = structure(1442609424.24531, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442613054.34025, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )), structure(list(success = TRUE, details = structure(list(
+        message = "check"), .Names = "message"), timestamp = structure(1442616469.25693, class = c("POSIXct", 
+    "POSIXt"))), .Names = c("success", "details", "timestamp"
+    )))
+
+```
+
+  - logs has 96 entries 
+  - showing the `str()` of logs will print the str of all entries
+  - I shorten here to save space
+  
+```{r}
+
+length(logs)
+logs[1:3]
+str(logs[1:3])
+
+```
+## Scanning Logs in R
+
+```{r}
+
+# Print the structure of logs
+# str(logs)
+
+# Use list subsetting to print the details part of 11th logs entry
+logs[11]
+
+# Print the class of the timestamp component of the first entry
+class(logs[[1]]$timestamp)
+
+```
+
+## Understand the logs
+
+```{r}
+## You can index into a list like this
+logs[[2]][[2]][[1]]
+
+## You can also use an array to index
+logs[[c(2, 2, 1)]]
+
+## Note that if success == FALSE then there are two elements in the details
+
+```
+
+## While: start easy
+
+```{r}
+
+# Initialize the iterator i to be 1
+i <- 1
+
+# Code the while loop
+while ( logs[[i]]$success == TRUE ) {
+  print(i)
+  i <- i + 1
+}
+
+```
+
+
+## Adapt the while loop
+
+```{r}
+
+# Adapt the while loop
+i <- 1
+while (logs[[i]]$success) {
+  print(logs[[i]]$details$message)
+  i <- i + 1
+}
+
+```
+
+## While: different approach
+
+  - This approach set a value to false initially, then updates when a specific condition is met which will then top the loop
+
+```{r}
+
+# Initialize i and found
+i <- 1
+found <- FALSE
+
+# Code the while loop
+while (found == FALSE) {
+  if (logs[[i]]$success == FALSE && logs[[i]]$details$location == "waste") {
+    print("found")
+    found <- TRUE
+  } else {
+    print("still looking")
+    i <- i + 1
+  }
+}
+
+```
+
+## The for loop
+  
+  - I shorten this up to just the first 10 logs
+  
+```{r}
+
+# Code a for loop that prints the timestamp of each log
+for (log in logs[1:10]) {
+  print(log$timestamp)
+}
+
+```
+
+## Going through the list
+
+```{r}
+
+# Make the printout conditional: only if success
+for (log in logs[1:20]) {
+  if (log$success == TRUE) {
+    print(log$timestamp)  
+  }
+}
+
+```
+
+## Adapt the logs list
+
+```{r}
+
+# Finish the for loop: add date element for each entry
+for (i in 1:length(logs)) {
+  logs[[i]]$date <- as.Date(logs[[i]]$timestamp)
+}
+
+# Print first 6 elements in logs
+head(logs, 3)
+
+```
+
+## Collect all failures
+
+```{r}
+
+# Intialize empty list: failures
+failures <- list()
+
+# Finish the for loop: add each failure to failures
+for (log in logs) {
+  if (log$success == FALSE) {
+    failures <- c(failures, list(log))
+  }
+}
+
+# Display the structure of failures
+str(failures)
+
+```
+
+## Without Loops
+
+  - The looping code above is good practice but normally you should not use loops in R. 
+  - There are much better ways to work with data. 
+  - I will show how to pull this list data into a dataframe to make life much easier while doing analysis. 
+  - This is important because you can waste a lot of time not just in execution, but in writing code if you don't learn `dplyr` and other libraries that are specifically made to crunch data. 
+  - Loops are good for other programming routines or low level operations but not for crunching data. 
+  
+### Pulling the list into a clean data frame
+
+  - Ideally the log data would be consistent and not have different elements in different situations.
+  - That makes it tricky to clean this up into a dataframe
+  - But its still possible and once clean is much easier to work with!
+  - Note: I am using the dplyr chain function to make these read well
+
+Convert the variable level list to a dataframe:
+  
+  - First, I convert each log into a data frame
+    - I want to apply the `as.data.frame` function to each log record
+    - I can't name the columns here becasue `details.location` is not always present.
+    - So, I will clean that up later
+  - Then you can use `bind_rows` (from `dplyr` package) to combine the list of dataframes
+    - If the columns are missing in some of the dataframes (and they are) that is okay, it will just fill in with NA
+  - Now I will clean up the column names so `message` and `details.message` are the same column
+    - I just set `details.message` to be `message` when its NA 
+    - I wish `as.data.frame` would always pull in the full name path from a list as the column name
+    - Unfortunately, If there is just one nested record it will just use the last name as the column name, so we have `message` when its the only thing in details or `details.message` when there are multiple recoreds under details
+    - This is lame but its how it works. 
+  - And last thing is to remove the original `message` column since we have moved it into `details.message`
+    
+```{r}
+
+df_logs <- logs %>%
+  sapply(as.data.frame) %>%
+  bind_rows() %>%
+  mutate(
+    details.message = ifelse(is.na(details.message), message, details.message)
+  ) %>%
+  select(-message)
+
+head(df_logs, 12)
+
+```
+
+### Analysing the data
+
+  - Now we can see all the data so much easier. 
+  - Really, you always want your data in a dataframe like this. 
+  - These few lines of code pretty much cover all the tasks we just did with the loops above. 
+
+```{r, opt.tidy=T}
+
+## subset the data
+df_logs %>% filter(success==FALSE)
+df_logs %>% filter(success==FALSE & details.location == 'waste')
+
+## add data column
+df_logs %>% mutate(date = as.Date(timestamp)) %>% head(10)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+
+# Functions
+
+  - I have loaded the `timestamps` data into the notebook manually
+  - This is good practive for writting functions
+  - I should note that using dataframes instead of a list makes all of these next functions unnecessary
+  - Normall I use functions for more complex data conversions that I want to call from a dplyr chain
+    - Or I may use a function to do a data crunching or charting process that I use often
+  - I don't use functions to extract data. Just put it in a dataframe and you are good to go. : ) 
+  
+```{r, echo=F, results='hide',}
+
+timestamps <- structure(c(1442304053.61872, 1442340478.48111, 1442351656.34473, 
+1442453511.53602, 1442496823.20539, 1442504062.01691, 1442547438.416
+), class = c("POSIXct", "POSIXt"))
+
+```
+
+## Using functions
+
+```{r}
+
+# Call max() on timestamps
+max(timestamps)
+
+# What is the date of the latest timestamp?
+as.Date(max(timestamps))
+
+```
+
+## Optional Arguments
+
+```{r}
+
+# Print out timestamps
+print(timestamps)
+
+# Call max() on timestamps, no additional arguments
+max(timestamps)
+
+# Call max() on timestamps, specify na.rm
+max(timestamps, na.rm=T)
+
+
+```
+
+## Extracting log information (1)
+
+```{r}
+
+# Build a function extract_info(): use for loop, add return statement
+extract_info <- function(x) {
+  info <- c()
+  for (log in x) {
+    info <- c(info, log$timestamp)
+  }
+  return(info)
+}
+
+# Call extract_info() on logs
+extract_info(logs)
+
+```
+
+## Extracting log information (2)
+
+```{r}
+
+# Adapt the extract_info() function.
+extract_info <- function(x, property) {
+  
+  info <- c()
+  
+  for (log in x) {
+   info <- c(info, log[[property]])
+  }
+  
+  return(info)
+}
+
+# Call extract_info() on logs, set property to "timestamp"
+extract_info(logs, "timestamp")
+
+# Call extract_info() on logs, set property to "success"
+extract_info(logs, "success")
+```
+
+## Extracting log information (3)
+
+```{r}
+
+# Add default value for property argument
+extract_info <- function(x, property="success") {
+  info <- c()
+  for (log in x) {
+   info <- c(info, log[[property]])
+  }
+  return(info)
+}
+
+# Call extract_info() on logs, don't specify property
+extract_info(logs)
+
+# Call extract_info() on logs, set property to "timestamp"
+extract_info(logs, "timestamp")
+
+```
+
+## Extracting log information (4)
+
+```{r}
+
+# Adapt extract_info():
+# - add argument with default value
+# - change function body
+extract_info <- function(x, property = "success", include_all=T) {
+  info <- c()
+  for (log in x) {
+
+   # add if construct around the line below
+   if (include_all || !log$success) {
+      
+      info <- c(info, log[[property]])
+      
+    }
+
+  }
+  return(info)
+}
+
+# Call extract_info() on logs, no additional arguments
+extract_info(logs)
+
+# Call extract_info() on logs, set include_all to FALSE
+extract_info(logs, include_all=F)
+```
+
+## Extracting log information (5)
+
+```{r}
+
+# Defition of the extract_info() function
+extract_info <- function(x, property = "success", include_all = TRUE) {
+  info <- c()
+  for (log in x) {
+    if (include_all || !log$success) {
+     info <- c(info, log[[property]])
+    }
+  }
+  return(info)
+}
+
+# Generate vector of messages
+extract_info(logs, property = c('details', 'message'))
+
+# Generate vector of locations for failed log entries
+extract_info(logs, property = c('details','location'), include_all = F)
+```
+
+## Over to you
+
+```{r}
+
+# Write the function compute_fail_pct
+
+compute_fail_pct <- function(logs) {
+  
+  is_fail <- c()
+  
+  for (i in 1:length(logs)) {
+    is_fail[i] <- logs[[i]]$success == FALSE
+  }
+  
+  fail_pct <- sum(is_fail)/length(is_fail) * 100
+  
+  return(fail_pct)
+}
+
+
+# Call compute_fail_pct on logs
+compute_fail_pct(logs)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+
+# The apply family
+
+  - I have rarely use the apply family after learning dplyr
+  - But there are some times when its helpful, like above where I used it to convert the list elements to a dataframe before row binding them
+  - These are also good to know because you may need to do some data crunching in another language and this would be a good pattern to follow if they have a `map` function or something like the `apply` functions. 
+
+## lapply refresher
+  
+```{r}
+
+# Call length() on each element of logs
+lapply(logs,length) %>% head()
+
+# Call class() on each element of logs
+lapply(logs,class) %>% head()
+
+```
+
+## lapply on logs (1)
+
+```{r}
+
+# Define get_timestamp()
+get_timestamp <- function(x) {
+  return(x$timestamp)
+}
+
+# Apply get_timestamp() over all elements in logs
+lapply(logs, get_timestamp) %>% head()
+
+```
+
+## lapply on logs (2)
+
+```{r}
+
+# Have lapply() use an anonymous function
+lapply(logs, function(x) {x$timestamp}) %>% head()
+
+```
+
+## lapply on logs (3)
+
+```{r}
+
+# Replace the anonymous function with `[[` 
+lapply(logs, `[[`, 'timestamp') %>% head()
+
+```
+
+## sapply refresher
+
+```{r}
+
+# Call length() on each element of logs using sapply()
+sapply(logs, length)
+
+# Definition of get_timestamp
+get_timestamp <- function(x) {
+  x$timestamp
+}
+
+# Get vector of log entries' timestamps
+sapply(logs, get_timestamp)
+
+```
+
+## sapply on logs (1)
+
+```{r}
+
+# Use sapply() to select the success element from each log: results
+results <- sapply(logs, `[[`, 'success')
+
+# Call mean() on results
+mean(results)
+
+# Use sapply() to select the details element from each log
+sapply(logs, `[[`, 'details') %>% head()
+
+```
+
+## sapply on logs (2)
+
+```{r}
+
+# Implement function get_failure_loc
+get_failure_loc <- function(x) {
+  if (x$success==T) {
+    return(NULL)
+  } else {
+    return(x$details$location)
+  }
+}
+
+# Use sapply() to call get_failure_loc on logs
+sapply(logs, get_failure_loc) %>% head(11)
+
+```
+
+## vapply refresher
+
+```{r}
+
+# Convert the sapply call to vapply
+vapply(logs, length, integer(1))
+
+# Convert the sapply call to vapply
+vapply(logs, `[[`, "success", FUN.VALUE = logical(1))
+
+```
+
+## vapply on logs (1)
+
+```{r}
+
+# Convert the sapply() call to a vapply() or lapply() call
+vapply(logs, `[[`, c("details", "message"), FUN.VALUE=character(1))
+
+# Convert the sapply() call to a vapply() or lapply() call
+lapply(logs, function(x) { x$details }) %>% head()
+
+```
+
+## loop it the way you want it
+
+```{r}
+
+# Return vector with uppercase version of message elements in log entries
+toupper(sapply(logs, `[[`, c('details','message')))
+
+```
+
+&nbsp; &nbsp;
+
+***  
+
+# Utilities
+
+  - I have loaded the data into the notebook manually
+  
+```{r, echo=F, results='hide'}
+
+titanic <- structure(list(PassengerId = 1:891, Survived = c(0L, 1L, 1L, 
+1L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 1L, 0L, 1L, 0L, 
+1L, 0L, 1L, 1L, 1L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 
+0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 
+0L, 1L, 1L, 0L, 1L, 1L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 
+0L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 1L, 
+0L, 1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 0L, 1L, 1L, 0L, 0L, 
+0L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 1L, 
+0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 
+0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 1L, 0L, 1L, 1L, 1L, 
+1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 1L, 0L, 
+1L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 1L, 
+0L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 
+0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 
+1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 0L, 1L, 
+1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 1L, 1L, 1L, 
+1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 0L, 1L, 0L, 1L, 1L, 
+1L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 1L, 
+1L, 0L, 1L, 0L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 
+0L, 1L, 1L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 
+0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 0L, 0L, 0L, 
+1L, 0L, 1L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 
+0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 0L, 1L, 1L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 1L, 1L, 1L, 0L, 0L, 
+1L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 0L, 
+0L, 0L, 1L, 0L, 1L, 0L, 1L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 
+1L, 1L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 1L, 0L, 1L, 1L, 0L, 1L, 1L, 0L, 
+0L, 1L, 0L, 1L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 
+0L, 0L, 1L, 0L, 1L, 0L, 1L, 0L, 1L, 1L, 0L, 0L, 1L, 0L, 0L, 1L, 
+1L, 0L, 1L, 1L, 0L, 0L, 1L, 1L, 0L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 1L, 1L, 0L, 
+1L, 1L, 1L, 0L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 
+0L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 1L, 0L, 
+0L, 1L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 
+1L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 
+1L, 1L, 1L, 0L, 1L, 0L, 1L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 
+0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 1L, 0L, 
+0L, 0L, 1L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 
+1L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 1L, 
+1L, 1L, 1L, 1L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 1L, 0L, 0L, 
+0L, 1L, 0L, 1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 
+0L, 1L, 0L, 1L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 1L, 
+1L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 1L, 
+0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 1L, 1L, 
+1L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 1L, 1L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 
+1L, 0L, 0L, 1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 
+0L, 0L, 1L, 0L, 1L, 1L, 1L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 
+0L, 0L, 1L, 0L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 
+0L, 0L, 0L, 0L, 1L, 0L, 1L, 0L), Pclass = c(3L, 1L, 3L, 1L, 3L, 
+3L, 1L, 3L, 3L, 2L, 3L, 1L, 3L, 3L, 3L, 2L, 3L, 2L, 3L, 3L, 2L, 
+2L, 3L, 1L, 3L, 3L, 3L, 1L, 3L, 3L, 1L, 1L, 3L, 2L, 1L, 1L, 3L, 
+3L, 3L, 3L, 3L, 2L, 3L, 2L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 1L, 
+2L, 1L, 1L, 2L, 3L, 2L, 3L, 3L, 1L, 1L, 3L, 1L, 3L, 2L, 3L, 3L, 
+3L, 2L, 3L, 2L, 3L, 3L, 3L, 3L, 3L, 2L, 3L, 3L, 3L, 3L, 1L, 2L, 
+3L, 3L, 3L, 1L, 3L, 3L, 3L, 1L, 3L, 3L, 3L, 1L, 1L, 2L, 2L, 3L, 
+3L, 1L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 1L, 3L, 3L, 3L, 3L, 3L, 3L, 
+2L, 1L, 3L, 2L, 3L, 2L, 2L, 1L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 
+2L, 2L, 2L, 1L, 1L, 3L, 1L, 3L, 3L, 3L, 3L, 2L, 2L, 3L, 3L, 2L, 
+2L, 2L, 1L, 3L, 3L, 3L, 1L, 3L, 3L, 3L, 3L, 3L, 2L, 3L, 3L, 3L, 
+3L, 1L, 3L, 1L, 3L, 1L, 3L, 3L, 3L, 1L, 3L, 3L, 1L, 2L, 3L, 3L, 
+2L, 3L, 2L, 3L, 1L, 3L, 1L, 3L, 3L, 2L, 2L, 3L, 2L, 1L, 1L, 3L, 
+3L, 3L, 2L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 1L, 3L, 2L, 3L, 
+2L, 3L, 1L, 3L, 2L, 1L, 2L, 3L, 2L, 3L, 3L, 1L, 3L, 2L, 3L, 2L, 
+3L, 1L, 3L, 2L, 3L, 2L, 3L, 2L, 2L, 2L, 2L, 3L, 3L, 2L, 3L, 3L, 
+1L, 3L, 2L, 1L, 2L, 3L, 3L, 1L, 3L, 3L, 3L, 1L, 1L, 1L, 2L, 3L, 
+3L, 1L, 1L, 3L, 2L, 3L, 3L, 1L, 1L, 1L, 3L, 2L, 1L, 3L, 1L, 3L, 
+2L, 3L, 3L, 3L, 3L, 3L, 3L, 1L, 3L, 3L, 3L, 2L, 3L, 1L, 1L, 2L, 
+3L, 3L, 1L, 3L, 1L, 1L, 1L, 3L, 3L, 3L, 2L, 3L, 1L, 1L, 1L, 2L, 
+1L, 1L, 1L, 2L, 3L, 2L, 3L, 2L, 2L, 1L, 1L, 3L, 3L, 2L, 2L, 3L, 
+1L, 3L, 2L, 3L, 1L, 3L, 1L, 1L, 3L, 1L, 3L, 1L, 1L, 3L, 1L, 2L, 
+1L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 1L, 3L, 3L, 3L, 3L, 1L, 
+2L, 3L, 3L, 3L, 2L, 3L, 3L, 3L, 3L, 1L, 3L, 3L, 1L, 1L, 3L, 3L, 
+1L, 3L, 1L, 3L, 1L, 3L, 3L, 1L, 3L, 3L, 1L, 3L, 2L, 3L, 2L, 3L, 
+2L, 1L, 3L, 3L, 1L, 3L, 3L, 3L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 
+2L, 3L, 2L, 3L, 3L, 3L, 3L, 1L, 2L, 3L, 3L, 2L, 2L, 2L, 3L, 3L, 
+3L, 3L, 3L, 3L, 3L, 2L, 2L, 3L, 3L, 1L, 3L, 2L, 3L, 1L, 1L, 3L, 
+2L, 1L, 2L, 2L, 3L, 3L, 2L, 3L, 1L, 2L, 1L, 3L, 1L, 2L, 3L, 1L, 
+1L, 3L, 3L, 1L, 1L, 2L, 3L, 1L, 3L, 1L, 2L, 3L, 3L, 2L, 1L, 3L, 
+3L, 3L, 3L, 2L, 2L, 3L, 1L, 2L, 3L, 3L, 3L, 3L, 2L, 3L, 3L, 1L, 
+3L, 1L, 1L, 3L, 3L, 3L, 3L, 1L, 1L, 3L, 3L, 1L, 3L, 1L, 3L, 3L, 
+3L, 3L, 3L, 1L, 1L, 2L, 1L, 3L, 3L, 3L, 3L, 1L, 1L, 3L, 1L, 2L, 
+3L, 2L, 3L, 1L, 3L, 3L, 1L, 3L, 3L, 2L, 1L, 3L, 2L, 2L, 3L, 3L, 
+3L, 3L, 2L, 1L, 1L, 3L, 1L, 1L, 3L, 3L, 2L, 1L, 1L, 2L, 2L, 3L, 
+2L, 1L, 2L, 3L, 3L, 3L, 1L, 1L, 1L, 1L, 3L, 3L, 3L, 2L, 3L, 3L, 
+3L, 3L, 3L, 3L, 3L, 2L, 1L, 1L, 3L, 3L, 3L, 2L, 1L, 3L, 3L, 2L, 
+1L, 2L, 1L, 3L, 1L, 2L, 1L, 3L, 3L, 3L, 1L, 3L, 3L, 2L, 3L, 2L, 
+3L, 3L, 1L, 2L, 3L, 1L, 3L, 1L, 3L, 3L, 1L, 2L, 1L, 3L, 3L, 3L, 
+3L, 3L, 2L, 3L, 3L, 2L, 2L, 3L, 1L, 3L, 3L, 3L, 1L, 2L, 1L, 3L, 
+3L, 1L, 3L, 1L, 1L, 3L, 2L, 3L, 2L, 3L, 3L, 3L, 1L, 3L, 3L, 3L, 
+1L, 3L, 1L, 3L, 3L, 3L, 2L, 3L, 3L, 3L, 2L, 3L, 3L, 2L, 1L, 1L, 
+3L, 1L, 3L, 3L, 2L, 2L, 3L, 3L, 1L, 2L, 1L, 2L, 2L, 2L, 3L, 3L, 
+3L, 3L, 1L, 3L, 1L, 3L, 3L, 2L, 2L, 3L, 3L, 3L, 1L, 1L, 3L, 3L, 
+3L, 1L, 2L, 3L, 3L, 1L, 3L, 1L, 1L, 3L, 3L, 3L, 2L, 2L, 1L, 1L, 
+3L, 1L, 1L, 1L, 3L, 2L, 3L, 1L, 2L, 3L, 3L, 2L, 3L, 2L, 2L, 1L, 
+3L, 2L, 3L, 2L, 3L, 1L, 3L, 2L, 2L, 2L, 3L, 3L, 1L, 3L, 3L, 1L, 
+1L, 1L, 3L, 3L, 1L, 3L, 2L, 1L, 3L, 2L, 3L, 3L, 3L, 2L, 2L, 3L, 
+2L, 3L, 1L, 3L, 3L, 3L, 1L, 3L, 1L, 1L, 3L, 3L, 3L, 3L, 3L, 2L, 
+3L, 2L, 3L, 3L, 3L, 3L, 1L, 3L, 1L, 1L, 3L, 3L, 3L, 3L, 3L, 3L, 
+1L, 3L, 2L, 3L, 1L, 3L, 2L, 1L, 3L, 3L, 3L, 2L, 2L, 1L, 3L, 3L, 
+3L, 1L, 3L, 2L, 1L, 3L, 3L, 2L, 3L, 3L, 1L, 3L, 2L, 3L, 3L, 1L, 
+3L, 1L, 3L, 3L, 3L, 3L, 2L, 3L, 1L, 3L, 2L, 3L, 3L, 3L, 1L, 3L, 
+3L, 3L, 1L, 3L, 2L, 1L, 3L, 3L, 3L, 3L, 3L, 2L, 1L, 3L, 3L, 3L, 
+1L, 2L, 3L, 1L, 1L, 3L, 3L, 3L, 2L, 1L, 3L, 2L, 2L, 2L, 1L, 3L, 
+3L, 3L, 1L, 1L, 3L, 2L, 3L, 3L, 3L, 3L, 1L, 2L, 3L, 3L, 2L, 3L, 
+3L, 2L, 1L, 3L, 1L, 3L), Name = structure(c(109L, 191L, 354L, 
+273L, 16L, 555L, 516L, 625L, 413L, 577L, 728L, 96L, 730L, 29L, 
+841L, 360L, 683L, 868L, 840L, 513L, 274L, 81L, 524L, 766L, 627L, 
+45L, 241L, 261L, 606L, 814L, 829L, 777L, 290L, 857L, 536L, 373L, 
+506L, 135L, 838L, 590L, 8L, 828L, 447L, 457L, 213L, 698L, 474L, 
+605L, 727L, 39L, 630L, 595L, 334L, 247L, 621L, 874L, 708L, 596L, 
+854L, 300L, 750L, 386L, 338L, 756L, 785L, 561L, 597L, 186L, 26L, 
+441L, 397L, 301L, 377L, 162L, 88L, 547L, 779L, 564L, 128L, 224L, 
+843L, 738L, 520L, 142L, 387L, 53L, 256L, 765L, 260L, 150L, 160L, 
+32L, 151L, 210L, 185L, 741L, 293L, 309L, 220L, 423L, 657L, 659L, 
+859L, 406L, 313L, 543L, 725L, 560L, 676L, 553L, 668L, 883L, 68L, 
+418L, 47L, 646L, 179L, 827L, 71L, 25L, 363L, 552L, 576L, 849L, 
+858L, 589L, 526L, 500L, 654L, 235L, 226L, 166L, 696L, 852L, 773L, 
+686L, 586L, 272L, 619L, 283L, 100L, 598L, 320L, 117L, 33L, 587L, 
+30L, 255L, 581L, 122L, 69L, 644L, 533L, 890L, 613L, 867L, 288L, 
+182L, 768L, 717L, 187L, 848L, 83L, 130L, 629L, 294L, 158L, 761L, 
+70L, 487L, 833L, 681L, 409L, 753L, 770L, 445L, 465L, 389L, 321L, 
+475L, 718L, 651L, 42L, 77L, 442L, 701L, 602L, 699L, 102L, 824L, 
+665L, 137L, 21L, 580L, 114L, 496L, 534L, 612L, 498L, 882L, 835L, 
+722L, 404L, 879L, 167L, 790L, 52L, 10L, 141L, 95L, 13L, 132L, 
+650L, 289L, 438L, 583L, 376L, 391L, 73L, 339L, 792L, 106L, 307L, 
+582L, 380L, 84L, 532L, 493L, 244L, 468L, 340L, 461L, 755L, 44L, 
+480L, 330L, 371L, 173L, 649L, 384L, 884L, 568L, 170L, 501L, 48L, 
+540L, 482L, 323L, 79L, 148L, 674L, 791L, 783L, 488L, 703L, 820L, 
+809L, 157L, 845L, 637L, 772L, 43L, 800L, 341L, 357L, 675L, 632L, 
+653L, 306L, 92L, 126L, 818L, 531L, 578L, 351L, 34L, 483L, 635L, 
+682L, 3L, 228L, 615L, 888L, 222L, 771L, 780L, 887L, 571L, 379L, 
+178L, 66L, 91L, 478L, 316L, 542L, 479L, 325L, 18L, 715L, 72L, 
+432L, 519L, 412L, 429L, 869L, 17L, 249L, 648L, 4L, 264L, 349L, 
+711L, 450L, 356L, 343L, 591L, 424L, 556L, 860L, 776L, 212L, 201L, 
+763L, 129L, 723L, 878L, 599L, 61L, 296L, 364L, 518L, 638L, 305L, 
+839L, 266L, 211L, 643L, 118L, 193L, 94L, 579L, 259L, 171L, 734L, 
+263L, 112L, 769L, 208L, 184L, 216L, 609L, 871L, 238L, 38L, 880L, 
+836L, 105L, 271L, 523L, 546L, 760L, 889L, 65L, 41L, 600L, 6L, 
+846L, 563L, 401L, 49L, 329L, 864L, 76L, 691L, 626L, 537L, 455L, 
+863L, 86L, 315L, 87L, 573L, 812L, 374L, 666L, 206L, 299L, 119L, 
+716L, 469L, 145L, 394L, 314L, 584L, 729L, 405L, 614L, 525L, 624L, 
+822L, 593L, 7L, 419L, 319L, 617L, 275L, 862L, 688L, 89L, 466L, 
+733L, 344L, 541L, 192L, 793L, 529L, 227L, 743L, 514L, 830L, 282L, 
+156L, 885L, 199L, 702L, 873L, 163L, 663L, 250L, 664L, 93L, 811L, 
+492L, 421L, 745L, 144L, 254L, 689L, 262L, 448L, 345L, 324L, 660L, 
+680L, 403L, 217L, 530L, 736L, 56L, 662L, 855L, 317L, 258L, 291L, 
+645L, 393L, 538L, 437L, 816L, 604L, 22L, 558L, 281L, 539L, 503L, 
+297L, 133L, 767L, 732L, 55L, 431L, 125L, 856L, 402L, 788L, 165L, 
+677L, 108L, 426L, 366L, 298L, 269L, 707L, 826L, 90L, 467L, 382L, 
+436L, 775L, 183L, 318L, 872L, 548L, 40L, 782L, 881L, 243L, 739L, 
+19L, 797L, 131L, 134L, 608L, 451L, 502L, 647L, 671L, 107L, 611L, 
+456L, 196L, 850L, 522L, 706L, 169L, 844L, 473L, 710L, 36L, 642L, 
+652L, 842L, 449L, 365L, 428L, 245L, 690L, 246L, 726L, 367L, 670L, 
+819L, 237L, 655L, 124L, 342L, 121L, 462L, 693L, 267L, 189L, 27L, 
+28L, 74L, 223L, 588L, 75L, 623L, 295L, 204L, 805L, 737L, 601L, 
+464L, 610L, 875L, 229L, 694L, 801L, 886L, 559L, 752L, 594L, 747L, 
+528L, 205L, 787L, 628L, 218L, 417L, 337L, 37L, 252L, 433L, 709L, 
+640L, 278L, 746L, 136L, 420L, 161L, 806L, 225L, 704L, 641L, 799L, 
+396L, 268L, 285L, 567L, 692L, 784L, 239L, 101L, 155L, 831L, 471L, 
+410L, 99L, 230L, 392L, 762L, 336L, 817L, 375L, 484L, 425L, 200L, 
+459L, 742L, 31L, 395L, 569L, 378L, 111L, 358L, 198L, 489L, 78L, 
+280L, 876L, 440L, 574L, 328L, 104L, 795L, 443L, 491L, 97L, 603L, 
+67L, 495L, 778L, 636L, 758L, 207L, 470L, 174L, 634L, 810L, 398L, 
+724L, 759L, 253L, 54L, 333L, 181L, 748L, 866L, 781L, 545L, 219L, 
+422L, 607L, 353L, 361L, 672L, 103L, 233L, 585L, 265L, 58L, 172L, 
+168L, 485L, 362L, 120L, 700L, 180L, 803L, 115L, 203L, 544L, 865L, 
+847L, 232L, 731L, 825L, 303L, 138L, 656L, 346L, 616L, 302L, 113L, 
+458L, 633L, 195L, 248L, 499L, 214L, 427L, 453L, 714L, 851L, 154L, 
+434L, 566L, 804L, 383L, 46L, 744L, 64L, 276L, 327L, 557L, 435L, 
+127L, 164L, 562L, 515L, 444L, 802L, 460L, 308L, 774L, 242L, 823L, 
+521L, 411L, 332L, 400L, 287L, 369L, 152L, 618L, 678L, 508L, 116L, 
+388L, 15L, 347L, 446L, 85L, 821L, 870L, 257L, 477L, 390L, 575L, 
+348L, 149L, 712L, 527L, 789L, 188L, 2L, 749L, 512L, 177L, 853L, 
+550L, 834L, 416L, 359L, 322L, 139L, 59L, 807L, 705L, 277L, 592L, 
+63L, 147L, 234L, 370L, 110L, 507L, 554L, 310L, 481L, 399L, 497L, 
+236L, 368L, 570L, 813L, 240L, 439L, 695L, 51L, 215L, 490L, 415L, 
+14L, 331L, 754L, 684L, 209L, 311L, 430L, 279L, 720L, 381L, 202L, 
+622L, 463L, 620L, 385L, 832L, 667L, 175L, 143L, 808L, 352L, 407L, 
+35L, 661L, 535L, 153L, 11L, 476L, 764L, 24L, 815L, 270L, 355L, 
+505L, 372L, 757L, 350L, 494L, 679L, 551L, 631L, 251L, 454L, 504L, 
+517L, 786L, 877L, 687L, 713L, 50L, 20L, 176L, 639L, 751L, 159L, 
+509L, 12L, 565L, 735L, 472L, 190L, 1L, 721L, 510L, 335L, 292L, 
+23L, 796L, 98L, 486L, 146L, 9L, 861L, 197L, 57L, 673L, 326L, 
+284L, 798L, 719L, 286L, 123L, 231L, 697L, 891L, 408L, 60L, 80L, 
+140L, 837L, 5L, 572L, 312L, 658L, 452L, 669L, 740L, 511L, 194L, 
+62L, 794L, 685L, 549L, 304L, 414L, 82L, 221L), .Label = c("Abbing, Mr. Anthony", 
+"Abbott, Mr. Rossmore Edward", "Abbott, Mrs. Stanton (Rosa Hunt)", 
+"Abelson, Mr. Samuel", "Abelson, Mrs. Samuel (Hannah Wizosky)", 
+"Adahl, Mr. Mauritz Nils Martin", "Adams, Mr. John", "Ahlin, Mrs. Johan (Johanna Persdotter Larsson)", 
+"Aks, Mrs. Sam (Leah Rosen)", "Albimona, Mr. Nassef Cassem", 
+"Alexander, Mr. William", "Alhomaki, Mr. Ilmari Rudolf", "Ali, Mr. Ahmed", 
+"Ali, Mr. William", "Allen, Miss. Elisabeth Walton", "Allen, Mr. William Henry", 
+"Allison, Master. Hudson Trevor", "Allison, Miss. Helen Loraine", 
+"Allison, Mrs. Hudson J C (Bessie Waldo Daniels)", "Allum, Mr. Owen George", 
+"Andersen-Jensen, Miss. Carla Christine Nielsine", "Anderson, Mr. Harry", 
+"Andersson, Master. Sigvard Harald Elias", "Andersson, Miss. Ebba Iris Alfrida", 
+"Andersson, Miss. Ellis Anna Maria", "Andersson, Miss. Erna Alexandra", 
+"Andersson, Miss. Ingeborg Constanzia", "Andersson, Miss. Sigrid Elisabeth", 
+"Andersson, Mr. Anders Johan", "Andersson, Mr. August Edvard (\"Wennerstrom\")", 
+"Andersson, Mrs. Anders Johan (Alfrida Konstantia Brogren)", 
+"Andreasson, Mr. Paul Edvin", "Andrew, Mr. Edgardo Samuel", "Andrews, Miss. Kornelia Theodosia", 
+"Andrews, Mr. Thomas Jr", "Angle, Mrs. William A (Florence \"Mary\" Agnes Hughes)", 
+"Appleton, Mrs. Edward Dale (Charlotte Lamson)", "Arnold-Franchi, Mr. Josef", 
+"Arnold-Franchi, Mrs. Josef (Josefine Franchi)", "Artagaveytia, Mr. Ramon", 
+"Asim, Mr. Adola", "Asplund, Master. Clarence Gustaf Hugo", "Asplund, Master. Edvin Rojj Felix", 
+"Asplund, Miss. Lillian Gertrud", "Asplund, Mrs. Carl Oscar (Selma Augusta Emilia Johansson)", 
+"Astor, Mrs. John Jacob (Madeleine Talmadge Force)", "Attalah, Miss. Malake", 
+"Attalah, Mr. Sleiman", "Aubart, Mme. Leontine Pauline", "Augustsson, Mr. Albert", 
+"Ayoub, Miss. Banoura", "Backstrom, Mr. Karl Alfred", "Backstrom, Mrs. Karl Alfred (Maria Mathilda Gustafsson)", 
+"Baclini, Miss. Eugenie", "Baclini, Miss. Helene Barbara", "Baclini, Miss. Marie Catherine", 
+"Baclini, Mrs. Solomon (Latifa Qurban)", "Badt, Mr. Mohamed", 
+"Bailey, Mr. Percy Andrew", "Balkic, Mr. Cerin", "Ball, Mrs. (Ada E Hall)", 
+"Banfield, Mr. Frederick James", "Barah, Mr. Hanna Assi", "Barbara, Miss. Saiide", 
+"Barbara, Mrs. (Catherine David)", "Barber, Miss. Ellen \"Nellie\"", 
+"Barkworth, Mr. Algernon Henry Wilson", "Barton, Mr. David John", 
+"Bateman, Rev. Robert James", "Baumann, Mr. John D", "Baxter, Mr. Quigg Edmond", 
+"Baxter, Mrs. James (Helene DeLaudeniere Chaput)", "Bazzani, Miss. Albina", 
+"Beane, Mr. Edward", "Beane, Mrs. Edward (Ethel Clarke)", "Beavan, Mr. William Thomas", 
+"Becker, Master. Richard F", "Becker, Miss. Marion Louise", "Beckwith, Mr. Richard Leonard", 
+"Beckwith, Mrs. Richard Leonard (Sallie Monypeny)", "Beesley, Mr. Lawrence", 
+"Behr, Mr. Karl Howell", "Bengtsson, Mr. John Viktor", "Berglund, Mr. Karl Ivar Sven", 
+"Berriman, Mr. William John", "Betros, Mr. Tannous", "Bidois, Miss. Rosalie", 
+"Bing, Mr. Lee", "Birkeland, Mr. Hans Martin Monsen", "Bishop, Mr. Dickinson H", 
+"Bishop, Mrs. Dickinson H (Helen Walton)", "Bissette, Miss. Amelia", 
+"Bjornstrom-Steffansson, Mr. Mauritz Hakan", "Blackwell, Mr. Stephen Weart", 
+"Blank, Mr. Henry", "Bonnell, Miss. Elizabeth", "Bostandyeff, Mr. Guentcho", 
+"Boulos, Miss. Nourelain", "Boulos, Mr. Hanna", "Boulos, Mrs. Joseph (Sultana)", 
+"Bourke, Miss. Mary", "Bourke, Mr. John", "Bourke, Mrs. John (Catherine)", 
+"Bowen, Mr. David John \"Dai\"", "Bowerman, Miss. Elsie Edith", 
+"Bracken, Mr. James H", "Bradley, Mr. George (\"George Arthur Brayton\")", 
+"Braund, Mr. Lewis Richard", "Braund, Mr. Owen Harris", "Brewe, Dr. Arthur Jackson", 
+"Brocklebank, Mr. William Alfred", "Brown, Miss. Amelia \"Mildred\"", 
+"Brown, Mr. Thomas William Solomon", "Brown, Mrs. James Joseph (Margaret Tobin)", 
+"Brown, Mrs. Thomas William Solomon (Elizabeth Catherine Ford)", 
+"Bryhl, Mr. Kurt Arnold Gottfrid", "Burke, Mr. Jeremiah", "Burns, Miss. Elizabeth Margaret", 
+"Buss, Miss. Kate", "Butler, Mr. Reginald Fenton", "Butt, Major. Archibald Willingham", 
+"Byles, Rev. Thomas Roussel Davids", "Bystrom, Mrs. (Karolina)", 
+"Cacic, Miss. Marija", "Cacic, Mr. Luka", "Cairns, Mr. Alexander", 
+"Calderhead, Mr. Edward Pennington", "Caldwell, Master. Alden Gates", 
+"Caldwell, Mrs. Albert Francis (Sylvia Mae Harbaugh)", "Calic, Mr. Jovo", 
+"Calic, Mr. Petar", "Cameron, Miss. Clear Annie", "Campbell, Mr. William", 
+"Canavan, Miss. Mary", "Cann, Mr. Ernest Charles", "Caram, Mrs. Joseph (Maria Elias)", 
+"Carbines, Mr. William", "Cardeza, Mr. Thomas Drake Martinez", 
+"Carlsson, Mr. August Sigfrid", "Carlsson, Mr. Frans Olof", "Carr, Miss. Helen \"Ellen\"", 
+"Carrau, Mr. Francisco M", "Carter, Master. William Thornton II", 
+"Carter, Miss. Lucile Polk", "Carter, Mr. William Ernest", "Carter, Mrs. Ernest Courtenay (Lilian Hughes)", 
+"Carter, Mrs. William Ernest (Lucile Polk)", "Carter, Rev. Ernest Courtenay", 
+"Cavendish, Mr. Tyrell William", "Celotti, Mr. Francesco", "Chaffee, Mr. Herbert Fuller", 
+"Chambers, Mr. Norman Campbell", "Chambers, Mrs. Norman Campbell (Bertha Griggs)", 
+"Chapman, Mr. Charles Henry", "Chapman, Mr. John Henry", "Charters, Mr. David", 
+"Cherry, Miss. Gladys", "Chibnall, Mrs. (Edith Martha Bowerman)", 
+"Chip, Mr. Chang", "Christmann, Mr. Emil", "Christy, Miss. Julie Rachel", 
+"Chronopoulos, Mr. Apostolos", "Clarke, Mrs. Charles V (Ada Maria Winfield)", 
+"Cleaver, Miss. Alice", "Clifford, Mr. George Quincy", "Coelho, Mr. Domingos Fernandeo", 
+"Cohen, Mr. Gurshon \"Gus\"", "Coleff, Mr. Peju", "Coleff, Mr. Satio", 
+"Coleridge, Mr. Reginald Charles", "Collander, Mr. Erik Gustaf", 
+"Colley, Mr. Edward Pomeroy", "Collyer, Miss. Marjorie \"Lottie\"", 
+"Collyer, Mr. Harvey", "Collyer, Mrs. Harvey (Charlotte Annie Tate)", 
+"Compton, Miss. Sara Rebecca", "Connaghton, Mr. Michael", "Connolly, Miss. Kate", 
+"Connors, Mr. Patrick", "Cook, Mr. Jacob", "Cor, Mr. Liudevit", 
+"Corn, Mr. Harry", "Coutts, Master. Eden Leslie \"Neville\"", 
+"Coutts, Master. William Loch \"William\"", "Coxon, Mr. Daniel", 
+"Crease, Mr. Ernest James", "Cribb, Mr. John Hatfield", "Crosby, Capt. Edward Gifford", 
+"Crosby, Miss. Harriet R", "Culumovic, Mr. Jeso", "Cumings, Mrs. John Bradley (Florence Briggs Thayer)", 
+"Cunningham, Mr. Alfred Fleming", "Dahl, Mr. Karl Edwart", "Dahlberg, Miss. Gerda Ulrika", 
+"Dakic, Mr. Branko", "Daly, Mr. Eugene Patrick", "Daly, Mr. Peter Denis ", 
+"Danbom, Mr. Ernst Gilbert", "Danbom, Mrs. Ernst Gilbert (Anna Sigrid Maria Brogren)", 
+"Daniel, Mr. Robert Williams", "Danoff, Mr. Yoto", "Dantcheff, Mr. Ristiu", 
+"Davidson, Mr. Thornton", "Davies, Master. John Morgan Jr", "Davies, Mr. Alfred J", 
+"Davies, Mr. Charles Henry", "Davis, Miss. Mary", "Davison, Mrs. Thomas Henry (Mary E Finck)", 
+"Dean, Master. Bertram Vere", "Dean, Mr. Bertram Frank", "Denkoff, Mr. Mitto", 
+"Dennis, Mr. Samuel", "Devaney, Miss. Margaret Delia", "Dick, Mr. Albert Adrian", 
+"Dick, Mrs. Albert Adrian (Vera Gillespie)", "Dimic, Mr. Jovan", 
+"Dodge, Master. Washington", "Doharr, Mr. Tannous", "Doling, Miss. Elsie", 
+"Doling, Mrs. John T (Ada Julia Bone)", "Dooley, Mr. Patrick", 
+"Dorking, Mr. Edward Arthur", "Douglas, Mr. Walter Donald", "Dowdell, Miss. Elizabeth", 
+"Downton, Mr. William James", "Drazenoic, Mr. Jozef", "Drew, Mrs. James Vivian (Lulu Thorne Christian)", 
+"Duane, Mr. Frank", "Duff Gordon, Lady. (Lucille Christiana Sutherland) (\"Mrs Morgan\")", 
+"Duff Gordon, Sir. Cosmo Edmund (\"Mr Morgan\")", "Duran y More, Miss. Asuncion", 
+"Edvardsson, Mr. Gustaf Hjalmar", "Eitemiller, Mr. George Floyd", 
+"Eklund, Mr. Hans Linus", "Ekstrom, Mr. Johan", "Elias, Mr. Dibo", 
+"Elias, Mr. Joseph Jr", "Elias, Mr. Tannous", "Elsbury, Mr. William James", 
+"Emanuel, Miss. Virginia Ethel", "Emir, Mr. Farred Chehab", "Endres, Miss. Caroline Louise", 
+"Eustis, Miss. Elizabeth Mussey", "Fahlstrom, Mr. Arne Jonas", 
+"Farrell, Mr. James", "Farthing, Mr. John", "Faunthorpe, Mrs. Lizzie (Elizabeth Anne Wilkinson)", 
+"Fischer, Mr. Eberhard Thelander", "Fleming, Miss. Margaret", 
+"Flynn, Mr. James", "Flynn, Mr. John", "Flynn, Mr. John Irwin (\"Irving\")", 
+"Foo, Mr. Choong", "Ford, Miss. Doolina Margaret \"Daisy\"", 
+"Ford, Miss. Robina Maggie \"Ruby\"", "Ford, Mr. William Neal", 
+"Ford, Mrs. Edward (Margaret Ann Watson)", "Foreman, Mr. Benjamin Laventall", 
+"Fortune, Miss. Alice Elizabeth", "Fortune, Miss. Mabel Helen", 
+"Fortune, Mr. Charles Alexander", "Fortune, Mr. Mark", "Fox, Mr. Stanley Hubert", 
+"Francatelli, Miss. Laura Mabel", "Frauenthal, Dr. Henry William", 
+"Frauenthal, Mrs. Henry William (Clara Heinsheimer)", "Frolicher, Miss. Hedwig Margaritha", 
+"Frolicher-Stehli, Mr. Maxmillian", "Frost, Mr. Anthony Wood \"Archie\"", 
+"Fry, Mr. Richard", "Funk, Miss. Annie Clemmer", "Futrelle, Mr. Jacques Heath", 
+"Futrelle, Mrs. Jacques Heath (Lily May Peel)", "Fynney, Mr. Joseph J", 
+"Gale, Mr. Shadrach", "Gallagher, Mr. Martin", "Garfirth, Mr. John", 
+"Garside, Miss. Ethel", "Gaskell, Mr. Alfred", "Gavey, Mr. Lawrence", 
+"Gee, Mr. Arthur H", "Gheorgheff, Mr. Stanio", "Giglio, Mr. Victor", 
+"Giles, Mr. Frederick Edward", "Gilinski, Mr. Eliezer", "Gill, Mr. John William", 
+"Gillespie, Mr. William Henry", "Gilnagh, Miss. Katherine \"Katie\"", 
+"Givard, Mr. Hans Kristensen", "Glynn, Miss. Mary Agatha", "Goldenberg, Mr. Samuel L", 
+"Goldenberg, Mrs. Samuel L (Edwiga Grabowska)", "Goldschmidt, Mr. George B", 
+"Goldsmith, Master. Frank John William \"Frankie\"", "Goldsmith, Mr. Frank John", 
+"Goldsmith, Mrs. Frank John (Emily Alice Brown)", "Goncalves, Mr. Manuel Estanslas", 
+"Goodwin, Master. Harold Victor", "Goodwin, Master. Sidney Leonard", 
+"Goodwin, Master. William Frederick", "Goodwin, Miss. Lillian Amy", 
+"Goodwin, Mr. Charles Edward", "Goodwin, Mrs. Frederick (Augusta Tyler)", 
+"Graham, Miss. Margaret Edith", "Graham, Mr. George Edward", 
+"Graham, Mrs. William Thompson (Edith Junkins)", "Green, Mr. George Henry", 
+"Greenberg, Mr. Samuel", "Greenfield, Mr. William Bertram", "Gronnestad, Mr. Daniel Danielsen", 
+"Guggenheim, Mr. Benjamin", "Gustafsson, Mr. Alfred Ossian", 
+"Gustafsson, Mr. Anders Vilhelm", "Gustafsson, Mr. Johan Birger", 
+"Gustafsson, Mr. Karl Gideon", "Haas, Miss. Aloisia", "Hagland, Mr. Ingvald Olai Olsen", 
+"Hagland, Mr. Konrad Mathias Reiersen", "Hakkarainen, Mr. Pekka Pietari", 
+"Hakkarainen, Mrs. Pekka Pietari (Elin Matilda Dolck)", "Hale, Mr. Reginald", 
+"Hamalainen, Master. Viljo", "Hamalainen, Mrs. William (Anna)", 
+"Hampe, Mr. Leon", "Hanna, Mr. Mansour", "Hansen, Mr. Claus Peter", 
+"Hansen, Mr. Henrik Juul", "Hansen, Mr. Henry Damsgaard", "Harder, Mr. George Achilles", 
+"Harknett, Miss. Alice Phoebe", "Harmer, Mr. Abraham (David Lishin)", 
+"Harper, Miss. Annie Jessie \"Nina\"", "Harper, Mr. Henry Sleeper", 
+"Harper, Mrs. Henry Sleeper (Myna Haxtun)", "Harper, Rev. John", 
+"Harrington, Mr. Charles H", "Harris, Mr. George", "Harris, Mr. Henry Birkhardt", 
+"Harris, Mr. Walter", "Harris, Mrs. Henry Birkhardt (Irene Wallach)", 
+"Harrison, Mr. William", "Hart, Miss. Eva Miriam", "Hart, Mr. Benjamin", 
+"Hart, Mr. Henry", "Hart, Mrs. Benjamin (Esther Ada Bloomfield)", 
+"Hassab, Mr. Hammad", "Hassan, Mr. Houssein G N", "Hawksford, Mr. Walter James", 
+"Hays, Miss. Margaret Bechstein", "Hays, Mrs. Charles Melville (Clara Jennings Gregg)", 
+"Healy, Miss. Hanora \"Nora\"", "Hedman, Mr. Oskar Arvid", "Hegarty, Miss. Hanora \"Nora\"", 
+"Heikkinen, Miss. Laina", "Heininen, Miss. Wendla Maria", "Hendekovic, Mr. Ignjac", 
+"Henry, Miss. Delia", "Herman, Miss. Alice", "Herman, Mrs. Samuel (Jane Laver)", 
+"Hewlett, Mrs. (Mary D Kingcome) ", "Hickman, Mr. Leonard Mark", 
+"Hickman, Mr. Lewis", "Hickman, Mr. Stanley George", "Hippach, Miss. Jean Gertrude", 
+"Hippach, Mrs. Louis Albert (Ida Sophia Fischer)", "Hirvonen, Miss. Hildur E", 
+"Hocking, Mr. Richard George", "Hocking, Mrs. Elizabeth (Eliza Needs)", 
+"Hodges, Mr. Henry Price", "Hogeboom, Mrs. John C (Anna Andrews)", 
+"Hold, Mr. Stephen", "Holm, Mr. John Fredrik Alexander", "Holverson, Mr. Alexander Oskar", 
+"Holverson, Mrs. Alexander Oskar (Mary Aline Towner)", "Homer, Mr. Harry (\"Mr E Haven\")", 
+"Honkanen, Miss. Eliina", "Hood, Mr. Ambrose Jr", "Horgan, Mr. John", 
+"Hosono, Mr. Masabumi", "Hoyt, Mr. Frederick Maxfield", "Hoyt, Mr. William Fisher", 
+"Hoyt, Mrs. Frederick Maxfield (Jane Anne Forby)", "Humblen, Mr. Adolf Mathias Nicolai Olsen", 
+"Hunt, Mr. George Henry", "Ibrahim Shawah, Mr. Yousseff", "Icard, Miss. Amelie", 
+"Ilett, Miss. Bertha", "Ilmakangas, Miss. Pieta Sofia", "Isham, Miss. Ann Elizabeth", 
+"Ivanoff, Mr. Kanio", "Jacobsohn, Mr. Sidney Samuel", "Jacobsohn, Mrs. Sidney Samuel (Amy Frances Christy)", 
+"Jalsevac, Mr. Ivan", "Jansson, Mr. Carl Olof", "Jardin, Mr. Jose Neto", 
+"Jarvis, Mr. John Denzil", "Jenkin, Mr. Stephen Curnow", "Jensen, Mr. Hans Peder", 
+"Jensen, Mr. Niels Peder", "Jensen, Mr. Svend Lauritz", "Jermyn, Miss. Annie", 
+"Jerwan, Mrs. Amin S (Marie Marthe Thuillard)", "Johannesen-Bratthammer, Mr. Bernt", 
+"Johanson, Mr. Jakob Alfred", "Johansson, Mr. Erik", "Johansson, Mr. Gustaf Joel", 
+"Johansson, Mr. Karl Johan", "Johnson, Master. Harold Theodor", 
+"Johnson, Miss. Eleanor Ileen", "Johnson, Mr. Alfred", "Johnson, Mr. Malkolm Joackim", 
+"Johnson, Mr. William Cahoone Jr", "Johnson, Mrs. Oscar W (Elisabeth Vilhelmina Berg)", 
+"Johnston, Miss. Catherine Helen \"Carrie\"", "Johnston, Mr. Andrew G", 
+"Jonkoff, Mr. Lalio", "Jonsson, Mr. Carl", "Jussila, Miss. Katriina", 
+"Jussila, Miss. Mari Aina", "Jussila, Mr. Eiriik", "Kallio, Mr. Nikolai Erland", 
+"Kalvik, Mr. Johannes Halvorsen", "Kantor, Mr. Sinai", "Kantor, Mrs. Sinai (Miriam Sternin)", 
+"Karaic, Mr. Milan", "Karlsson, Mr. Nils August", "Karun, Miss. Manca", 
+"Kassem, Mr. Fared", "Keane, Miss. Nora A", "Keane, Mr. Andrew \"Andy\"", 
+"Keefe, Mr. Arthur", "Kelly, Miss. Anna Katherine \"Annie Kate\"", 
+"Kelly, Miss. Mary", "Kelly, Mr. James", "Kelly, Mrs. Florence \"Fannie\"", 
+"Kent, Mr. Edward Austin", "Kenyon, Mrs. Frederick R (Marion)", 
+"Kiernan, Mr. Philip", "Kilgannon, Mr. Thomas J", "Kimball, Mr. Edwin Nelson Jr", 
+"Kink, Mr. Vincenz", "Kink-Heilmann, Miss. Luise Gretchen", "Kirkland, Rev. Charles Leonard", 
+"Klaber, Mr. Herman", "Klasen, Mr. Klas Albin", "Knight, Mr. Robert J", 
+"Kraeff, Mr. Theodor", "Kvillner, Mr. Johan Henrik Johannesson", 
+"Lahoud, Mr. Sarkis", "Lahtinen, Mrs. William (Anna Sylfven)", 
+"Laitinen, Miss. Kristina Sofia", "Laleff, Mr. Kristo", "Lam, Mr. Ali", 
+"Lam, Mr. Len", "Landergren, Miss. Aurora Adelia", "Lang, Mr. Fang", 
+"Laroche, Miss. Simonne Marie Anne Andree", "Laroche, Mr. Joseph Philippe Lemercier", 
+"Laroche, Mrs. Joseph (Juliette Marie Louise Lafargue)", "Larsson, Mr. August Viktor", 
+"Larsson, Mr. Bengt Edvin", "LeRoy, Miss. Bertha", "Leader, Dr. Alice (Farnham)", 
+"Leeni, Mr. Fahim (\"Philip Zenni\")", "Lefebre, Master. Henry Forbes", 
+"Lefebre, Miss. Ida", "Lefebre, Miss. Jeannie", "Lefebre, Miss. Mathilde", 
+"Lehmann, Miss. Bertha", "Leinonen, Mr. Antti Gustaf", "Leitch, Miss. Jessie Wills", 
+"Lemberopolous, Mr. Peter L", "Lemore, Mrs. (Amelia Milley)", 
+"Lennon, Mr. Denis", "Leonard, Mr. Lionel", "Lester, Mr. James", 
+"Lesurer, Mr. Gustave J", "Levy, Mr. Rene Jacques", "Lewy, Mr. Ervin G", 
+"Leyson, Mr. Robert William Norman", "Lievens, Mr. Rene Aime", 
+"Lindahl, Miss. Agda Thorilda Viktoria", "Lindblom, Miss. Augusta Charlotta", 
+"Lindell, Mr. Edvard Bengtsson", "Lindqvist, Mr. Eino William", 
+"Lines, Miss. Mary Conover", "Ling, Mr. Lee", "Lobb, Mr. William Arthur", 
+"Lobb, Mrs. William Arthur (Cordelia K Stanlick)", "Long, Mr. Milton Clyde", 
+"Longley, Miss. Gretchen Fiske", "Louch, Mrs. Charles Alexander (Alice Adelaide Slow)", 
+"Lovell, Mr. John Hall (\"Henry\")", "Lulic, Mr. Nikola", "Lundahl, Mr. Johan Svensson", 
+"Lurette, Miss. Elise", "Mack, Mrs. (Mary)", "Madigan, Miss. Margaret \"Maggie\"", 
+"Madill, Miss. Georgette Alexandra", "Madsen, Mr. Fridtjof Arne", 
+"Maenpaa, Mr. Matti Alexanteri", "Maioni, Miss. Roberta", "Maisner, Mr. Simon", 
+"Mallet, Master. Andre", "Mallet, Mr. Albert", "Mamee, Mr. Hanna", 
+"Mangan, Miss. Mary", "Mannion, Miss. Margareth", "Marechal, Mr. Pierre", 
+"Markoff, Mr. Marin", "Markun, Mr. Johann", "Marvin, Mr. Daniel Warner", 
+"Masselmani, Mrs. Fatima", "Matthews, Mr. William John", "Mayne, Mlle. Berthe Antonine (\"Mrs de Villiers\")", 
+"McCarthy, Mr. Timothy J", "McCormack, Mr. Thomas Joseph", "McCoy, Miss. Agnes", 
+"McCoy, Mr. Bernard", "McDermott, Miss. Brigdet Delia", "McEvoy, Mr. Michael", 
+"McGough, Mr. James Robert", "McGovern, Miss. Mary", "McGowan, Miss. Anna \"Annie\"", 
+"McKane, Mr. Peter David", "McMahon, Mr. Martin", "McNamee, Mr. Neal", 
+"Meanwell, Miss. (Marion Ogden)", "Meek, Mrs. Thomas (Annie Louise Rowley)", 
+"Mellinger, Miss. Madeleine Violet", "Mellinger, Mrs. (Elizabeth Anne Maidment)", 
+"Mellors, Mr. William John", "Meo, Mr. Alfonzo", "Mernagh, Mr. Robert", 
+"Meyer, Mr. August", "Meyer, Mr. Edgar Joseph", "Meyer, Mrs. Edgar Joseph (Leila Saks)", 
+"Millet, Mr. Francis Davis", "Milling, Mr. Jacob Christian", 
+"Minahan, Dr. William Edward", "Minahan, Miss. Daisy E", "Mineff, Mr. Ivan", 
+"Mionoff, Mr. Stoytcho", "Mitchell, Mr. Henry Michael", "Mitkoff, Mr. Mito", 
+"Mockler, Miss. Helen Mary \"Ellie\"", "Moen, Mr. Sigurd Hansen", 
+"Molson, Mr. Harry Markland", "Montvila, Rev. Juozas", "Moor, Master. Meier", 
+"Moor, Mrs. (Beila)", "Moore, Mr. Leonard Charles", "Moran, Miss. Bertha", 
+"Moran, Mr. Daniel J", "Moran, Mr. James", "Moraweck, Dr. Ernest", 
+"Morley, Mr. Henry Samuel (\"Mr Henry Marshall\")", "Morley, Mr. William", 
+"Morrow, Mr. Thomas Rowan", "Moss, Mr. Albert Johan", "Moubarek, Master. Gerios", 
+"Moubarek, Master. Halim Gonios (\"William George\")", "Moussa, Mrs. (Mantoura Boulos)", 
+"Moutal, Mr. Rahamin Haim", "Mudd, Mr. Thomas Charles", "Mullens, Miss. Katherine \"Katie\"", 
+"Murdlin, Mr. Joseph", "Murphy, Miss. Katherine \"Kate\"", "Murphy, Miss. Margaret Jane", 
+"Myhrman, Mr. Pehr Fabian Oliver Malkolm", "Naidenoff, Mr. Penko", 
+"Najib, Miss. Adele Kiamie \"Jane\"", "Nakid, Miss. Maria (\"Mary\")", 
+"Nakid, Mr. Sahid", "Nankoff, Mr. Minko", "Nasser, Mr. Nicholas", 
+"Nasser, Mrs. Nicholas (Adele Achem)", "Natsch, Mr. Charles H", 
+"Navratil, Master. Edmond Roger", "Navratil, Master. Michel M", 
+"Navratil, Mr. Michel (\"Louis M Hoffman\")", "Nenkoff, Mr. Christo", 
+"Newell, Miss. Madeleine", "Newell, Miss. Marjorie", "Newell, Mr. Arthur Webster", 
+"Newsom, Miss. Helen Monypeny", "Nicholls, Mr. Joseph Charles", 
+"Nicholson, Mr. Arthur Ernest", "Nicola-Yarred, Master. Elias", 
+"Nicola-Yarred, Miss. Jamila", "Nilsson, Miss. Helmina Josefina", 
+"Nirva, Mr. Iisakki Antino Aijo", "Niskanen, Mr. Juha", "Norman, Mr. Robert Douglas", 
+"Nosworthy, Mr. Richard Cater", "Novel, Mr. Mansouer", "Nye, Mrs. (Elizabeth Ramell)", 
+"Nysten, Miss. Anna Sofia", "Nysveen, Mr. Johan Hansen", "O'Brien, Mr. Thomas", 
+"O'Brien, Mr. Timothy", "O'Brien, Mrs. Thomas (Johanna \"Hannah\" Godfrey)", 
+"O'Connell, Mr. Patrick D", "O'Connor, Mr. Maurice", "O'Driscoll, Miss. Bridget", 
+"O'Dwyer, Miss. Ellen \"Nellie\"", "O'Leary, Miss. Hanora \"Norah\"", 
+"O'Sullivan, Miss. Bridget Mary", "Odahl, Mr. Nils Martin", "Ohman, Miss. Velin", 
+"Olsen, Mr. Henry Margido", "Olsen, Mr. Karl Siegwart Andreas", 
+"Olsen, Mr. Ole Martin", "Olsson, Miss. Elina", "Olsson, Mr. Nils Johan Goransson", 
+"Olsvigen, Mr. Thor Anderson", "Oreskovic, Miss. Marija", "Oreskovic, Mr. Luka", 
+"Osen, Mr. Olaf Elon", "Osman, Mrs. Mara", "Ostby, Mr. Engelhart Cornelius", 
+"Otter, Mr. Richard", "Padro y Manent, Mr. Julian", "Pain, Dr. Alfred", 
+"Palsson, Master. Gosta Leonard", "Palsson, Miss. Stina Viola", 
+"Palsson, Miss. Torborg Danira", "Palsson, Mrs. Nils (Alma Cornelia Berglund)", 
+"Panula, Master. Eino Viljami", "Panula, Master. Juha Niilo", 
+"Panula, Master. Urho Abraham", "Panula, Mr. Ernesti Arvid", 
+"Panula, Mr. Jaako Arnold", "Panula, Mrs. Juha (Maria Emilia Ojala)", 
+"Parkes, Mr. Francis \"Frank\"", "Parr, Mr. William Henry Marsh", 
+"Parrish, Mrs. (Lutie Davis)", "Partner, Mr. Austen", "Pasic, Mr. Jakob", 
+"Patchett, Mr. George", "Paulner, Mr. Uscher", "Pavlovic, Mr. Stefo", 
+"Pears, Mr. Thomas Clinton", "Pears, Mrs. Thomas (Edith Wearne)", 
+"Peduzzi, Mr. Joseph", "Pekoniemi, Mr. Edvard", "Penasco y Castellana, Mr. Victor de Satode", 
+"Penasco y Castellana, Mrs. Victor de Satode (Maria Josefa Perez de Soto y Vallejo)", 
+"Pengelly, Mr. Frederick William", "Perkin, Mr. John Henry", 
+"Pernot, Mr. Rene", "Perreault, Miss. Anne", "Persson, Mr. Ernst Ulrik", 
+"Peter, Miss. Anna", "Peter, Mrs. Catherine (Catherine Rizk)", 
+"Peters, Miss. Katie", "Petranec, Miss. Matilda", "Petroff, Mr. Nedelio", 
+"Petroff, Mr. Pastcho (\"Pentcho\")", "Petterson, Mr. Johan Emil", 
+"Pettersson, Miss. Ellen Natalia", "Peuchen, Major. Arthur Godfrey", 
+"Phillips, Miss. Kate Florence (\"Mrs Kate Louise Phillips Marshall\")", 
+"Pickard, Mr. Berk (Berk Trembisky)", "Pinsky, Mrs. (Rosa)", 
+"Plotcharsky, Mr. Vasil", "Ponesell, Mr. Martin", "Porter, Mr. Walter Chamberlain", 
+"Potter, Mrs. Thomas Jr (Lily Alexenia Wilson)", "Quick, Miss. Phyllis May", 
+"Quick, Mrs. Frederick Charles (Jane Richards)", "Radeff, Mr. Alexander", 
+"Razi, Mr. Raihed", "Reed, Mr. James George", "Reeves, Mr. David", 
+"Rekic, Mr. Tido", "Renouf, Mr. Peter Henry", "Renouf, Mrs. Peter Henry (Lillian Jefferys)", 
+"Reuchlin, Jonkheer. John George", "Reynaldo, Ms. Encarnacion", 
+"Rice, Master. Arthur", "Rice, Master. Eric", "Rice, Master. Eugene", 
+"Rice, Master. George Hugh", "Rice, Mrs. William (Margaret Norton)", 
+"Richard, Mr. Emile", "Richards, Master. George Sibley", "Richards, Master. William Rowe", 
+"Richards, Mrs. Sidney (Emily Hocking)", "Ridsdale, Miss. Lucy", 
+"Ringhini, Mr. Sante", "Rintamaki, Mr. Matti", "Risien, Mr. Samuel Beard", 
+"Robbins, Mr. Victor", "Robert, Mrs. Edward Scott (Elisabeth Walton McMillan)", 
+"Robins, Mrs. Alexander A (Grace Charity Laury)", "Roebling, Mr. Washington Augustus II", 
+"Rogers, Mr. William John", "Romaine, Mr. Charles Hallace (\"Mr C Rolmane\")", 
+"Rommetvedt, Mr. Knud Paust", "Rood, Mr. Hugh Roscoe", "Rosblom, Mr. Viktor Richard", 
+"Rosblom, Mrs. Viktor (Helena Wilhelmina)", "Ross, Mr. John Hugo", 
+"Rothes, the Countess. of (Lucy Noel Martha Dyer-Edwards)", "Rothschild, Mrs. Martin (Elizabeth L. Barrett)", 
+"Rouse, Mr. Richard Henry", "Rugg, Miss. Emily", "Rush, Mr. Alfred George John", 
+"Ryan, Mr. Patrick", "Ryerson, Miss. Emily Borie", "Ryerson, Miss. Susan Parker \"Suzette\"", 
+"Saad, Mr. Amin", "Saad, Mr. Khalil", "Saalfeld, Mr. Adolphe", 
+"Sadlier, Mr. Matthew", "Sage, Master. Thomas Henry", "Sage, Miss. Constance Gladys", 
+"Sage, Miss. Dorothy Edith \"Dolly\"", "Sage, Miss. Stella Anna", 
+"Sage, Mr. Douglas Bullen", "Sage, Mr. Frederick", "Sage, Mr. George John Jr", 
+"Sagesser, Mlle. Emma", "Salkjelsvik, Miss. Anna Kristine", "Salonen, Mr. Johan Werner", 
+"Samaan, Mr. Youssef", "Sandstrom, Miss. Marguerite Rut", "Sandstrom, Mrs. Hjalmar (Agnes Charlotta Bengtsson)", 
+"Saundercock, Mr. William Henry", "Sawyer, Mr. Frederick Charles", 
+"Scanlan, Mr. James", "Sdycoff, Mr. Todor", "Sedgwick, Mr. Charles Frederick Waddington", 
+"Serepeca, Miss. Augusta", "Seward, Mr. Frederic Kimber", "Sharp, Mr. Percival James R", 
+"Sheerlinck, Mr. Jan Baptist", "Shellard, Mr. Frederick William", 
+"Shelley, Mrs. William (Imanita Parrish Hall)", "Shorney, Mr. Charles Joseph", 
+"Shutes, Miss. Elizabeth W", "Silven, Miss. Lyyli Karoliina", 
+"Silverthorne, Mr. Spencer Victor", "Silvey, Mr. William Baird", 
+"Silvey, Mrs. William Baird (Alice Munger)", "Simmons, Mr. John", 
+"Simonius-Blumer, Col. Oberst Alfons", "Sinkkonen, Miss. Anna", 
+"Sirayanian, Mr. Orsen", "Sirota, Mr. Maurice", "Sivic, Mr. Husein", 
+"Sivola, Mr. Antti Wilhelm", "Sjoblom, Miss. Anna Sofia", "Sjostedt, Mr. Ernst Adolf", 
+"Skoog, Master. Harald", "Skoog, Master. Karl Thorsten", "Skoog, Miss. Mabel", 
+"Skoog, Miss. Margit Elizabeth", "Skoog, Mr. Wilhelm", "Skoog, Mrs. William (Anna Bernhardina Karlsson)", 
+"Slabenoff, Mr. Petco", "Slayter, Miss. Hilda Mary", "Slemen, Mr. Richard James", 
+"Slocovski, Mr. Selman Francis", "Sloper, Mr. William Thompson", 
+"Smart, Mr. John Montgomery", "Smiljanic, Mr. Mile", "Smith, Miss. Marion Elsie", 
+"Smith, Mr. James Clinch", "Smith, Mr. Richard William", "Smith, Mr. Thomas", 
+"Sobey, Mr. Samuel James Hayden", "Soholt, Mr. Peter Andreas Lauritz Andersen", 
+"Somerton, Mr. Francis William", "Spedden, Mrs. Frederic Oakley (Margaretta Corning Stone)", 
+"Spencer, Mrs. William Augustus (Marie Eugenie)", "Stahelin-Maeglin, Dr. Max", 
+"Staneff, Mr. Ivan", "Stankovic, Mr. Ivan", "Stanley, Miss. Amy Zillah Elsie", 
+"Stanley, Mr. Edward Roland", "Stead, Mr. William Thomas", "Stephenson, Mrs. Walter Bertram (Martha Eustis)", 
+"Stewart, Mr. Albert A", "Stone, Mrs. George Nelson (Martha Evelyn)", 
+"Stoytcheff, Mr. Ilia", "Strandberg, Miss. Ida Sofia", "Stranden, Mr. Juho", 
+"Strom, Miss. Telma Matilda", "Strom, Mrs. Wilhelm (Elna Matilda Persson)", 
+"Sunderland, Mr. Victor Francis", "Sundman, Mr. Johan Julian", 
+"Sutehall, Mr. Henry Jr", "Sutton, Mr. Frederick", "Svensson, Mr. Johan", 
+"Svensson, Mr. Olof", "Swift, Mrs. Frederick Joel (Margaret Welles Barron)", 
+"Taussig, Miss. Ruth", "Taussig, Mr. Emil", "Taussig, Mrs. Emil (Tillie Mandelbaum)", 
+"Taylor, Mr. Elmer Zebley", "Taylor, Mrs. Elmer Zebley (Juliet Cummins Wright)", 
+"Thayer, Mr. John Borland", "Thayer, Mr. John Borland Jr", "Thayer, Mrs. John Borland (Marian Longstreth Morris)", 
+"Theobald, Mr. Thomas Leonard", "Thomas, Master. Assad Alexander", 
+"Thorne, Mrs. Gertrude Maybelle", "Thorneycroft, Mr. Percival", 
+"Thorneycroft, Mrs. Percival (Florence Kate White)", "Tikkanen, Mr. Juho", 
+"Tobin, Mr. Roger", "Todoroff, Mr. Lalio", "Tomlin, Mr. Ernest Portage", 
+"Toomey, Miss. Ellen", "Torber, Mr. Ernst William", "Tornquist, Mr. William Henry", 
+"Toufik, Mr. Nakli", "Touma, Mrs. Darwis (Hanne Youssef Razi)", 
+"Troupiansky, Mr. Moses Aaron", "Trout, Mrs. William H (Jessie L)", 
+"Troutt, Miss. Edwina Celia \"Winnie\"", "Turcin, Mr. Stjepan", 
+"Turja, Miss. Anna Sofia", "Turkula, Mrs. (Hedwig)", "Turpin, Mr. William John Robert", 
+"Turpin, Mrs. William John Robert (Dorothy Ann Wonnacott)", "Uruchurtu, Don. Manuel E", 
+"Van Impe, Miss. Catharina", "Van Impe, Mr. Jean Baptiste", "Van Impe, Mrs. Jean Baptiste (Rosalie Paula Govaert)", 
+"Van der hoef, Mr. Wyckoff", "Vande Velde, Mr. Johannes Joseph", 
+"Vande Walle, Mr. Nestor Cyriel", "Vanden Steen, Mr. Leo Peter", 
+"Vander Cruyssen, Mr. Victor", "Vander Planke, Miss. Augusta Maria", 
+"Vander Planke, Mr. Leo Edmondus", "Vander Planke, Mrs. Julius (Emelia Maria Vandemoortele)", 
+"Vestrom, Miss. Hulda Amanda Adolfina", "Vovk, Mr. Janko", "Waelens, Mr. Achille", 
+"Walker, Mr. William Anderson", "Ward, Miss. Anna", "Warren, Mrs. Frank Manley (Anna Sophia Atkinson)", 
+"Watson, Mr. Ennis Hastings", "Watt, Mrs. James (Elizabeth \"Bessie\" Inglis Milne)", 
+"Webber, Miss. Susan", "Webber, Mr. James", "Weir, Col. John", 
+"Weisz, Mrs. Leopold (Mathilde Francoise Pede)", "Wells, Miss. Joan", 
+"West, Miss. Constance Mirium", "West, Mr. Edwy Arthur", "West, Mrs. Edwy Arthur (Ada Mary Worth)", 
+"Wheadon, Mr. Edward H", "White, Mr. Percival Wayland", "White, Mr. Richard Frasar", 
+"Wick, Miss. Mary Natalie", "Wick, Mrs. George Dennick (Mary Hitchcock)", 
+"Widegren, Mr. Carl/Charles Peter", "Widener, Mr. Harry Elkins", 
+"Wiklund, Mr. Jakob Alfred", "Wilhelms, Mr. Charles", "Willey, Mr. Edward", 
+"Williams, Mr. Charles Duane", "Williams, Mr. Charles Eugene", 
+"Williams, Mr. Howard Hugh \"Harry\"", "Williams, Mr. Leslie", 
+"Williams-Lambert, Mr. Fletcher Fellows", "Windelov, Mr. Einar", 
+"Wiseman, Mr. Phillippe", "Woolner, Mr. Hugh", "Wright, Mr. George", 
+"Yasbeck, Mr. Antoni", "Yasbeck, Mrs. Antoni (Selini Alexander)", 
+"Young, Miss. Marie Grice", "Youseff, Mr. Gerious", "Yousif, Mr. Wazli", 
+"Yousseff, Mr. Gerious", "Yrois, Miss. Henriette (\"Mrs Harbeck\")", 
+"Zabour, Miss. Hileni", "Zabour, Miss. Thamine", "Zimmerman, Mr. Leo", 
+"de Messemaeker, Mrs. Guillaume Joseph (Emma)", "de Mulder, Mr. Theodore", 
+"de Pelsmaeker, Mr. Alfons", "del Carlo, Mr. Sebastiano", "van Billiard, Mr. Austin Blyler", 
+"van Melkebeke, Mr. Philemon"), class = "factor"), Sex = structure(c(2L, 
+1L, 1L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, 
+2L, 1L, 1L, 2L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 
+2L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 
+1L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 
+2L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 
+2L, 1L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 2L, 
+1L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 
+2L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 1L, 1L, 2L, 2L, 
+2L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 
+1L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 
+1L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 1L, 
+2L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 
+2L, 2L, 1L, 2L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 
+1L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 1L, 
+1L, 1L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, 
+2L, 1L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 
+2L, 1L, 1L, 2L, 1L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, 1L, 1L, 2L, 
+2L, 1L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 
+1L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 1L, 1L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 1L, 1L, 
+1L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 2L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 
+2L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, 
+2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 
+1L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 2L, 2L, 2L, 1L, 1L, 
+2L, 2L, 1L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 
+2L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 
+2L, 1L, 2L, 2L, 1L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 
+1L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 
+2L, 1L, 2L, 2L, 1L, 1L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 1L, 2L, 2L, 
+2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 1L, 2L, 
+2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 
+1L, 1L, 2L, 1L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 
+1L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 
+1L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 
+1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, 
+1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 
+2L, 2L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 
+2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, 
+2L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 
+2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 
+2L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 
+2L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 1L, 1L, 2L, 2L, 2L, 
+2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 
+1L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 
+2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 2L, 2L, 
+2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 
+1L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 1L, 1L, 2L, 
+1L, 1L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 2L, 2L, 2L, 1L, 1L, 
+2L, 1L, 2L, 2L, 1L, 2L, 1L, 1L, 2L, 2L), .Label = c("female", 
+"male"), class = "factor"), Age = c(22, 38, 26, 35, 35, NA, 54, 
+2, 27, 14, 4, 58, 20, 39, 14, 55, 2, NA, 31, NA, 35, 34, 15, 
+28, 8, 38, NA, 19, NA, NA, 40, NA, NA, 66, 28, 42, NA, 21, 18, 
+14, 40, 27, NA, 3, 19, NA, NA, NA, NA, 18, 7, 21, 49, 29, 65, 
+NA, 21, 28.5, 5, 11, 22, 38, 45, 4, NA, NA, 29, 19, 17, 26, 32, 
+16, 21, 26, 32, 25, NA, NA, 0.83, 30, 22, 29, NA, 28, 17, 33, 
+16, NA, 23, 24, 29, 20, 46, 26, 59, NA, 71, 23, 34, 34, 28, NA, 
+21, 33, 37, 28, 21, NA, 38, NA, 47, 14.5, 22, 20, 17, 21, 70.5, 
+29, 24, 2, 21, NA, 32.5, 32.5, 54, 12, NA, 24, NA, 45, 33, 20, 
+47, 29, 25, 23, 19, 37, 16, 24, NA, 22, 24, 19, 18, 19, 27, 9, 
+36.5, 42, 51, 22, 55.5, 40.5, NA, 51, 16, 30, NA, NA, 44, 40, 
+26, 17, 1, 9, NA, 45, NA, 28, 61, 4, 1, 21, 56, 18, NA, 50, 30, 
+36, NA, NA, 9, 1, 4, NA, NA, 45, 40, 36, 32, 19, 19, 3, 44, 58, 
+NA, 42, NA, 24, 28, NA, 34, 45.5, 18, 2, 32, 26, 16, 40, 24, 
+35, 22, 30, NA, 31, 27, 42, 32, 30, 16, 27, 51, NA, 38, 22, 19, 
+20.5, 18, NA, 35, 29, 59, 5, 24, NA, 44, 8, 19, 33, NA, NA, 29, 
+22, 30, 44, 25, 24, 37, 54, NA, 29, 62, 30, 41, 29, NA, 30, 35, 
+50, NA, 3, 52, 40, NA, 36, 16, 25, 58, 35, NA, 25, 41, 37, NA, 
+63, 45, NA, 7, 35, 65, 28, 16, 19, NA, 33, 30, 22, 42, 22, 26, 
+19, 36, 24, 24, NA, 23.5, 2, NA, 50, NA, NA, 19, NA, NA, 0.92, 
+NA, 17, 30, 30, 24, 18, 26, 28, 43, 26, 24, 54, 31, 40, 22, 27, 
+30, 22, NA, 36, 61, 36, 31, 16, NA, 45.5, 38, 16, NA, NA, 29, 
+41, 45, 45, 2, 24, 28, 25, 36, 24, 40, NA, 3, 42, 23, NA, 15, 
+25, NA, 28, 22, 38, NA, NA, 40, 29, 45, 35, NA, 30, 60, NA, NA, 
+24, 25, 18, 19, 22, 3, NA, 22, 27, 20, 19, 42, 1, 32, 35, NA, 
+18, 1, 36, NA, 17, 36, 21, 28, 23, 24, 22, 31, 46, 23, 28, 39, 
+26, 21, 28, 20, 34, 51, 3, 21, NA, NA, NA, 33, NA, 44, NA, 34, 
+18, 30, 10, NA, 21, 29, 28, 18, NA, 28, 19, NA, 32, 28, NA, 42, 
+17, 50, 14, 21, 24, 64, 31, 45, 20, 25, 28, NA, 4, 13, 34, 5, 
+52, 36, NA, 30, 49, NA, 29, 65, NA, 50, NA, 48, 34, 47, 48, NA, 
+38, NA, 56, NA, 0.75, NA, 38, 33, 23, 22, NA, 34, 29, 22, 2, 
+9, NA, 50, 63, 25, NA, 35, 58, 30, 9, NA, 21, 55, 71, 21, NA, 
+54, NA, 25, 24, 17, 21, NA, 37, 16, 18, 33, NA, 28, 26, 29, NA, 
+36, 54, 24, 47, 34, NA, 36, 32, 30, 22, NA, 44, NA, 40.5, 50, 
+NA, 39, 23, 2, NA, 17, NA, 30, 7, 45, 30, NA, 22, 36, 9, 11, 
+32, 50, 64, 19, NA, 33, 8, 17, 27, NA, 22, 22, 62, 48, NA, 39, 
+36, NA, 40, 28, NA, NA, 24, 19, 29, NA, 32, 62, 53, 36, NA, 16, 
+19, 34, 39, NA, 32, 25, 39, 54, 36, NA, 18, 47, 60, 22, NA, 35, 
+52, 47, NA, 37, 36, NA, 49, NA, 49, 24, NA, NA, 44, 35, 36, 30, 
+27, 22, 40, 39, NA, NA, NA, 35, 24, 34, 26, 4, 26, 27, 42, 20, 
+21, 21, 61, 57, 21, 26, NA, 80, 51, 32, NA, 9, 28, 32, 31, 41, 
+NA, 20, 24, 2, NA, 0.75, 48, 19, 56, NA, 23, NA, 18, 21, NA, 
+18, 24, NA, 32, 23, 58, 50, 40, 47, 36, 20, 32, 25, NA, 43, NA, 
+40, 31, 70, 31, NA, 18, 24.5, 18, 43, 36, NA, 27, 20, 14, 60, 
+25, 14, 19, 18, 15, 31, 4, NA, 25, 60, 52, 44, NA, 49, 42, 18, 
+35, 18, 25, 26, 39, 45, 42, 22, NA, 24, NA, 48, 29, 52, 19, 38, 
+27, NA, 33, 6, 17, 34, 50, 27, 20, 30, NA, 25, 25, 29, 11, NA, 
+23, 23, 28.5, 48, 35, NA, NA, NA, 36, 21, 24, 31, 70, 16, 30, 
+19, 31, 4, 6, 33, 23, 48, 0.67, 28, 18, 34, 33, NA, 41, 20, 36, 
+16, 51, NA, 30.5, NA, 32, 24, 48, 57, NA, 54, 18, NA, 5, NA, 
+43, 13, 17, 29, NA, 25, 25, 18, 8, 1, 46, NA, 16, NA, NA, 25, 
+39, 49, 31, 30, 30, 34, 31, 11, 0.42, 27, 31, 39, 18, 39, 33, 
+26, 39, 35, 6, 30.5, NA, 23, 31, 43, 10, 52, 27, 38, 27, 2, NA, 
+NA, 1, NA, 62, 15, 0.83, NA, 23, 18, 39, 21, NA, 32, NA, 20, 
+16, 30, 34.5, 17, 42, NA, 35, 28, NA, 4, 74, 9, 16, 44, 18, 45, 
+51, 24, NA, 41, 21, 48, NA, 24, 42, 27, 31, NA, 4, 26, 47, 33, 
+47, 28, 15, 20, 19, NA, 56, 25, 33, 22, 28, 25, 39, 27, 19, NA, 
+26, 32), SibSp = c(1L, 1L, 0L, 1L, 0L, 0L, 0L, 3L, 0L, 1L, 1L, 
+0L, 0L, 1L, 0L, 0L, 4L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 3L, 1L, 0L, 
+3L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 2L, 1L, 1L, 1L, 0L, 
+1L, 0L, 0L, 1L, 0L, 2L, 1L, 4L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 1L, 
+5L, 0L, 0L, 1L, 3L, 0L, 1L, 0L, 0L, 4L, 2L, 0L, 5L, 0L, 1L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 3L, 1L, 0L, 3L, 0L, 0L, 
+0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 2L, 0L, 0L, 
+0L, 0L, 1L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 4L, 2L, 0L, 1L, 
+0L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 1L, 0L, 
+0L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 2L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 8L, 0L, 0L, 0L, 0L, 4L, 0L, 0L, 1L, 0L, 0L, 0L, 
+4L, 1L, 0L, 0L, 1L, 3L, 0L, 0L, 0L, 8L, 0L, 4L, 2L, 0L, 0L, 1L, 
+0L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 8L, 0L, 
+0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 0L, 
+0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 3L, 1L, 0L, 0L, 4L, 0L, 
+0L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 2L, 0L, 0L, 1L, 1L, 0L, 
+1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 4L, 1L, 0L, 0L, 0L, 4L, 
+1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 4L, 1L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 
+0L, 0L, 2L, 0L, 0L, 0L, 1L, 0L, 1L, 1L, 0L, 0L, 2L, 1L, 0L, 1L, 
+0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 8L, 0L, 0L, 0L, 1L, 0L, 2L, 
+0L, 0L, 2L, 1L, 0L, 1L, 0L, 0L, 0L, 1L, 3L, 0L, 0L, 0L, 0L, 0L, 
+1L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 
+0L, 1L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 3L, 1L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 1L, 0L, 0L, 5L, 0L, 0L, 0L, 1L, 0L, 2L, 1L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 0L, 1L, 0L, 3L, 0L, 
+0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 
+0L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 1L, 2L, 2L, 1L, 0L, 1L, 0L, 1L, 
+0L, 0L, 0L, 0L, 0L, 2L, 0L, 1L, 1L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 2L, 0L, 0L, 1L, 0L, 0L, 
+0L, 1L, 1L, 0L, 0L, 5L, 0L, 0L, 0L, 1L, 3L, 1L, 0L, 0L, 1L, 1L, 
+0L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 2L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 4L, 4L, 1L, 1L, 0L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 
+0L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 2L, 0L, 0L, 0L, 0L, 0L, 
+2L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 
+1L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 1L, 2L, 0L, 0L, 
+0L, 0L, 1L, 0L, 0L, 1L, 0L, 1L, 0L, 1L, 0L, 0L, 1L, 1L, 1L, 2L, 
+0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 3L, 
+0L, 0L, 1L, 0L, 1L, 0L, 0L, 3L, 0L, 2L, 1L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 2L, 0L, 1L, 0L, 0L, 2L, 0L, 0L, 0L, 1L, 2L, 0L, 
+0L, 0L, 1L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 
+5L, 1L, 1L, 4L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 
+0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 3L, 0L, 1L, 1L, 0L, 
+0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 2L, 1L, 0L, 1L, 1L, 
+0L, 1L, 0L, 1L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
+1L, 0L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 
+0L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 4L, 1L, 0L, 0L, 0L, 8L, 0L, 0L, 
+0L, 0L, 0L, 0L, 1L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 
+0L, 0L, 4L, 0L, 0L, 0L, 1L, 0L, 3L, 1L, 0L, 0L, 0L, 4L, 0L, 0L, 
+0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 8L, 0L, 0L, 1L, 4L, 0L, 1L, 0L, 1L, 0L, 1L, 0L, 0L, 
+0L, 2L, 1L, 0L, 8L, 0L, 0L, 1L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 1L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L
+), Parch = c(0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 2L, 0L, 1L, 0L, 
+0L, 5L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 5L, 0L, 2L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 2L, 
+0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 2L, 2L, 
+0L, 0L, 0L, 2L, 0L, 1L, 0L, 0L, 2L, 0L, 0L, 2L, 0L, 0L, 0L, 0L, 
+0L, 0L, 2L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 3L, 0L, 2L, 0L, 0L, 0L, 
+0L, 2L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 2L, 0L, 0L, 0L, 0L, 
+1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 2L, 0L, 0L, 0L, 
+2L, 0L, 0L, 0L, 0L, 1L, 0L, 2L, 2L, 0L, 0L, 0L, 0L, 2L, 0L, 1L, 
+0L, 0L, 0L, 2L, 1L, 0L, 0L, 0L, 1L, 2L, 1L, 4L, 0L, 0L, 0L, 1L, 
+1L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 2L, 0L, 2L, 1L, 2L, 0L, 0L, 0L, 
+1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 2L, 0L, 0L, 
+0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 2L, 0L, 0L, 
+0L, 2L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 2L, 1L, 0L, 0L, 1L, 
+0L, 0L, 2L, 2L, 0L, 0L, 0L, 1L, 0L, 2L, 1L, 0L, 0L, 0L, 1L, 0L, 
+1L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 2L, 0L, 1L, 
+0L, 0L, 0L, 0L, 0L, 2L, 0L, 0L, 0L, 0L, 0L, 2L, 1L, 0L, 1L, 0L, 
+0L, 0L, 2L, 1L, 0L, 0L, 0L, 1L, 2L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 
+1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 2L, 0L, 0L, 0L, 0L, 0L, 0L, 
+1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 4L, 0L, 1L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 2L, 0L, 0L, 
+0L, 2L, 0L, 0L, 0L, 0L, 2L, 0L, 0L, 0L, 2L, 0L, 0L, 0L, 2L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 
+0L, 0L, 0L, 0L, 1L, 2L, 0L, 2L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 2L, 2L, 3L, 4L, 0L, 1L, 0L, 0L, 0L, 
+0L, 2L, 1L, 0L, 1L, 0L, 2L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 2L, 0L, 0L, 0L, 
+0L, 0L, 0L, 1L, 2L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 2L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 2L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 
+0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 1L, 2L, 0L, 2L, 0L, 0L, 0L, 2L, 
+2L, 2L, 2L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 2L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 4L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 2L, 0L, 1L, 
+0L, 0L, 0L, 0L, 0L, 2L, 0L, 1L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 2L, 0L, 5L, 0L, 0L, 0L, 0L, 2L, 1L, 0L, 1L, 0L, 
+0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 2L, 0L, 
+0L, 1L, 5L, 0L, 0L, 0L, 2L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 
+0L, 0L, 0L, 0L, 0L, 1L, 0L, 2L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 6L, 1L, 0L, 0L, 0L, 2L, 
+1L, 2L, 1L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 
+0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 0L, 3L, 0L, 0L, 0L, 0L, 0L, 2L, 0L, 0L, 1L, 1L, 0L, 
+0L, 0L, 1L, 1L, 0L, 0L, 2L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 2L, 
+0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 3L, 0L, 0L, 0L, 0L, 1L, 
+0L, 0L, 0L, 2L, 0L, 0L, 0L, 1L, 2L, 0L, 0L, 0L, 2L, 0L, 0L, 0L, 
+0L, 0L, 0L, 1L, 0L, 1L, 2L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 2L, 0L, 0L, 0L, 1L, 0L, 2L, 1L, 0L, 0L, 1L, 1L, 0L, 0L, 2L, 
+0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
+0L, 0L, 2L, 0L, 1L, 0L, 2L, 0L, 1L, 1L, 0L, 1L, 1L, 0L, 3L, 0L, 
+0L, 0L, 0L, 2L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 1L, 0L, 0L, 0L, 0L, 
+0L, 0L, 0L, 1L, 1L, 0L, 0L, 0L, 0L, 5L, 0L, 0L, 2L, 0L, 0L), 
+    Ticket = structure(c(524L, 597L, 670L, 50L, 473L, 276L, 86L, 
+    396L, 345L, 133L, 617L, 39L, 536L, 334L, 414L, 154L, 481L, 
+    152L, 302L, 185L, 140L, 153L, 279L, 43L, 396L, 330L, 180L, 
+    96L, 284L, 363L, 599L, 587L, 289L, 550L, 601L, 44L, 203L, 
+    515L, 303L, 187L, 508L, 54L, 392L, 635L, 283L, 618L, 463L, 
+    77L, 191L, 378L, 250L, 523L, 588L, 240L, 30L, 95L, 556L, 
+    216L, 562L, 567L, 198L, 33L, 458L, 338L, 602L, 190L, 554L, 
+    624L, 249L, 271L, 558L, 567L, 622L, 205L, 81L, 348L, 356L, 
+    474L, 159L, 433L, 305L, 312L, 281L, 26L, 638L, 248L, 677L, 
+    653L, 96L, 298L, 299L, 342L, 679L, 549L, 429L, 476L, 608L, 
+    613L, 118L, 151L, 385L, 362L, 418L, 506L, 246L, 355L, 297L, 
+    255L, 389L, 470L, 3L, 194L, 275L, 492L, 177L, 667L, 461L, 
+    54L, 586L, 334L, 622L, 541L, 133L, 220L, 418L, 187L, 464L, 
+    542L, 197L, 319L, 381L, 641L, 538L, 112L, 553L, 631L, 56L, 
+    50L, 505L, 593L, 204L, 333L, 669L, 439L, 119L, 559L, 406L, 
+    677L, 114L, 148L, 623L, 37L, 517L, 539L, 574L, 596L, 419L, 
+    655L, 259L, 569L, 471L, 560L, 324L, 266L, 250L, 424L, 29L, 
+    338L, 577L, 81L, 6L, 481L, 345L, 660L, 91L, 413L, 489L, 594L, 
+    170L, 575L, 569L, 630L, 330L, 115L, 272L, 35L, 460L, 12L, 
+    436L, 387L, 123L, 228L, 407L, 114L, 605L, 587L, 453L, 495L, 
+    462L, 161L, 307L, 569L, 243L, 178L, 531L, 317L, 248L, 217L, 
+    446L, 18L, 643L, 571L, 527L, 164L, 444L, 417L, 671L, 143L, 
+    64L, 680L, 654L, 106L, 103L, 376L, 94L, 616L, 673L, 526L, 
+    126L, 489L, 458L, 323L, 129L, 330L, 555L, 678L, 199L, 557L, 
+    232L, 637L, 194L, 445L, 675L, 659L, 214L, 93L, 326L, 167L, 
+    55L, 145L, 423L, 317L, 32L, 537L, 459L, 186L, 590L, 1L, 609L, 
+    116L, 483L, 330L, 2L, 17L, 479L, 547L, 250L, 335L, 589L, 
+    614L, 48L, 575L, 163L, 595L, 466L, 72L, 327L, 136L, 481L, 
+    552L, 291L, 341L, 311L, 534L, 25L, 379L, 309L, 354L, 135L, 
+    465L, 92L, 65L, 636L, 377L, 375L, 607L, 213L, 38L, 99L, 586L, 
+    514L, 442L, 575L, 110L, 528L, 38L, 84L, 612L, 576L, 585L, 
+    60L, 603L, 168L, 383L, 572L, 344L, 151L, 233L, 454L, 82L, 
+    525L, 366L, 125L, 159L, 569L, 614L, 300L, 230L, 424L, 8L, 
+    442L, 21L, 589L, 303L, 606L, 371L, 37L, 82L, 511L, 40L, 114L, 
+    96L, 160L, 150L, 113L, 158L, 258L, 484L, 563L, 263L, 504L, 
+    31L, 215L, 378L, 183L, 315L, 29L, 132L, 280L, 286L, 338L, 
+    634L, 212L, 642L, 460L, 545L, 5L, 176L, 79L, 582L, 59L, 245L, 
+    274L, 614L, 396L, 601L, 546L, 28L, 184L, 325L, 611L, 188L, 
+    666L, 44L, 372L, 622L, 567L, 221L, 448L, 626L, 34L, 402L, 
+    247L, 417L, 617L, 411L, 415L, 227L, 147L, 141L, 664L, 293L, 
+    493L, 669L, 268L, 231L, 322L, 238L, 256L, 489L, 368L, 488L, 
+    93L, 136L, 656L, 296L, 225L, 169L, 226L, 308L, 393L, 535L, 
+    260L, 332L, 459L, 522L, 101L, 171L, 438L, 645L, 4L, 477L, 
+    628L, 658L, 73L, 34L, 677L, 238L, 96L, 548L, 572L, 306L, 
+    329L, 117L, 500L, 290L, 163L, 46L, 195L, 41L, 562L, 498L, 
+    23L, 85L, 529L, 380L, 74L, 87L, 573L, 469L, 97L, 430L, 7L, 
+    122L, 540L, 640L, 136L, 45L, 422L, 195L, 273L, 264L, 562L, 
+    629L, 510L, 3L, 253L, 316L, 412L, 252L, 567L, 137L, 532L, 
+    490L, 65L, 489L, 94L, 62L, 518L, 563L, 499L, 650L, 42L, 604L, 
+    519L, 177L, 455L, 565L, 38L, 403L, 262L, 434L, 277L, 491L, 
+    1L, 612L, 181L, 11L, 543L, 81L, 480L, 649L, 578L, 600L, 357L, 
+    457L, 561L, 470L, 111L, 382L, 68L, 391L, 174L, 8L, 218L, 
+    447L, 674L, 584L, 251L, 236L, 181L, 182L, 211L, 197L, 261L, 
+    572L, 22L, 615L, 427L, 76L, 681L, 334L, 334L, 234L, 615L, 
+    502L, 234L, 632L, 424L, 559L, 84L, 149L, 285L, 172L, 336L, 
+    53L, 58L, 611L, 2L, 301L, 472L, 390L, 104L, 652L, 646L, 520L, 
+    353L, 396L, 208L, 416L, 625L, 61L, 579L, 78L, 521L, 421L, 
+    144L, 73L, 210L, 662L, 134L, 84L, 227L, 69L, 292L, 2L, 130L, 
+    75L, 80L, 516L, 657L, 455L, 533L, 435L, 627L, 308L, 156L, 
+    575L, 193L, 585L, 143L, 361L, 47L, 431L, 10L, 397L, 386L, 
+    51L, 635L, 589L, 334L, 639L, 445L, 468L, 432L, 107L, 332L, 
+    537L, 115L, 254L, 189L, 57L, 188L, 401L, 496L, 456L, 105L, 
+    72L, 370L, 287L, 219L, 346L, 71L, 14L, 338L, 131L, 665L, 
+    557L, 250L, 477L, 410L, 582L, 338L, 81L, 195L, 588L, 374L, 
+    70L, 621L, 568L, 367L, 118L, 513L, 278L, 440L, 622L, 369L, 
+    436L, 242L, 417L, 606L, 173L, 497L, 358L, 661L, 622L, 124L, 
+    257L, 530L, 100L, 241L, 570L, 551L, 146L, 139L, 398L, 295L, 
+    494L, 567L, 609L, 282L, 588L, 501L, 567L, 241L, 635L, 250L, 
+    373L, 404L, 142L, 90L, 394L, 81L, 201L, 49L, 157L, 426L, 
+    420L, 84L, 347L, 611L, 580L, 212L, 450L, 399L, 171L, 109L, 
+    581L, 38L, 190L, 583L, 20L, 100L, 507L, 165L, 349L, 611L, 
+    294L, 441L, 320L, 156L, 409L, 66L, 162L, 52L, 267L, 253L, 
+    452L, 128L, 668L, 142L, 217L, 138L, 229L, 120L, 496L, 677L, 
+    609L, 350L, 365L, 83L, 92L, 603L, 478L, 663L, 681L, 552L, 
+    166L, 36L, 288L, 235L, 487L, 313L, 352L, 107L, 167L, 405L, 
+    239L, 425L, 1L, 421L, 647L, 192L, 34L, 328L, 72L, 19L, 437L, 
+    470L, 512L, 314L, 408L, 620L, 202L, 237L, 331L, 482L, 433L, 
+    451L, 142L, 209L, 90L, 27L, 676L, 644L, 475L, 244L, 481L, 
+    549L, 593L, 67L, 140L, 569L, 598L, 351L, 224L, 88L, 384L, 
+    207L, 308L, 165L, 557L, 34L, 175L, 339L, 321L, 13L, 337L, 
+    155L, 52L, 340L, 520L, 223L, 334L, 428L, 16L, 672L, 619L, 
+    544L, 338L, 68L, 270L, 98L, 487L, 250L, 449L, 81L, 619L, 
+    443L, 33L, 189L, 238L, 200L, 343L, 108L, 610L, 269L, 486L, 
+    81L, 63L, 648L, 620L, 48L, 206L, 265L, 564L, 569L, 360L, 
+    156L, 85L, 334L, 318L, 204L, 592L, 145L, 485L, 454L, 24L, 
+    195L, 179L, 400L, 222L, 89L, 569L, 121L, 127L, 633L, 591L, 
+    310L, 345L, 388L, 55L, 503L, 304L, 576L, 196L, 505L, 359L, 
+    364L, 60L, 116L, 395L, 509L, 566L, 651L, 481L, 102L, 15L, 
+    676L, 9L, 467L), .Label = c("110152", "110413", "110465", 
+    "110564", "110813", "111240", "111320", "111361", "111369", 
+    "111426", "111427", "111428", "112050", "112052", "112053", 
+    "112058", "112059", "112277", "112379", "113028", "113043", 
+    "113050", "113051", "113055", "113056", "113059", "113501", 
+    "113503", "113505", "113509", "113510", "113514", "113572", 
+    "113760", "113767", "113773", "113776", "113781", "113783", 
+    "113784", "113786", "113787", "113788", "113789", "113792", 
+    "113794", "113796", "113798", "113800", "113803", "113804", 
+    "113806", "113807", "11668", "11751", "11752", "11753", "11755", 
+    "11765", "11767", "11769", "11771", "11774", "11813", "11967", 
+    "12233", "12460", "12749", "13049", "13213", "13214", "13502", 
+    "13507", "13509", "13567", "13568", "14311", "14312", "14313", 
+    "14973", "1601", "16966", "16988", "17421", "17453", "17463", 
+    "17464", "17465", "17466", "17474", "17764", "19877", "19928", 
+    "19943", "19947", "19950", "19952", "19972", "19988", "19996", 
+    "2003", "211536", "21440", "218629", "219533", "220367", 
+    "220845", "2223", "223596", "226593", "226875", "228414", 
+    "229236", "230080", "230136", "230433", "230434", "231919", 
+    "231945", "233639", "233866", "234360", "234604", "234686", 
+    "234818", "236171", "236852", "236853", "237442", "237565", 
+    "237668", "237671", "237736", "237789", "237798", "239853", 
+    "239854", "239855", "239856", "239865", "240929", "24160", 
+    "243847", "243880", "244252", "244270", "244278", "244310", 
+    "244358", "244361", "244367", "244373", "248698", "248706", 
+    "248723", "248727", "248731", "248733", "248738", "248740", 
+    "248747", "250643", "250644", "250646", "250647", "250648", 
+    "250649", "250651", "250652", "250653", "250655", "2620", 
+    "2623", "2624", "2625", "2626", "2627", "2628", "2629", "2631", 
+    "26360", "2641", "2647", "2648", "2649", "2650", "2651", 
+    "2653", "2659", "2661", "2662", "2663", "2664", "2665", "2666", 
+    "2667", "2668", "2669", "26707", "2671", "2672", "2674", 
+    "2677", "2678", "2680", "2683", "2685", "2686", "2687", "2689", 
+    "2690", "2691", "2693", "2694", "2695", "2697", "2699", "2700", 
+    "27042", "27267", "27849", "28134", "28206", "28213", "28220", 
+    "28228", "28403", "28424", "28425", "28551", "28664", "28665", 
+    "29011", "2908", "29103", "29104", "29105", "29106", "29108", 
+    "2926", "29750", "29751", "3101264", "3101265", "3101267", 
+    "3101276", "3101277", "3101278", "3101281", "3101295", "3101296", 
+    "3101298", "31027", "31028", "312991", "312992", "312993", 
+    "31418", "315037", "315082", "315084", "315086", "315088", 
+    "315089", "315090", "315093", "315094", "315096", "315097", 
+    "315098", "315151", "315153", "323592", "323951", "324669", 
+    "330877", "330909", "330919", "330923", "330931", "330932", 
+    "330935", "330958", "330959", "330979", "330980", "334912", 
+    "335097", "335677", "33638", "336439", "3411", "341826", 
+    "34218", "342826", "343095", "343120", "343275", "343276", 
+    "345364", "345572", "345763", "345764", "345765", "345767", 
+    "345769", "345770", "345773", "345774", "345777", "345778", 
+    "345779", "345780", "345781", "345783", "3460", "347054", 
+    "347060", "347061", "347062", "347063", "347064", "347067", 
+    "347068", "347069", "347071", "347073", "347074", "347076", 
+    "347077", "347078", "347080", "347081", "347082", "347083", 
+    "347085", "347087", "347088", "347089", "3474", "347464", 
+    "347466", "347468", "347470", "347742", "347743", "348121", 
+    "348123", "348124", "349201", "349203", "349204", "349205", 
+    "349206", "349207", "349208", "349209", "349210", "349212", 
+    "349213", "349214", "349215", "349216", "349217", "349218", 
+    "349219", "349221", "349222", "349223", "349224", "349225", 
+    "349227", "349228", "349231", "349233", "349234", "349236", 
+    "349237", "349239", "349240", "349241", "349242", "349243", 
+    "349244", "349245", "349246", "349247", "349248", "349249", 
+    "349251", "349252", "349253", "349254", "349256", "349257", 
+    "349909", "349910", "349912", "350025", "350026", "350029", 
+    "350034", "350035", "350036", "350042", "350043", "350046", 
+    "350047", "350048", "350050", "350052", "350060", "350404", 
+    "350406", "350407", "350417", "35273", "35281", "35851", 
+    "35852", "358585", "36209", "362316", "363291", "363294", 
+    "363592", "364498", "364499", "364500", "364506", "364511", 
+    "364512", "364516", "364846", "364848", "364849", "364850", 
+    "364851", "365222", "365226", "36568", "367226", "367228", 
+    "367229", "367230", "367231", "367232", "367655", "368323", 
+    "36864", "36865", "36866", "368703", "36928", "36947", "36963", 
+    "36967", "36973", "370129", "370365", "370369", "370370", 
+    "370371", "370372", "370373", "370375", "370376", "370377", 
+    "371060", "371110", "371362", "372622", "373450", "374746", 
+    "374887", "374910", "376564", "376566", "382649", "382651", 
+    "382652", "383121", "384461", "386525", "392091", "392092", 
+    "392096", "394140", "4133", "4134", "4135", "4136", "4137", 
+    "4138", "4579", "54636", "5727", "65303", "65304", "65306", 
+    "6563", "693", "695", "7267", "7534", "7540", "7545", "7546", 
+    "7552", "7553", "7598", "8471", "8475", "9234", "A./5. 2152", 
+    "A./5. 3235", "A.5. 11206", "A.5. 18509", "A/4 45380", "A/4 48871", 
+    "A/4. 20589", "A/4. 34244", "A/4. 39886", "A/5 21171", "A/5 21172", 
+    "A/5 21173", "A/5 21174", "A/5 2466", "A/5 2817", "A/5 3536", 
+    "A/5 3540", "A/5 3594", "A/5 3902", "A/5. 10482", "A/5. 13032", 
+    "A/5. 2151", "A/5. 3336", "A/5. 3337", "A/5. 851", "A/S 2816", 
+    "A4. 54510", "C 17369", "C 4001", "C 7075", "C 7076", "C 7077", 
+    "C.A. 17248", "C.A. 18723", "C.A. 2315", "C.A. 24579", "C.A. 24580", 
+    "C.A. 2673", "C.A. 29178", "C.A. 29395", "C.A. 29566", "C.A. 31026", 
+    "C.A. 31921", "C.A. 33111", "C.A. 33112", "C.A. 33595", "C.A. 34260", 
+    "C.A. 34651", "C.A. 37671", "C.A. 5547", "C.A. 6212", "C.A./SOTON 34068", 
+    "CA 2144", "CA. 2314", "CA. 2343", "F.C. 12750", "F.C.C. 13528", 
+    "F.C.C. 13529", "F.C.C. 13531", "Fa 265302", "LINE", "P/PP 3381", 
+    "PC 17318", "PC 17473", "PC 17474", "PC 17475", "PC 17476", 
+    "PC 17477", "PC 17482", "PC 17483", "PC 17485", "PC 17558", 
+    "PC 17569", "PC 17572", "PC 17582", "PC 17585", "PC 17590", 
+    "PC 17592", "PC 17593", "PC 17595", "PC 17596", "PC 17597", 
+    "PC 17599", "PC 17600", "PC 17601", "PC 17603", "PC 17604", 
+    "PC 17605", "PC 17608", "PC 17609", "PC 17610", "PC 17611", 
+    "PC 17612", "PC 17754", "PC 17755", "PC 17756", "PC 17757", 
+    "PC 17758", "PC 17759", "PC 17760", "PC 17761", "PP 4348", 
+    "PP 9549", "S.C./A.4. 23567", "S.C./PARIS 2079", "S.O./P.P. 3", 
+    "S.O./P.P. 751", "S.O.C. 14879", "S.O.P. 1166", "S.P. 3464", 
+    "S.W./PP 752", "SC 1748", "SC/AH 29037", "SC/AH 3085", "SC/AH Basle 541", 
+    "SC/PARIS 2131", "SC/PARIS 2133", "SC/PARIS 2146", "SC/PARIS 2149", 
+    "SC/PARIS 2167", "SC/Paris 2123", "SC/Paris 2163", "SCO/W 1585", 
+    "SO/C 14885", "SOTON/O.Q. 3101305", "SOTON/O.Q. 3101306", 
+    "SOTON/O.Q. 3101307", "SOTON/O.Q. 3101310", "SOTON/O.Q. 3101311", 
+    "SOTON/O.Q. 3101312", "SOTON/O.Q. 392078", "SOTON/O.Q. 392087", 
+    "SOTON/O2 3101272", "SOTON/O2 3101287", "SOTON/OQ 3101316", 
+    "SOTON/OQ 3101317", "SOTON/OQ 392076", "SOTON/OQ 392082", 
+    "SOTON/OQ 392086", "SOTON/OQ 392089", "SOTON/OQ 392090", 
+    "STON/O 2. 3101269", "STON/O 2. 3101273", "STON/O 2. 3101274", 
+    "STON/O 2. 3101275", "STON/O 2. 3101280", "STON/O 2. 3101285", 
+    "STON/O 2. 3101286", "STON/O 2. 3101288", "STON/O 2. 3101289", 
+    "STON/O 2. 3101292", "STON/O 2. 3101293", "STON/O 2. 3101294", 
+    "STON/O2. 3101271", "STON/O2. 3101279", "STON/O2. 3101282", 
+    "STON/O2. 3101283", "STON/O2. 3101290", "SW/PP 751", "W./C. 14258", 
+    "W./C. 14263", "W./C. 6607", "W./C. 6608", "W./C. 6609", 
+    "W.E.P. 5734", "W/C 14208", "WE/P 5735"), class = "factor"), 
+    Fare = c(7.25, 71.2833, 7.925, 53.1, 8.05, 8.4583, 51.8625, 
+    21.075, 11.1333, 30.0708, 16.7, 26.55, 8.05, 31.275, 7.8542, 
+    16, 29.125, 13, 18, 7.225, 26, 13, 8.0292, 35.5, 21.075, 
+    31.3875, 7.225, 263, 7.8792, 7.8958, 27.7208, 146.5208, 7.75, 
+    10.5, 82.1708, 52, 7.2292, 8.05, 18, 11.2417, 9.475, 21, 
+    7.8958, 41.5792, 7.8792, 8.05, 15.5, 7.75, 21.6792, 17.8, 
+    39.6875, 7.8, 76.7292, 26, 61.9792, 35.5, 10.5, 7.2292, 27.75, 
+    46.9, 7.2292, 80, 83.475, 27.9, 27.7208, 15.2458, 10.5, 8.1583, 
+    7.925, 8.6625, 10.5, 46.9, 73.5, 14.4542, 56.4958, 7.65, 
+    7.8958, 8.05, 29, 12.475, 9, 9.5, 7.7875, 47.1, 10.5, 15.85, 
+    34.375, 8.05, 263, 8.05, 8.05, 7.8542, 61.175, 20.575, 7.25, 
+    8.05, 34.6542, 63.3583, 23, 26, 7.8958, 7.8958, 77.2875, 
+    8.6542, 7.925, 7.8958, 7.65, 7.775, 7.8958, 24.15, 52, 14.4542, 
+    8.05, 9.825, 14.4583, 7.925, 7.75, 21, 247.5208, 31.275, 
+    73.5, 8.05, 30.0708, 13, 77.2875, 11.2417, 7.75, 7.1417, 
+    22.3583, 6.975, 7.8958, 7.05, 14.5, 26, 13, 15.0458, 26.2833, 
+    53.1, 9.2167, 79.2, 15.2458, 7.75, 15.85, 6.75, 11.5, 36.75, 
+    7.7958, 34.375, 26, 13, 12.525, 66.6, 8.05, 14.5, 7.3125, 
+    61.3792, 7.7333, 8.05, 8.6625, 69.55, 16.1, 15.75, 7.775, 
+    8.6625, 39.6875, 20.525, 55, 27.9, 25.925, 56.4958, 33.5, 
+    29.125, 11.1333, 7.925, 30.6958, 7.8542, 25.4667, 28.7125, 
+    13, 0, 69.55, 15.05, 31.3875, 39, 22.025, 50, 15.5, 26.55, 
+    15.5, 7.8958, 13, 13, 7.8542, 26, 27.7208, 146.5208, 7.75, 
+    8.4042, 7.75, 13, 9.5, 69.55, 6.4958, 7.225, 8.05, 10.4625, 
+    15.85, 18.7875, 7.75, 31, 7.05, 21, 7.25, 13, 7.75, 113.275, 
+    7.925, 27, 76.2917, 10.5, 8.05, 13, 8.05, 7.8958, 90, 9.35, 
+    10.5, 7.25, 13, 25.4667, 83.475, 7.775, 13.5, 31.3875, 10.5, 
+    7.55, 26, 26.25, 10.5, 12.275, 14.4542, 15.5, 10.5, 7.125, 
+    7.225, 90, 7.775, 14.5, 52.5542, 26, 7.25, 10.4625, 26.55, 
+    16.1, 20.2125, 15.2458, 79.2, 86.5, 512.3292, 26, 7.75, 31.3875, 
+    79.65, 0, 7.75, 10.5, 39.6875, 7.775, 153.4625, 135.6333, 
+    31, 0, 19.5, 29.7, 7.75, 77.9583, 7.75, 0, 29.125, 20.25, 
+    7.75, 7.8542, 9.5, 8.05, 26, 8.6625, 9.5, 7.8958, 13, 7.75, 
+    78.85, 91.0792, 12.875, 8.85, 7.8958, 27.7208, 7.2292, 151.55, 
+    30.5, 247.5208, 7.75, 23.25, 0, 12.35, 8.05, 151.55, 110.8833, 
+    108.9, 24, 56.9292, 83.1583, 262.375, 26, 7.8958, 26.25, 
+    7.8542, 26, 14, 164.8667, 134.5, 7.25, 7.8958, 12.35, 29, 
+    69.55, 135.6333, 6.2375, 13, 20.525, 57.9792, 23.25, 28.5, 
+    153.4625, 18, 133.65, 7.8958, 66.6, 134.5, 8.05, 35.5, 26, 
+    263, 13, 13, 13, 13, 13, 16.1, 15.9, 8.6625, 9.225, 35, 7.2292, 
+    17.8, 7.225, 9.5, 55, 13, 7.8792, 7.8792, 27.9, 27.7208, 
+    14.4542, 7.05, 15.5, 7.25, 75.25, 7.2292, 7.75, 69.3, 55.4417, 
+    6.4958, 8.05, 135.6333, 21.075, 82.1708, 7.25, 211.5, 4.0125, 
+    7.775, 227.525, 15.7417, 7.925, 52, 7.8958, 73.5, 46.9, 13, 
+    7.7292, 12, 120, 7.7958, 7.925, 113.275, 16.7, 7.7958, 7.8542, 
+    26, 10.5, 12.65, 7.925, 8.05, 9.825, 15.85, 8.6625, 21, 7.75, 
+    18.75, 7.775, 25.4667, 7.8958, 6.8583, 90, 0, 7.925, 8.05, 
+    32.5, 13, 13, 24.15, 7.8958, 7.7333, 7.875, 14.4, 20.2125, 
+    7.25, 26, 26, 7.75, 8.05, 26.55, 16.1, 26, 7.125, 55.9, 120, 
+    34.375, 18.75, 263, 10.5, 26.25, 9.5, 7.775, 13, 8.1125, 
+    81.8583, 19.5, 26.55, 19.2583, 30.5, 27.75, 19.9667, 27.75, 
+    89.1042, 8.05, 7.8958, 26.55, 51.8625, 10.5, 7.75, 26.55, 
+    8.05, 38.5, 13, 8.05, 7.05, 0, 26.55, 7.725, 19.2583, 7.25, 
+    8.6625, 27.75, 13.7917, 9.8375, 52, 21, 7.0458, 7.5208, 12.2875, 
+    46.9, 0, 8.05, 9.5875, 91.0792, 25.4667, 90, 29.7, 8.05, 
+    15.9, 19.9667, 7.25, 30.5, 49.5042, 8.05, 14.4583, 78.2667, 
+    15.1, 151.55, 7.7958, 8.6625, 7.75, 7.6292, 9.5875, 86.5, 
+    108.9, 26, 26.55, 22.525, 56.4958, 7.75, 8.05, 26.2875, 59.4, 
+    7.4958, 34.0208, 10.5, 24.15, 26, 7.8958, 93.5, 7.8958, 7.225, 
+    57.9792, 7.2292, 7.75, 10.5, 221.7792, 7.925, 11.5, 26, 7.2292, 
+    7.2292, 22.3583, 8.6625, 26.25, 26.55, 106.425, 14.5, 49.5, 
+    71, 31.275, 31.275, 26, 106.425, 26, 26, 13.8625, 20.525, 
+    36.75, 110.8833, 26, 7.8292, 7.225, 7.775, 26.55, 39.6, 227.525, 
+    79.65, 17.4, 7.75, 7.8958, 13.5, 8.05, 8.05, 24.15, 7.8958, 
+    21.075, 7.2292, 7.8542, 10.5, 51.4792, 26.3875, 7.75, 8.05, 
+    14.5, 13, 55.9, 14.4583, 7.925, 30, 110.8833, 26, 40.125, 
+    8.7125, 79.65, 15, 79.2, 8.05, 8.05, 7.125, 78.2667, 7.25, 
+    7.75, 26, 24.15, 33, 0, 7.225, 56.9292, 27, 7.8958, 42.4, 
+    8.05, 26.55, 15.55, 7.8958, 30.5, 41.5792, 153.4625, 31.275, 
+    7.05, 15.5, 7.75, 8.05, 65, 14.4, 16.1, 39, 10.5, 14.4542, 
+    52.5542, 15.7417, 7.8542, 16.1, 32.3208, 12.35, 77.9583, 
+    7.8958, 7.7333, 30, 7.0542, 30.5, 0, 27.9, 13, 7.925, 26.25, 
+    39.6875, 16.1, 7.8542, 69.3, 27.9, 56.4958, 19.2583, 76.7292, 
+    7.8958, 35.5, 7.55, 7.55, 7.8958, 23, 8.4333, 7.8292, 6.75, 
+    73.5, 7.8958, 15.5, 13, 113.275, 133.65, 7.225, 25.5875, 
+    7.4958, 7.925, 73.5, 13, 7.775, 8.05, 52, 39, 52, 10.5, 13, 
+    0, 7.775, 8.05, 9.8417, 46.9, 512.3292, 8.1375, 76.7292, 
+    9.225, 46.9, 39, 41.5792, 39.6875, 10.1708, 7.7958, 211.3375, 
+    57, 13.4167, 56.4958, 7.225, 26.55, 13.5, 8.05, 7.7333, 110.8833, 
+    7.65, 227.525, 26.2875, 14.4542, 7.7417, 7.8542, 26, 13.5, 
+    26.2875, 151.55, 15.2458, 49.5042, 26.55, 52, 9.4833, 13, 
+    7.65, 227.525, 10.5, 15.5, 7.775, 33, 7.0542, 13, 13, 53.1, 
+    8.6625, 21, 7.7375, 26, 7.925, 211.3375, 18.7875, 0, 13, 
+    13, 16.1, 34.375, 512.3292, 7.8958, 7.8958, 30, 78.85, 262.375, 
+    16.1, 7.925, 71, 20.25, 13, 53.1, 7.75, 23, 12.475, 9.5, 
+    7.8958, 65, 14.5, 7.7958, 11.5, 8.05, 86.5, 14.5, 7.125, 
+    7.2292, 120, 7.775, 77.9583, 39.6, 7.75, 24.15, 8.3625, 9.5, 
+    7.8542, 10.5, 7.225, 23, 7.75, 7.75, 12.475, 7.7375, 211.3375, 
+    7.2292, 57, 30, 23.45, 7.05, 7.25, 7.4958, 29.125, 20.575, 
+    79.2, 7.75, 26, 69.55, 30.6958, 7.8958, 13, 25.9292, 8.6833, 
+    7.2292, 24.15, 13, 26.25, 120, 8.5167, 6.975, 7.775, 0, 7.775, 
+    13, 53.1, 7.8875, 24.15, 10.5, 31.275, 8.05, 0, 7.925, 37.0042, 
+    6.45, 27.9, 93.5, 8.6625, 0, 12.475, 39.6875, 6.95, 56.4958, 
+    37.0042, 7.75, 80, 14.4542, 18.75, 7.2292, 7.8542, 8.3, 83.1583, 
+    8.6625, 8.05, 56.4958, 29.7, 7.925, 10.5, 31, 6.4375, 8.6625, 
+    7.55, 69.55, 7.8958, 33, 89.1042, 31.275, 7.775, 15.2458, 
+    39.4, 26, 9.35, 164.8667, 26.55, 19.2583, 7.2292, 14.1083, 
+    11.5, 25.9292, 69.55, 13, 13, 13.8583, 50.4958, 9.5, 11.1333, 
+    7.8958, 52.5542, 5, 9, 24, 7.225, 9.8458, 7.8958, 7.8958, 
+    83.1583, 26, 7.8958, 10.5167, 10.5, 7.05, 29.125, 13, 30, 
+    23.45, 30, 7.75), Cabin = structure(c(1L, 83L, 1L, 57L, 1L, 
+    1L, 131L, 1L, 1L, 1L, 147L, 51L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 113L, 1L, 15L, 1L, 1L, 1L, 65L, 1L, 1L, 1L, 43L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 1L, 103L, 1L, 25L, 73L, 1L, 1L, 1L, 1L, 1L, 
+    23L, 82L, 1L, 1L, 1L, 144L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    142L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 65L, 
+    1L, 1L, 1L, 124L, 1L, 1L, 1L, 14L, 93L, 1L, 1L, 1L, 1L, 100L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 54L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 38L, 1L, 1L, 1L, 1L, 118L, 100L, 1L, 1L, 1L, 140L, 1L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 109L, 57L, 1L, 47L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 143L, 1L, 1L, 63L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 125L, 1L, 1L, 1L, 20L, 1L, 
+    1L, 1L, 16L, 1L, 1L, 71L, 1L, 1L, 1L, 1L, 1L, 146L, 1L, 11L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 143L, 30L, 45L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 1L, 147L, 1L, 1L, 1L, 10L, 1L, 1L, 1L, 1L, 
+    1L, 105L, 1L, 1L, 95L, 1L, 1L, 1L, 1L, 1L, 89L, 1L, 1L, 1L, 
+    1L, 1L, 82L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 80L, 1L, 1L, 104L, 1L, 1L, 147L, 85L, 1L, 1L, 
+    1L, 1L, 42L, 1L, 1L, 1L, 1L, 136L, 48L, 1L, 1L, 1L, 1L, 59L, 
+    91L, 1L, 1L, 1L, 56L, 1L, 115L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 5L, 1L, 1L, 1L, 1L, 1L, 1L, 33L, 92L, 1L, 1L, 1L, 1L, 
+    64L, 53L, 38L, 1L, 1L, 1L, 118L, 1L, 64L, 1L, 76L, 1L, 127L, 
+    74L, 37L, 1L, 1L, 1L, 1L, 1L, 1L, 78L, 126L, 1L, 1L, 1L, 
+    1L, 1L, 67L, 1L, 92L, 1L, 19L, 1L, 58L, 87L, 1L, 1L, 1L, 
+    63L, 129L, 1L, 148L, 143L, 65L, 1L, 1L, 1L, 144L, 1L, 1L, 
+    1L, 1L, 1L, 61L, 1L, 1L, 1L, 1L, 125L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 106L, 1L, 1L, 26L, 133L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 81L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 49L, 1L, 1L, 105L, 147L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 80L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 117L, 
+    73L, 1L, 1L, 1L, 130L, 49L, 1L, 1L, 65L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 12L, 1L, 1L, 1L, 52L, 1L, 1L, 55L, 88L, 1L, 1L, 128L, 
+    99L, 1L, 1L, 119L, 1L, 135L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 92L, 1L, 3L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    33L, 1L, 89L, 27L, 1L, 1L, 1L, 1L, 66L, 1L, 1L, 1L, 98L, 
+    1L, 64L, 1L, 1L, 1L, 1L, 1L, 44L, 76L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 123L, 1L, 1L, 108L, 144L, 1L, 1L, 1L, 41L, 1L, 1L, 19L, 
+    1L, 1L, 1L, 90L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 28L, 1L, 
+    1L, 29L, 22L, 1L, 1L, 1L, 84L, 1L, 1L, 1L, 1L, 1L, 79L, 1L, 
+    1L, 1L, 1L, 1L, 4L, 1L, 136L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 1L, 50L, 123L, 1L, 1L, 1L, 1L, 130L, 1L, 
+    1L, 1L, 77L, 1L, 2L, 1L, 137L, 1L, 31L, 1L, 1L, 1L, 98L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 6L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 59L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 146L, 1L, 1L, 
+    97L, 1L, 1L, 1L, 112L, 1L, 116L, 1L, 1L, 7L, 1L, 35L, 1L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 26L, 1L, 1L, 1L, 103L, 1L, 9L, 
+    1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 110L, 1L, 1L, 
+    134L, 1L, 1L, 1L, 1L, 1L, 1L, 60L, 1L, 40L, 1L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 36L, 1L, 111L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 34L, 
+    21L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 77L, 141L, 75L, 122L, 1L, 
+    1L, 1L, 1L, 1L, 122L, 1L, 1L, 86L, 58L, 60L, 1L, 1L, 142L, 
+    68L, 118L, 1L, 1L, 1L, 1L, 1L, 1L, 139L, 1L, 1L, 1L, 1L, 
+    1L, 34L, 1L, 1L, 1L, 1L, 1L, 1L, 17L, 1L, 1L, 107L, 69L, 
+    37L, 1L, 1L, 22L, 1L, 1L, 102L, 1L, 1L, 120L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 1L, 42L, 1L, 1L, 1L, 49L, 1L, 94L, 1L, 1L, 1L, 
+    1L, 1L, 1L, 138L, 1L, 1L, 1L, 145L, 1L, 1L, 24L, 1L, 21L, 
+    114L, 1L, 1L, 1L, 1L, 1L, 1L, 46L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    96L, 1L, 1L, 1L, 1L, 1L, 49L, 1L, 1L, 1L, 13L, 1L, 1L, 139L, 
+    1L, 1L, 1L, 1L, 1L, 18L, 1L, 1L, 1L, 1L, 39L, 1L, 1L, 120L, 
+    1L, 1L, 1L, 1L, 1L, 23L, 1L, 1L, 1L, 1L, 1L, 132L, 1L, 1L, 
+    1L, 70L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 88L, 1L, 1L, 
+    1L, 101L, 1L, 1L, 1L, 121L, 1L, 1L, 1L, 1L, 96L, 1L, 1L, 
+    1L, 1L, 8L, 1L, 1L, 1L, 104L, 36L, 1L, 1L, 1L, 1L, 1L, 1L, 
+    72L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 32L, 1L, 62L, 1L), .Label = c("", 
+    "A10", "A14", "A16", "A19", "A20", "A23", "A24", "A26", "A31", 
+    "A32", "A34", "A36", "A5", "A6", "A7", "B101", "B102", "B18", 
+    "B19", "B20", "B22", "B28", "B3", "B30", "B35", "B37", "B38", 
+    "B39", "B4", "B41", "B42", "B49", "B5", "B50", "B51 B53 B55", 
+    "B57 B59 B63 B66", "B58 B60", "B69", "B71", "B73", "B77", 
+    "B78", "B79", "B80", "B82 B84", "B86", "B94", "B96 B98", 
+    "C101", "C103", "C104", "C106", "C110", "C111", "C118", "C123", 
+    "C124", "C125", "C126", "C128", "C148", "C2", "C22 C26", 
+    "C23 C25 C27", "C30", "C32", "C45", "C46", "C47", "C49", 
+    "C50", "C52", "C54", "C62 C64", "C65", "C68", "C7", "C70", 
+    "C78", "C82", "C83", "C85", "C86", "C87", "C90", "C91", "C92", 
+    "C93", "C95", "C99", "D", "D10 D12", "D11", "D15", "D17", 
+    "D19", "D20", "D21", "D26", "D28", "D30", "D33", "D35", "D36", 
+    "D37", "D45", "D46", "D47", "D48", "D49", "D50", "D56", "D6", 
+    "D7", "D9", "E10", "E101", "E12", "E121", "E17", "E24", "E25", 
+    "E31", "E33", "E34", "E36", "E38", "E40", "E44", "E46", "E49", 
+    "E50", "E58", "E63", "E67", "E68", "E77", "E8", "F E69", 
+    "F G63", "F G73", "F2", "F33", "F38", "F4", "G6", "T"), class = "factor"), 
+    Embarked = structure(c(4L, 2L, 4L, 4L, 4L, 3L, 4L, 4L, 4L, 
+    2L, 4L, 4L, 4L, 4L, 4L, 4L, 3L, 4L, 4L, 2L, 4L, 4L, 3L, 4L, 
+    4L, 4L, 2L, 4L, 3L, 4L, 2L, 2L, 3L, 4L, 2L, 4L, 2L, 4L, 4L, 
+    2L, 4L, 4L, 2L, 2L, 3L, 4L, 3L, 3L, 2L, 4L, 4L, 4L, 2L, 4L, 
+    2L, 4L, 4L, 2L, 4L, 4L, 2L, 1L, 4L, 4L, 2L, 2L, 4L, 4L, 4L, 
+    4L, 4L, 4L, 4L, 2L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 3L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 2L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 3L, 4L, 2L, 4L, 4L, 
+    2L, 4L, 3L, 4L, 2L, 4L, 4L, 4L, 2L, 4L, 4L, 2L, 3L, 4L, 2L, 
+    4L, 2L, 4L, 4L, 4L, 4L, 2L, 4L, 4L, 4L, 2L, 2L, 4L, 4L, 3L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 3L, 4L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 3L, 4L, 4L, 
+    2L, 4L, 4L, 2L, 4L, 4L, 4L, 2L, 4L, 4L, 4L, 4L, 3L, 4L, 3L, 
+    4L, 4L, 4L, 4L, 4L, 2L, 2L, 3L, 4L, 3L, 4L, 4L, 4L, 4L, 2L, 
+    4L, 4L, 4L, 2L, 3L, 2L, 4L, 4L, 4L, 4L, 3L, 2L, 4L, 4L, 2L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 2L, 3L, 4L, 4L, 2L, 3L, 4L, 4L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 2L, 2L, 4L, 2L, 4L, 3L, 4L, 4L, 4L, 
+    3L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 3L, 4L, 4L, 4L, 3L, 
+    4L, 3L, 4L, 4L, 4L, 4L, 2L, 4L, 4L, 4L, 3L, 4L, 2L, 2L, 4L, 
+    4L, 2L, 2L, 4L, 4L, 2L, 3L, 3L, 4L, 3L, 4L, 4L, 2L, 2L, 2L, 
+    2L, 2L, 2L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 4L, 4L, 3L, 4L, 
+    4L, 2L, 4L, 4L, 4L, 2L, 3L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 4L, 
+    2L, 4L, 4L, 4L, 3L, 3L, 4L, 2L, 2L, 4L, 3L, 4L, 2L, 2L, 3L, 
+    2L, 2L, 4L, 4L, 2L, 4L, 2L, 4L, 2L, 2L, 4L, 2L, 2L, 4L, 4L, 
+    4L, 4L, 4L, 4L, 3L, 2L, 4L, 4L, 4L, 2L, 4L, 4L, 4L, 4L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 3L, 3L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 2L, 3L, 4L, 4L, 4L, 4L, 4L, 4L, 3L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 
+    4L, 4L, 4L, 4L, 2L, 4L, 4L, 4L, 2L, 2L, 4L, 2L, 4L, 4L, 4L, 
+    3L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 3L, 2L, 4L, 4L, 4L, 2L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 4L, 4L, 2L, 4L, 
+    4L, 4L, 4L, 4L, 2L, 4L, 2L, 2L, 4L, 4L, 4L, 4L, 3L, 3L, 4L, 
+    4L, 2L, 4L, 4L, 4L, 4L, 3L, 4L, 4L, 2L, 4L, 4L, 4L, 3L, 4L, 
+    4L, 4L, 4L, 2L, 2L, 2L, 3L, 4L, 4L, 4L, 4L, 4L, 2L, 2L, 2L, 
+    4L, 4L, 4L, 2L, 4L, 2L, 4L, 4L, 4L, 4L, 2L, 4L, 4L, 2L, 4L, 
+    4L, 2L, 4L, 3L, 2L, 4L, 4L, 2L, 2L, 4L, 4L, 3L, 4L, 4L, 4L, 
+    4L, 4L, 4L, 4L, 2L, 4L, 4L, 4L, 4L, 3L, 4L, 4L, 4L, 4L, 2L, 
+    4L, 4L, 2L, 4L, 2L, 2L, 4L, 4L, 2L, 4L, 4L, 4L, 2L, 4L, 3L, 
+    4L, 4L, 4L, 4L, 2L, 2L, 4L, 4L, 4L, 4L, 2L, 4L, 4L, 4L, 2L, 
+    4L, 4L, 4L, 3L, 3L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 4L, 2L, 4L, 
+    4L, 4L, 3L, 4L, 4L, 3L, 4L, 4L, 2L, 4L, 4L, 4L, 4L, 4L, 4L, 
+    4L, 4L, 2L, 4L, 4L, 2L, 2L, 4L, 2L, 4L, 4L, 4L, 4L, 4L, 3L, 
+    3L, 4L, 4L, 3L, 4L, 2L, 4L, 2L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 3L, 2L, 4L, 4L, 
+    4L, 2L, 4L, 4L, 4L, 4L, 4L, 2L, 4L, 2L, 4L, 4L, 4L, 3L, 2L, 
+    4L, 2L, 4L, 2L, 3L, 4L, 4L, 4L, 4L, 4L, 2L, 2L, 4L, 4L, 4L, 
+    4L, 4L, 2L, 4L, 3L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 3L, 4L, 
+    4L, 4L, 2L, 4L, 4L, 4L, 4L, 4L, 2L, 4L, 4L, 4L, 4L, 2L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 3L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 
+    4L, 4L, 4L, 2L, 4L, 4L, 4L, 2L, 3L, 3L, 4L, 4L, 4L, 4L, 2L, 
+    4L, 4L, 3L, 4L, 3L, 4L, 2L, 4L, 4L, 4L, 4L, 4L, 4L, 3L, 4L, 
+    2L, 3L, 4L, 4L, 2L, 4L, 4L, 4L, 4L, 2L, 4L, 4L, 4L, 4L, 2L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 4L, 
+    4L, 4L, 4L, 4L, 4L, 4L, 3L, 4L, 2L, 3L, 1L, 2L, 4L, 2L, 4L, 
+    4L, 2L, 4L, 4L, 4L, 2L, 4L, 4L, 2L, 2L, 4L, 4L, 4L, 2L, 4L, 
+    2L, 4L, 4L, 2L, 4L, 4L, 4L, 4L, 4L, 2L, 2L, 4L, 4L, 4L, 4L, 
+    4L, 4L, 2L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 2L, 2L, 4L, 4L, 4L, 
+    2L, 4L, 4L, 4L, 4L, 4L, 3L, 4L, 4L, 4L, 2L, 3L), .Label = c("", 
+    "C", "Q", "S"), class = "factor")), .Names = c("PassengerId", 
+"Survived", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", 
+"Ticket", "Fare", "Cabin", "Embarked"), class = "data.frame", row.names = c(NA, 
+-891L))
+```
+
+## Titanic
+
+```{r}
+
+# Call dim on titanic
+dim(titanic)
+
+# Generate histogram of Age column
+hist(titanic$Age)
+
+```
+
+## Exploratory queries
+
+```{r}
+
+# Print out total value of fares
+str(titanic)
+sum(titanic$Fare)
+
+# Print out proportion of passengers that survived
+mean(titanic$Survived)
+
+```
+
+## Infer gender from names(1)
+
+```{r}
+
+# Extract the name column from titanic
+pass_names <- titanic$Name
+
+# Create the logical vectror is_man
+is_man <- grepl(", Mr\\.", pass_names)
+
+# Count the number of men
+sum(is_man)
+
+# Count number of men based on gender
+sum(titanic$Sex == "male")
+```
+
+## Infer gender from names(2)
+
+```{r}
+
+# Extract the name column from titanic
+pass_names <- titanic$Name
+
+# Create titles
+titles <- gsub("^.*, (.*?)\\..*$", "\\1", pass_names)
+
+# Call unique() on titles
+unique(titles)
+
+```
+
+## Infer gender from names(3)
+
+```{r}
+
+pass_names <- titanic$Name
+titles_male <- paste(",", c("Mr\\.", "Master", "Don", "Rev", "Dr\\.", "Major", "Sir", "Col", "Capt", "Jonkheer"))
+
+# Finish the vapply() command
+hits <- vapply(titles_male,
+               FUN = grepl,
+               FUN.VALUE = logical(length(pass_names)),
+               pass_names)
+
+# Calculate the sum() of hits
+sum(hits)
+
+# Count number of men based on gender
+sum(titanic$Sex == "male")
+
+```
+
+
+### Why is it off by one?
+
+  - They don't really address this in the class
+  - But one function I use a lot is the `table` function
+  - It easily shows whats off with the title assumptions and the gender
+    - There is a female doctor on the boat but they are counting Dr as a male title
+    - Definitely need to be careful with things like this. Other titles could go eaither way. 
+  
+```{r}
+table(titles, titanic$Sex)
+```
+
+## Reformat passenger names
+
+  - this is some great regex
+  
+```{r}
+
+# pass_names is available in your workspace
+
+convert_name <- function(name) {
+  # women: take name from inside parentheses
+  if (grepl("\\(.*?\\)", name)) {
+    gsub("^.*?\\((.*?)\\)$", "\\1", name)
+  # men: take name before comma and after title
+  } else {
+    # Finish the gsub() function
+    gsub("^(.*?),\\s[a-zA-Z\\.]*?\\s(.*?)$", "\\2 \\1", name)
+  }
+}
+
+# Call convert_name on name
+clean_pass_names <- vapply(pass_names, FUN = convert_name,
+                           FUN.VALUE = character(1), USE.NAMES = FALSE)
+
+# Print out clean_pass_names
+head(clean_pass_names, 20)
+
+```
+
+## Add birth dates
+
+  - I'm adding the dob data manually
+  
+```{r, echo=F, results='hide'}
+
+
+dob1 <- c("1890-01-03", "1874-02-28", "1886-01-17", "1877-03-04", "1876-09-28", 
+NA, "1857-06-14", "1909-08-11", "1884-10-17", "1898-01-05", "1908-04-11", 
+"1853-04-27", "1891-06-09", "1873-01-08", "1897-04-15", "1856-09-04", 
+"1909-09-30", NA, "1880-09-03", NA, "1876-09-08", "1877-06-19", 
+"1897-03-28", "1883-09-28", "1903-08-12", "1874-04-02", NA, "1892-12-29", 
+NA, NA, "1871-12-06", NA, NA, "1845-09-04", "1883-12-26", "1869-10-30", 
+NA, "1890-07-06", "1893-10-08", "1898-01-29", "1871-04-17", "1884-06-22", 
+NA, "1908-12-19", "1892-08-28", NA, NA, NA, NA, "1893-08-24", 
+"1905-02-26", "1891-03-11", "1862-11-26", "1882-06-02", "1847-01-25", 
+NA, "1890-09-18", "1884-03-19", "1907-01-22", "1900-07-18", "1889-08-10", 
+"1873-05-06", "1866-04-30", "1907-05-05", NA, NA, "1882-11-29", 
+"1893-04-02", "1895-02-10", "1885-08-07", "1879-07-01", "1896-01-08", 
+"1890-10-14", "1886-01-06", "1879-05-14", "1886-09-20", NA, NA, 
+"1910-07-10", "1882-01-28", "1889-07-18", "1883-04-09", NA, "1884-01-17", 
+"1895-04-07", "1878-07-03", "1896-03-27", NA, "1888-06-08", "1887-11-20", 
+"1883-03-26", "1891-12-22", "1865-10-16", "1885-08-29", "1852-08-15", 
+NA, "1840-05-02", "1888-11-26", "1878-03-31", "1877-12-10", "1883-10-18", 
+NA, "1890-06-08", "1879-02-26", "1874-10-19", "1883-04-18", "1890-04-22", 
+NA, "1873-06-06", NA, "1864-08-04", "1898-02-10", "1889-10-15", 
+"1892-02-03", "1894-05-07", "1891-03-19", "1842-02-03", "1882-05-13", 
+"1887-11-20", "1909-12-31", "1890-10-19", NA, "1880-01-03", "1880-01-14", 
+"1857-05-19", "1899-09-07", NA, "1887-07-31", NA, "1866-11-26", 
+"1879-04-05", "1891-11-27", "1864-10-22", "1883-03-10", "1886-12-03", 
+"1889-02-24", "1892-07-15", "1874-07-02", "1895-11-24", "1887-09-02", 
+NA, "1890-01-15", "1887-08-31", "1893-01-30", "1894-03-11", "1893-04-09", 
+"1884-11-15", "1902-04-18", "1875-08-10", "1869-11-05", "1860-10-19", 
+"1889-05-17", "1856-12-20", "1871-12-30", NA, "1861-02-01", "1896-03-25", 
+"1881-06-22", NA, NA, "1867-07-25", "1872-01-23", "1885-04-27", 
+"1894-12-16", "1911-02-05", "1902-12-13", NA, "1867-03-25", NA, 
+"1884-02-29", "1850-12-25", "1907-06-21", "1910-05-20", "1891-02-03", 
+"1855-10-22", "1893-12-24", NA, "1861-07-02", "1881-11-30", "1875-06-07", 
+NA, NA, "1903-03-31", "1911-04-11", "1907-10-13", NA, NA, "1867-03-16", 
+"1871-08-29", "1876-02-11", "1879-11-05", "1893-01-30", "1892-08-21", 
+"1908-06-30", "1868-01-27", "1853-12-20", NA, "1869-09-19", NA, 
+"1888-02-18", "1883-11-21", NA, "1878-01-10", "1866-11-18", "1894-02-19", 
+"1910-02-06", "1879-09-01", "1885-10-11", "1896-04-12", "1871-06-17", 
+"1888-02-14", "1876-09-06", "1890-04-03", "1881-06-22", NA, "1881-01-13", 
+"1884-08-05", "1869-08-31", "1880-01-14", "1881-12-28", "1896-03-16", 
+"1885-01-30", "1861-02-11", NA, "1873-06-15", "1889-09-11", "1892-06-25", 
+"1891-07-18", "1894-04-04", NA, "1877-02-05", "1882-08-19", "1853-03-23", 
+"1906-06-13", "1887-06-11", NA, "1868-01-15", "1904-03-04", "1892-08-04", 
+"1878-08-06", NA, NA, "1883-04-09", "1889-04-17", "1881-07-24", 
+"1868-02-01", "1886-07-12", "1887-09-29", "1874-11-15", "1858-03-06", 
+NA, "1882-05-30", "1849-10-19", "1881-12-13", "1871-01-19", "1882-05-18", 
+NA, "1881-05-09", "1876-11-03", "1861-12-08", NA, "1908-08-01", 
+"1859-12-25", "1871-08-31", NA, "1875-07-19", "1896-03-24", "1886-09-19", 
+"1853-08-12", "1876-10-27", NA, "1886-11-29", "1870-06-16", "1874-05-24", 
+NA, "1848-05-24", "1866-05-18", NA, "1904-10-27", "1877-03-08", 
+"1846-12-30", "1884-03-11", "1895-09-21", "1892-10-02", NA, "1878-11-19", 
+"1881-08-04", "1889-11-09", "1869-10-06", "1889-12-25", "1886-01-08", 
+"1892-10-20", "1876-04-09", "1888-03-15", "1887-10-04", NA, "1888-08-31", 
+"1910-03-23", NA, "1862-03-25", NA, NA, "1893-03-11", NA, NA, 
+"1911-01-26", NA, "1894-11-29", "1881-12-17", "1882-03-23", "1887-10-27", 
+"1893-08-15", "1886-01-28", "1883-05-30", "1869-03-31", "1885-04-26", 
+"1887-07-19", "1858-02-28", "1881-02-17", "1871-04-21", "1889-06-21", 
+"1884-05-27", "1881-10-06", "1890-03-27", NA, "1876-02-11", "1851-02-05", 
+"1876-03-15", "1880-12-26", "1895-05-15", NA, "1866-05-28", "1874-01-29", 
+"1896-04-13", NA, NA, "1882-12-23", "1870-06-07", "1866-08-09", 
+"1866-06-10", "1910-04-13", "1888-01-13", "1883-09-05", "1886-11-02", 
+"1875-04-25", "1887-08-16", "1872-02-23", NA, "1908-05-31", "1870-01-28", 
+"1888-05-20", NA, "1896-04-21", "1886-07-24", NA, "1883-09-12", 
+"1889-05-09", "1874-01-30", NA, NA, "1871-10-17", "1882-10-21", 
+"1866-12-28", "1877-02-12", NA, "1881-05-07", "1851-08-16", NA, 
+NA, "1888-02-02", "1886-07-27", "1894-02-06", "1892-07-02", "1889-11-03", 
+"1908-04-20", NA, "1889-05-04", "1884-11-19", "1891-12-30", "1892-12-09", 
+"1869-11-11", "1910-12-18", "1879-06-30", "1876-07-10", NA, "1893-09-28", 
+"1910-08-17", "1875-09-08", NA, "1894-09-19", "1876-03-29", "1890-07-05", 
+"1883-08-26", "1889-03-03", "1887-10-24", "1889-11-14", "1880-07-18", 
+"1866-02-26", "1888-08-07", "1883-12-17")
+
+dob2 <- c("November 26, 1872", "September 09, 1885", "September 09, 1890", 
+"April 01, 1884", "August 08, 1891", "April 20, 1877", "June 12, 1860", 
+"July 07, 1908", "September 04, 1890", NA, NA, NA, "February 18, 1879", 
+NA, "January 09, 1868", NA, "December 17, 1877", "May 24, 1893", 
+"May 06, 1881", "March 31, 1902", NA, "January 06, 1891", "October 11, 1882", 
+"March 02, 1884", "November 12, 1893", NA, "December 25, 1883", 
+"March 13, 1893", NA, "February 15, 1880", "October 20, 1883", 
+NA, "November 29, 1869", "January 30, 1895", "March 25, 1862", 
+"May 01, 1897", "January 15, 1891", "December 21, 1887", "November 28, 1847", 
+"April 12, 1881", "December 03, 1866", "December 11, 1891", "January 05, 1887", 
+"November 15, 1883", NA, "November 11, 1907", "April 27, 1898", 
+"January 27, 1878", "June 20, 1906", "June 15, 1859", "October 07, 1875", 
+NA, "July 12, 1881", "August 18, 1862", NA, "January 01, 1883", 
+"February 26, 1847", NA, "July 16, 1861", NA, "January 30, 1864", 
+"November 09, 1877", "October 25, 1864", "January 27, 1864", 
+NA, "March 19, 1874", NA, "November 28, 1855", NA, "December 06, 1910", 
+NA, "September 20, 1873", "September 19, 1878", "April 05, 1889", 
+"August 05, 1889", NA, "September 28, 1877", "December 28, 1882", 
+"February 05, 1890", "August 04, 1909", "December 18, 1902", 
+NA, "January 26, 1862", "February 22, 1849", "November 26, 1886", 
+NA, "June 22, 1876", "March 11, 1854", "April 26, 1881", "January 27, 1903", 
+NA, "February 20, 1891", "February 01, 1857", "June 15, 1840", 
+"August 12, 1890", NA, "June 26, 1857", NA, "August 12, 1886", 
+"September 01, 1887", "October 16, 1894", "May 30, 1890", NA, 
+"May 12, 1874", "October 05, 1895", "July 20, 1893", "July 08, 1878", 
+NA, "November 19, 1883", "June 12, 1885", "February 21, 1883", 
+NA, "July 10, 1875", "January 30, 1858", "May 13, 1887", "October 29, 1864", 
+"January 01, 1878", NA, "April 29, 1875", "April 24, 1879", "January 10, 1882", 
+"January 21, 1890", NA, "October 29, 1867", NA, "September 04, 1871", 
+"October 03, 1861", NA, "May 29, 1872", "February 15, 1889", 
+"July 21, 1909", NA, "June 25, 1894", NA, "July 15, 1881", "September 04, 1904", 
+"February 16, 1867", "April 07, 1882", NA, "August 04, 1889", 
+"July 22, 1875", "November 28, 1902", "November 28, 1900", "May 05, 1879", 
+"January 12, 1862", "August 06, 1847", "April 30, 1892", NA, 
+"November 08, 1878", "April 21, 1903", "February 28, 1895", "October 24, 1884", 
+NA, "May 24, 1889", "February 03, 1890", "February 04, 1850", 
+"April 19, 1863", NA, "December 20, 1872", "September 23, 1875", 
+NA, "March 10, 1872", "September 06, 1883", NA, NA, "April 16, 1887", 
+"April 01, 1893", "April 02, 1883", NA, "January 14, 1880", "September 08, 1849", 
+"September 14, 1858", "February 10, 1876", NA, "October 16, 1895", 
+"December 25, 1892", "March 23, 1878", "July 17, 1872", NA, "October 26, 1879", 
+"May 18, 1886", "October 25, 1872", "March 18, 1858", "July 03, 1875", 
+NA, "February 23, 1894", "November 07, 1864", "September 07, 1851", 
+"November 21, 1889", NA, "August 30, 1876", "February 06, 1860", 
+"July 30, 1864", NA, "August 09, 1874", "September 14, 1875", 
+NA, "January 23, 1863", NA, "December 04, 1862", "July 19, 1887", 
+NA, NA, "August 07, 1867", "January 08, 1877", "January 23, 1876", 
+"November 19, 1881", "May 27, 1884", "July 12, 1889", "July 20, 1871", 
+"July 28, 1872", NA, NA, NA, "October 26, 1876", "September 07, 1887", 
+"December 06, 1877", "June 06, 1885", "February 26, 1908", "September 29, 1885", 
+"March 09, 1885", "January 24, 1870", "February 07, 1892", "April 13, 1891", 
+"November 16, 1890", "October 02, 1850", "August 13, 1854", "December 28, 1890", 
+"January 16, 1886", NA, "January 23, 1832", "February 27, 1861", 
+"June 30, 1879", NA, "January 19, 1903", "February 17, 1884", 
+"March 21, 1880", "December 17, 1880", "February 22, 1871", NA, 
+"May 12, 1891", "December 03, 1887", "September 06, 1909", NA, 
+"January 12, 1911", "January 10, 1864", "August 28, 1892", "August 17, 1855", 
+NA, "December 16, 1888", NA, "August 10, 1893", "December 20, 1890", 
+NA, "July 02, 1893", "July 14, 1887", NA, "May 30, 1879", "January 26, 1889", 
+"January 17, 1854", "June 25, 1861", "March 08, 1872", "November 18, 1864", 
+"September 24, 1875", "August 02, 1891", "August 03, 1879", "November 10, 1886", 
+NA, "March 20, 1869", NA, "February 05, 1872", "September 20, 1880", 
+"August 22, 1841", "October 20, 1880", NA, "December 09, 1893", 
+"December 21, 1887", "February 09, 1894", "May 28, 1868", "March 15, 1876", 
+NA, "July 16, 1884", "September 10, 1891", "July 19, 1897", "August 10, 1851", 
+"July 12, 1886", "October 28, 1897", "January 02, 1893", "October 28, 1893", 
+"April 21, 1896", "November 28, 1880", "November 21, 1907", NA, 
+"January 18, 1887", "February 29, 1852", "September 24, 1859", 
+"October 17, 1867", NA, "March 06, 1863", "August 30, 1869", 
+"July 18, 1893", "June 15, 1876", "May 16, 1893", "December 19, 1886", 
+"August 23, 1885", "May 08, 1872", "May 09, 1866", "November 07, 1869", 
+"December 19, 1889", NA, "June 24, 1887", NA, "July 21, 1863", 
+"March 25, 1883", "October 22, 1859", "January 10, 1893", "July 04, 1873", 
+"December 04, 1884", NA, "November 29, 1878", "October 29, 1905", 
+"July 11, 1894", "July 15, 1877", "October 02, 1861", "February 13, 1885", 
+"July 09, 1891", "January 22, 1882", NA, "October 22, 1886", 
+"August 14, 1886", "January 24, 1883", "July 10, 1900", NA, "August 15, 1888", 
+"September 16, 1888", "December 26, 1883", "December 10, 1863", 
+"January 03, 1877", NA, NA, NA, "June 14, 1875", "May 03, 1890", 
+"November 10, 1887", "May 26, 1880", "April 20, 1841", "January 24, 1896", 
+"July 21, 1881", "December 19, 1892", "July 05, 1880", "April 05, 1908", 
+"December 18, 1905", "January 25, 1879", "December 26, 1888", 
+"April 18, 1863", "October 15, 1910", "January 07, 1884", "August 13, 1893", 
+"February 08, 1878", "March 03, 1879", NA, "February 21, 1871", 
+"September 27, 1891", "October 04, 1875", "October 20, 1895", 
+"June 13, 1860", NA, "March 03, 1882", NA, "June 27, 1879", "December 03, 1887", 
+"May 01, 1863", "August 28, 1854", NA, "November 21, 1857", "March 28, 1894", 
+NA, "July 02, 1906", NA, "June 19, 1868", "February 25, 1899", 
+"October 01, 1894", "July 06, 1882", NA, "March 11, 1887", "April 04, 1887", 
+"March 30, 1894", "November 01, 1903", "April 09, 1911", "August 20, 1865", 
+NA, "August 30, 1895", NA, NA, "September 15, 1886", "July 27, 1872", 
+"May 09, 1862", "May 14, 1880", "September 19, 1881", "April 10, 1882", 
+"May 26, 1877", "July 04, 1880", "July 04, 1900", "December 07, 1910", 
+"October 17, 1884", "January 05, 1881", "August 08, 1872", "February 17, 1894", 
+"October 16, 1872", "December 20, 1878", "March 25, 1886", "April 20, 1872", 
+"October 22, 1876", "February 09, 1906", "August 12, 1881", NA, 
+"December 20, 1888", "November 26, 1880", "December 08, 1868", 
+"March 30, 1902", "July 09, 1859", "August 13, 1884", "February 14, 1874", 
+"June 06, 1884", "March 17, 1910", NA, NA, "May 16, 1910", NA, 
+"December 21, 1849", "April 03, 1897", "December 03, 1910", NA, 
+"September 15, 1888", "February 02, 1894", "July 19, 1872", "December 10, 1890", 
+NA, "November 14, 1879", NA, "December 06, 1891", "April 24, 1895", 
+"May 08, 1881", "April 08, 1878", "March 23, 1895", "June 25, 1869", 
+NA, "December 23, 1876", "August 13, 1883", NA, "December 18, 1907", 
+"May 11, 1837", "April 08, 1903", "May 31, 1895", "August 31, 1867", 
+"February 20, 1894", "February 11, 1867", "December 15, 1860", 
+"December 28, 1887", NA, "March 03, 1871", "September 30, 1890", 
+"December 27, 1863", NA, "September 24, 1887", "March 13, 1870", 
+"May 28, 1884", "May 05, 1880", NA, "December 29, 1907", "February 26, 1886", 
+"April 16, 1864", "January 16, 1879", "January 25, 1865", "October 12, 1883", 
+"November 25, 1896", "August 23, 1891", "October 01, 1892", NA, 
+"August 02, 1855", "May 11, 1886", "January 03, 1879", "June 04, 1889", 
+"January 25, 1884", "February 21, 1887", "August 18, 1872", "August 24, 1884", 
+"March 23, 1893", NA, "December 03, 1885", "August 16, 1879")
+```
+
+  - the `strptime` function documentation has all the codes for matching dates
+  
+```{r}
+
+# Have a look at head() of dob1 and dob2
+head(dob1)
+head(dob2)
+
+# Convert dob1 to dob1d, convert dob2 to dob2d
+dob1d <- as.Date(dob1, '%Y-%m-%d')
+
+dob2d <- as.Date(dob2, '%b %d, %Y')
+
+# Combine dob1d and dob2d into single vector: birth_dates
+birth_dates <- c(dob1d,dob2d)
+
+```
+
+## Average age
+
+  - I have not used subset in a while. Just use `dplyr::filter` now
+```{r}
+
+# titanic, dob1 and dob2 are preloaded
+dob1d <- as.Date(dob1)
+dob2d <- as.Date(dob2, format = "%B %d, %Y")
+birth_dates <- c(dob1d, dob2d)
+disaster_date <- as.Date("1912-04-15")
+
+# Add birth_dates to titanic (column Birth)
+titanic$Birth <- birth_dates
+str(titanic)
+
+# Create subset: survivors
+survivors <- subset(titanic, Survived == TRUE)
+str(survivors)
+
+# Calculate average age of survivors
+mean(disaster_date - survivors$Birth, na.rm=T)
+
+```
+
+## Age in perspective
+
+```{r}
+
+## How old was the youngest survivor when Apollo 11 landed on the moon on July 20, 1969?
+
+min(as.Date('1969-07-20') - survivors$Birth, na.rm=T)
+
+```
+
+# Conclusion
+
+  - This is great practice for the skillsets
+  - I do think a lot of data analsyis is made simpler with the use of dataframes
+  - The dplyr, tidyr, and other libraries replace a lot of the disparate R functions around data crunching into a clean and consistent grammar
+    - There are courses on these topics later in the Data Science Track
+  - A lot of this is core data crunching skills or even just programming skills that are needed in any language really so this is a good class for anyone getting into programing
+    - But I would caution that there are much smoother ways to work with data in R. Its really what makes R so great. It has the best libraries I think. 
+    - I'm looking forward to covering more of the library functions in docs like this soon. 
+    
