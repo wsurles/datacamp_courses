@@ -4,3 +4,4 @@ My course docs are hosted on [shinyapps.io](http://www.shinyapps.io)
 
  - [Introduction to R](https://surlyanalytics.shinyapps.io/introduction_to_r/)
  - [Intermediate R](https://surlyanalytics.shinyapps.io/intermediate_r/)
+ - [Intermediate R Practice](http://rpubs.com/williamsurles/289187)
