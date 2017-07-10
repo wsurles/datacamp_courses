@@ -5,3 +5,4 @@
 */*/*_files/
 *rsconnect/
 .Rproj.user
+courses/*/data/*

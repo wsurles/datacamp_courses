@@ -1,0 +1,1005 @@
+---
+title: "Importing Data in R (Part 1)"
+author: "William Surles"
+date: "2017-07-05"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+---
+
+***
+> This document was updated on **`r Sys.Date()`**.
+
+***
+
+```{r setup, include=FALSE, results='hide'}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+
+library(dplyr)
+library(stringr)
+
+library(readr)
+library(data.table)
+
+## excel packages
+library(readxl)
+library(gdata)
+dyn.load('/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib/server/libjvm.dylib')
+library(XLConnect)
+
+## Clean up the data directory
+unlink("data/*")
+
+
+```
+
+# Introduction
+
+  - Course notes for [Importing Data in R (Part 1)](https://www.datacamp.com/courses/importing-data-in-r-part-1)
+
+## Whats Covered
+
+  - Importing data from flat files with utils
+    - `read.csv`, `read.delim`, `read.table`
+    - `stringsAsFactors`, column classes, other arguments
+  - `readr` & `data.table`
+    - `read_csv`, `read_tsv`, `read_delim`
+    - skip, n_max, col_types and collectors
+    - fread from data.table package
+  - Importing Excel data
+    - `readxl` - listing and importing sheets, column names ans skip  
+    - `gdata` - `read.xls`
+  - Reporducible Excel work with XLConnect
+    
+&nbsp; &nbsp;
+
+## Additional Resources
+
+  - [R utils package documentation](https://stat.ethz.ch/R-manual/R-devel/library/utils/html/00Index.html)
+  - [readr vignette](https://cran.r-project.org/web/packages/readr/vignettes/readr.html)
+  - [readr package pdf](https://cran.r-project.org/web/packages/readr/readr.pdf)
+  - [XLConnect vignette](https://cran.r-project.org/web/packages/XLConnect/vignettes/XLConnect.pdf)
+  - [rio vignette](https://cran.r-project.org/web/packages/rio/vignettes/rio.html)
+
+&nbsp; &nbsp;
+
+***  
+# Importing data from flat files with utils
+***  
+
+## read.csv
+
+```{r, echo=F, results='hide'}
+
+swimming_pools <- structure(list(Name = structure(c(1L, 2L, 3L, 4L, 5L, 6L, 19L, 
+7L, 8L, 9L, 10L, 11L, 13L, 14L, 15L, 16L, 17L, 18L, 12L, 20L), .Label = c("Acacia Ridge Leisure Centre", 
+"Bellbowrie Pool", "Carole Park", "Centenary Pool (inner City)", 
+"Chermside Pool", "Colmslie Pool (Morningside)", "Dunlop Park Pool (Corinda)", 
+"Fortitude Valley Pool", "Hibiscus Sports Complex (upper MtGravatt)", 
+"Ithaca Pool ( Paddington)", "Jindalee Pool", "Langlands Parks Pool (Stones Corner)", 
+"Manly Pool", "Mt Gravatt East Aquatic Centre", "Musgrave Park Pool (South Brisbane)", 
+"Newmarket Pool", "Runcorn Pool", "Sandgate Pool", "Spring Hill Baths (inner City)", 
+"Yeronga Park Pool"), class = "factor"), Address = structure(c(5L, 
+20L, 18L, 10L, 9L, 11L, 6L, 15L, 12L, 17L, 4L, 3L, 1L, 19L, 2L, 
+14L, 8L, 7L, 13L, 16L), .Label = c("1 Fairlead Crescent, Manly", 
+"100 Edmonstone Street, South Brisbane", "11 Yallambee Road, Jindalee", 
+"131 Caxton Street, Paddington", "1391 Beaudesert Road, Acacia Ridge", 
+"14 Torrington Street, Springhill", "231 Flinders Parade, Sandgate", 
+"37 Bonemill Road, Runcorn", "375 Hamilton Road, Chermside", 
+"400 Gregory Terrace, Spring Hill", "400 Lytton Road, Morningside", 
+"432 Wickham Street, Fortitude Valley", "5 Panitya Street, Stones Corner", 
+"71 Alderson Stret, Newmarket", "794 Oxley Road, Corinda", "81 School Road, Yeronga", 
+"90 Klumpp Road, Upper Mount Gravatt", "Cnr Boundary Road and Waterford Road Wacol", 
+"Cnr wecker Road and Newnham Road, Mansfield", "Sugarwood Street, Bellbowrie"
+), class = "factor"), Latitude = c(-27.58616, -27.565466, -27.607439, 
+-27.455369, -27.385829, -27.45516, -27.459596, -27.546519, -27.4539, 
+-27.551826, -27.462262, -27.532363, -27.452285, -27.532135, -27.479777, 
+-27.42968, -27.591561, -27.311956, -27.497689, -27.520527), Longitude = c(153.026354, 
+152.891082, 152.931511, 153.025067, 153.035109, 153.078861, 153.021548, 
+152.980628, 153.0368, 153.07354, 153.010347, 152.942691, 153.187437, 
+153.094289, 153.016806, 153.006206, 153.076415, 153.069098, 153.04867, 
+153.018544)), .Names = c("Name", "Address", "Latitude", "Longitude"
+), class = "data.frame", row.names = c(NA, -20L))
+
+write_csv(swimming_pools, 'data/swimming_pools.csv')
+
+```
+
+  - I created the simming_pools.csv file
+  - I used `dput` in the course workspace to get the code to create the dataframe here then saved it with `write_csv`
+  - I will do this with all flat files that are needed for the exercises here
+  
+```{r}
+
+## dir functions lets us see what is in the workinig directory
+dir('data/')
+
+# Import swimming_pools.csv: pools
+pools <- read.csv('data/swimming_pools.csv')
+
+# Print the structure of pools
+str(pools)
+
+```
+
+## sringsAsFactors
+  
+  - We rarely want string to be factor, so we always need to set this to false when using the utils `read.csv` or other read functions
+    - With readr functions it is set to FALSE by default. 
+
+```{r}
+
+# Import swimming_pools.csv correctly: pools
+pools <- read.csv("data/swimming_pools.csv", stringsAsFactors=F)
+
+# Check the structure of pools
+str(pools)
+```
+
+## Any changes?
+
+```{r}
+## How many variables in the resulting pools data frame have different types if you specify the stringsAsFactors argument differently?
+
+# Option A
+pools <- read.csv("data/swimming_pools.csv", stringsAsFactors = TRUE)
+str(pools)
+
+# Option B
+pools <- read.csv("data/swimming_pools.csv", stringsAsFactors = FALSE)
+str(pools)
+
+```
+  - `stingsAsFactors` will impact any field that has strings. 
+    - In this case its the Name and Address fields
+
+## read.delim
+
+```{r, echo=F, results='hide'}
+
+hotdogs <- structure(list(V1 = structure(c(1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 
+3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L), .Label = c("Beef", 
+"Meat", "Poultry"), class = "factor"), V2 = c(186L, 181L, 176L, 
+149L, 184L, 190L, 158L, 139L, 175L, 148L, 152L, 111L, 141L, 153L, 
+190L, 157L, 131L, 149L, 135L, 132L, 173L, 191L, 182L, 190L, 172L, 
+147L, 146L, 139L, 175L, 136L, 179L, 153L, 107L, 195L, 135L, 140L, 
+138L, 129L, 132L, 102L, 106L, 94L, 102L, 87L, 99L, 107L, 113L, 
+135L, 142L, 86L, 143L, 152L, 146L, 144L), V3 = c(495L, 477L, 
+425L, 322L, 482L, 587L, 370L, 322L, 479L, 375L, 330L, 300L, 386L, 
+401L, 645L, 440L, 317L, 319L, 298L, 253L, 458L, 506L, 473L, 545L, 
+496L, 360L, 387L, 386L, 507L, 393L, 405L, 372L, 144L, 511L, 405L, 
+428L, 339L, 430L, 375L, 396L, 383L, 387L, 542L, 359L, 357L, 528L, 
+513L, 426L, 513L, 358L, 581L, 588L, 522L, 545L)), .Names = c("V1", 
+"V2", "V3"), class = "data.frame", row.names = c(NA, -54L))
+
+write_delim(hotdogs, 'data/hotdogs.txt', delim = '\t', col_names=F)
+```
+
+```{r}
+
+# Import hotdogs.txt: hotdogs
+hotdogs <- read.delim("data/hotdogs.txt", header=F)
+
+# Summarize hotdogs
+summary(hotdogs)
+
+```
+
+## read.table
+
+```{r}
+
+# Path to the hotdogs.txt file: path
+path <- file.path("data", "hotdogs.txt")
+
+# Import the hotdogs.txt file: hotdogs
+hotdogs <- read.table(path, 
+                      sep = "\t", 
+                      col.names = c("type", "calories", "sodium"))
+
+# Call head() on hotdogs
+head(hotdogs)
+
+```
+
+## Arguments
+
+```{r}
+
+# Finish the read.delim() call
+hotdogs <- read.delim("data/hotdogs.txt", header = F, col.names = c("type", "calories", "sodium"))
+head(hotdogs)
+
+# Select the hot dog with the least calories: lily
+lily <- hotdogs[which.min(hotdogs$calories), ]
+
+# Select the observation with the most sodium: tom
+tom <- hotdogs[which.max(hotdogs$sodium), ]
+
+# Print lily and tom
+lily
+tom
+
+```
+
+## Column classes
+
+  - using `NULL` in the colClasses vector will skip that column
+  
+```{r}
+
+# Previous call to import hotdogs.txt
+hotdogs <- read.delim("data/hotdogs.txt", header = FALSE, col.names = c("type", "calories", "sodium"))
+
+# Display structure of hotdogs
+str(hotdogs)
+
+# Edit the colClasses argument to import the data correctly: hotdogs2
+hotdogs2 <- read.delim("data/hotdogs.txt", header = FALSE, 
+                       col.names = c("type", "calories", "sodium"),
+                       colClasses = c("factor", "NULL","numeric"))
+
+
+# Display structure of hotdogs2
+str(hotdogs2)
+
+```
+
+## Final Thoughts
+
+  - Read.csv and read.delim wrap read.table
+
+&nbsp; &nbsp;
+
+***  
+# readr & data.table
+***  
+
+## read_csv
+
+```{r, echo=F, results='hide'}
+
+potatoes <- structure(list(area = c(1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L), temp = c(1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L), size = c(1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 
+2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L), storage = c(1L, 
+1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 4L, 4L, 
+4L, 4L, 4L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 
+3L, 3L, 4L, 4L, 4L, 4L, 4L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 
+2L, 3L, 3L, 3L, 3L, 3L, 4L, 4L, 4L, 4L, 4L, 1L, 1L, 1L, 1L, 1L, 
+2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 4L, 4L, 4L, 4L, 4L, 1L, 
+1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 4L, 4L, 
+4L, 4L, 4L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 
+3L, 3L, 4L, 4L, 4L, 4L, 4L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 
+2L, 3L, 3L, 3L, 3L, 3L, 4L, 4L, 4L, 4L, 4L, 1L, 1L, 1L, 1L, 1L, 
+2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 4L, 4L, 4L, 4L, 4L), 
+    method = c(1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 
+    3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 
+    3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 
+    3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 
+    3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 
+    3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 
+    3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 
+    3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 
+    3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 
+    3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 
+    3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L, 1L, 2L, 3L, 4L, 5L), texture = c(2.9, 
+    2.3, 2.5, 2.1, 1.9, 1.8, 2.6, 3, 2.2, 2, 1.8, 2, 2.6, 2.1, 
+    2.5, 2.6, 2.7, 2.2, 3.1, 3, 3.1, 2.7, 2.4, 2.2, 1.9, 1.8, 
+    2.2, 2.8, 2.3, 2, 1.9, 1.8, 3.3, 2.5, 2.5, 1.5, 1.4, 2.1, 
+    1.8, 1.7, 2.8, 2.5, 3.2, 2.4, 2, 2.3, 2.8, 3.7, 2.8, 2.6, 
+    2.4, 2.7, 2.7, 2.6, 2.6, 3, 3.1, 3.6, 3.4, 2.7, 2.2, 2.3, 
+    2.7, 2, 1.4, 2.5, 3.2, 3, 2.6, 2.6, 2.4, 2.8, 3.3, 2.8, 2.9, 
+    1.4, 2.1, 2.3, 1.8, 1.5, 2.5, 2.8, 2.2, 2.5, 2.7, 2.7, 2.5, 
+    1.6, 2.5, 2.5, 2.2, 2.4, 2.2, 3.1, 2.9, 2.4, 3.1, 2.3, 3.2, 
+    2.9, 2.6, 2.7, 2.5, 2.4, 2, 2, 2.3, 1.7, 2.6, 2.2, 1.7, 2.2, 
+    1.7, 2.8, 2.6, 2, 1.8, 1.6, 2.8, 2.7, 2.8, 2.9, 3, 2.6, 2.8, 
+    3.4, 3.5, 2.6, 3.3, 2, 2.8, 3.5, 2.5, 3.3, 3.5, 3.2, 3.3, 
+    3, 3.5, 3.4, 2.7, 2.5, 3.2, 2.4, 2.7, 2.2, 3.1, 2.2, 2.9, 
+    2.8, 2.5, 2.9, 2.5, 3, 2.9, 2.7, 2.6, 2.5, 3.4, 2.5), flavor = c(3.2, 
+    2.5, 2.8, 2.9, 2.8, 3, 3.1, 3, 3.2, 2.8, 2.6, 2.8, 2.6, 3.2, 
+    3, 3.1, 2.9, 3.1, 3.4, 2.6, 3, 2.8, 3, 2.9, 2.9, 2.6, 2.9, 
+    3.2, 3.2, 3, 3, 2.7, 3.2, 3.1, 3.4, 2.6, 2.6, 2.5, 3.1, 2.7, 
+    2.6, 2.4, 2.7, 2.4, 2.5, 2.9, 2.7, 3.3, 2.7, 2.6, 2.7, 2.5, 
+    2.9, 2.8, 2.8, 3.2, 3.1, 3, 3.4, 3, 2.6, 2.3, 2.6, 2.5, 2.4, 
+    2.6, 2.9, 3.1, 2.8, 3.1, 3, 2.8, 3.1, 3.1, 2.9, 2.9, 2.5, 
+    2.6, 2.9, 2.4, 2.7, 2.9, 3, 3.1, 3, 2.8, 2.9, 3.1, 3.2, 2.9, 
+    2.8, 2.9, 3.1, 3.1, 3.3, 3.4, 3.1, 3.2, 3.5, 2.7, 3.3, 3, 
+    2.9, 3, 2.9, 3, 3.1, 3.1, 3.1, 2.9, 3.2, 3.2, 3.1, 3.2, 3.3, 
+    3.5, 3, 3.4, 3.3, 2.3, 2.6, 2, 2.7, 3, 2.2, 3.2, 2.9, 2.8, 
+    3, 2.8, 2.8, 2.8, 3.2, 3, 2.9, 3.4, 2.8, 3, 3.2, 3, 2.5, 
+    2.7, 2.7, 2.7, 2.1, 2.7, 2.9, 2.8, 3, 2.7, 3.2, 3.3, 3.1, 
+    2.9, 3.1, 3.3, 2.8, 3.1, 3.3, 2.8), moistness = c(3, 2.6, 
+    2.8, 2.4, 2.2, 1.7, 2.4, 2.9, 2.5, 1.9, 1.5, 1.9, 2.6, 2.1, 
+    2.1, 2.4, 2.4, 2.3, 2.7, 2.7, 2.8, 2.7, 2.9, 2.3, 2, 1.8, 
+    2.1, 2.8, 2.4, 2, 1.8, 1.8, 3.2, 2.2, 2.3, 1.3, 1.3, 2, 1.7, 
+    1.7, 3, 2.8, 3.2, 2.6, 2.2, 1.9, 2.5, 3.1, 2.5, 2.3, 2, 2.1, 
+    2.7, 2.2, 1.8, 2.4, 2.8, 3.3, 2.9, 2.6, 2.6, 2.4, 2.7, 2, 
+    1.7, 1.9, 2.9, 1.9, 2.7, 2.2, 2.2, 2.5, 3.1, 2.6, 2.4, 1.4, 
+    1.6, 1.8, 1.6, 1.5, 2.6, 2.7, 3, 2.4, 2.3, 2.4, 2.6, 1.8, 
+    2.3, 2.5, 2.3, 2.1, 2.3, 2.6, 2.8, 2.4, 2.7, 2.5, 3.1, 2.7, 
+    2.6, 2.7, 2.7, 2.5, 2.1, 1.9, 2.3, 2.4, 2.5, 2.1, 1.5, 2, 
+    2, 2.7, 2.6, 2.2, 2, 2.1, 2.6, 2.6, 2.5, 2.7, 2.9, 2.5, 2.6, 
+    2.8, 3, 2.5, 3.1, 2.5, 2.6, 3, 2.3, 2.7, 2.9, 2.5, 2.8, 2.8, 
+    3.1, 2.8, 2.5, 2.3, 3, 2.5, 2.3, 2.3, 2.6, 3.1, 2.7, 2.6, 
+    2.3, 2.7, 2.5, 2.5, 3.1, 2.6, 2.3, 2.6, 3, 2.3)), class = c("tbl_df", 
+"tbl", "data.frame"), row.names = c(NA, -160L), .Names = c("area", 
+"temp", "size", "storage", "method", "texture", "flavor", "moistness"
+), spec = structure(list(cols = structure(list(area = structure(list(), class = c("collector_integer", 
+"collector")), temp = structure(list(), class = c("collector_integer", 
+"collector")), size = structure(list(), class = c("collector_integer", 
+"collector")), storage = structure(list(), class = c("collector_integer", 
+"collector")), method = structure(list(), class = c("collector_integer", 
+"collector")), texture = structure(list(), class = c("collector_double", 
+"collector")), flavor = structure(list(), class = c("collector_double", 
+"collector")), moistness = structure(list(), class = c("collector_double", 
+"collector"))), .Names = c("area", "temp", "size", "storage", 
+"method", "texture", "flavor", "moistness")), default = structure(list(), class = c("collector_guess", 
+"collector"))), .Names = c("cols", "default"), class = "col_spec"))
+
+write_csv(potatoes, 'data/potatoes.csv')
+write_delim(potatoes, 'data/potatoes.txt', delim = '\t', col_names=F)
+```
+
+```{r}
+## readr is already loaded
+
+# Import potatoes.csv with read_csv(): potatoes
+potatoes <- read_csv("data/potatoes.csv")
+potatoes
+
+```
+
+## read_tsv
+
+```{r}
+
+# Column names
+col_names_potatoes <- c("area", "temp", "size", "storage", "method",
+                "texture", "flavor", "moistness")
+
+# Import potatoes.txt: potatoes
+potatoes <- read_tsv("data/potatoes.txt", col_names = col_names_potatoes)
+
+# Call head() on potatoes
+head(potatoes)
+```
+
+read_delim
+
+```{r}
+
+# Column names
+col_names_potatoes <- c("area", "temp", "size", "storage", "method",
+                "texture", "flavor", "moistness")
+
+# Import potatoes.txt using read_delim(): potatoes
+potatoes <- read_delim("data/potatoes.txt", delim="\t", col_names = col_names_potatoes)
+
+# Print out potatoes
+potatoes
+
+```
+
+## skip and n_max
+
+```{r}
+
+# Column names
+col_names_potatoes <- c("area", "temp", "size", "storage", "method",
+                "texture", "flavor", "moistness")
+
+# Import 5 observations from potatoes.txt: potatoes_fragment
+potatoes_fragment <- read_tsv("data/potatoes.txt", skip = 6, n_max = 5, col_names = col_names_potatoes)
+
+potatoes_fragment
+```
+
+## col_types
+
+```{r}
+
+# Column names
+col_names_potatoes <- c("area", "temp", "size", "storage", "method",
+                "texture", "flavor", "moistness")
+
+# Import all data, but force all columns to be character: potatoes_char
+potatoes_char <- read_tsv("data/potatoes.txt", col_types = "cccccccc", col_names = col_names_potatoes)
+
+# Print out structure of potatoes_char
+str(potatoes_char)
+
+```
+
+## col_types with collectors
+
+```{r}
+
+# Import without col_types
+hotdogs <- read_tsv("data/hotdogs.txt", col_names = c("type", "calories", "sodium"))
+
+# Display the summary of hotdogs
+summary(hotdogs)
+
+# The collectors you will need to import the data
+fac <- col_factor(levels = c("Beef", "Meat", "Poultry"))
+int <- col_integer()
+
+# Edit the col_types argument to import the data correctly: hotdogs_factor
+hotdogs_factor <- read_tsv("data/hotdogs.txt",
+                           col_names = c("type", "calories", "sodium"),
+                           col_types = list(fac, int, int))
+
+# Display the summary of hotdogs_factor
+summary(hotdogs_factor)
+
+```
+
+  - Another way to do this is to just change the one column to a factor afterwards
+    - This is what I usually do. 
+    - In most cases I load the data with R defaults, then take a look, and mutate any columns to the correct types if needed
+    - This is usually just changing stirng fields to factors or dates as needed. 
+
+```{r}
+
+hotdogs2 <- read_tsv("data/hotdogs.txt", col_names = c("type", "calories", "sodium")) %>%
+  mutate(type = as.factor(type))
+
+summary(hotdogs2)
+
+```
+
+## fread (from data.table package)
+
+  - fread is fast and seems to pretty much do everything as you would want naturally
+  
+```{r}
+
+# data.table package is already loaded
+
+# Import potatoes.csv with fread(): potatoes
+potatoes <- fread("data/potatoes.csv")
+
+# Print out potatoes
+potatoes
+```
+
+## fread: more advanced use
+
+```{r}
+
+# Import columns 6 and 8 of potatoes.csv: potatoes
+potatoes <- fread("data/potatoes.csv", select = c(6,8))
+str(potatoes)
+
+# Plot texture (x) and moistness (y) of potatoes
+plot(potatoes$texture, potatoes$moistness)
+
+```
+
+## Dedicated classes
+
+```{r}
+potatoes <- fread("data/potatoes.csv")
+class(potatoes)
+
+potatoes <- read_csv("data/potatoes.csv")
+class(potatoes)
+
+```
+  - The classes of the object loaded by `data.table` and `readr` are different
+
+&nbsp; &nbsp;
+
+***  
+# Importing Excel Data
+***  
+
+## First, create the urban popultion datasets used in course
+
+### Gapminder urban population dataset notes
+  - They use an excel workbook in the datacamp course that they have modified from the gapminder dataset
+  - On gapminder there is an excel file with urban population data by year, but its all in one worksheet, not split into 3 worksheets.
+  - Also there is a lot of info in the other worksheets
+  - I want to recreate the file they use in the class but need some getting data and excel connection skills...
+  - Luckily, everything I need to do here is covered later in this class and the next importing data class.: ) 
+
+### Which excel package to use
+
+  - There are 3 excel packages covered in this course, `gdata`, `readxl`, and `XLConnect`
+    - `gdata` can load files directly from the web, which is nice, but only xls. The gaminder file I need is xlsx
+    - `readxl` could work but requires I download the file first. This is fine, but ultimately I need to create worksheets and with portions of the data and save it off. This package is just for reading data in.
+    - `XLConnect` is the package I really need to connect and change the worksheet I think. 
+
+### R and Java Issues with XLConnect
+
+  - These are worth noting because its probably a common problem
+  - I had rjava issues when trying to load the `XLConnect` library
+  - First I got an error when loading the libary becasue I did not have java installed on my new mac
+    - macs don't come with java anymore. 
+    - I installed java from [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+  - Then, I got this error when loading the library...
+```{}
+Error: package or namespace load failed for ‘XLConnectJars’:
+ .onLoad failed in loadNamespace() for 'rJava', details:
+  call: dyn.load(file, DLLpath = DLLpath, ...)
+  error: unable to load shared object '/Library/Frameworks/R.framework/Versions/3.4/Resources/library/rJava/libs/rJava.so':
+  dlopen(/Library/Frameworks/R.framework/Versions/3.4/Resources/library/rJava/libs/rJava.so, 6): Library not loaded: @rpath/libjvm.dylib
+  Referenced from: /Library/Frameworks/R.framework/Versions/3.4/Resources/library/rJava/libs/rJava.so
+  Reason: image not found
+```
+  - Gross! I know. I googled the error and found a solution on SO
+    - Just needed to symlink the java execution path to usr/local/lib so R can run java
+    - At least I think thats what its doing : )
+  - I ran this line of code in the terminal and then the library loaded and worked
+    - `sudo ln -f -s $(/usr/libexec/java_home)/jre/lib/server/libjvm.dylib /usr/local/lib`
+    - found the answer [here](https://stackoverflow.com/a/31039105/2029832)
+  - But there was one more problem... I got that same error when trying to run the code with the knitr button.
+    - Seriously! 
+    - I found an answer on SO [here](https://stackoverflow.com/a/44599071/2029832)
+    - Throwing this line in the code before loading the library lets the knitr button work
+    - This seems pretty gross, but for now it will have to do, so I can move forward with the real learning
+```{}
+dyn.load('/Library/Java/JavaVirtualMachines/jdk1.8.0[YOURVERSIONHERE].jdk/Contents/Home/jre/lib/server/libjvm.dylib')
+```
+  - Important side note: 
+    - Issues like this are actually farily common when working with packages that use java or connect to databases or do anything external to R.
+    - There is a lot going on under the hood. 
+    - Sometimes using R packages is kinda like driving a car. Sometimes cars have issues
+    - Knowing the command line and devops skills needed to fix this car is something you may or may not want to invest in. 
+    - If you are at a company with tons of smart software developers and devops engineers, you can probably always get help to get 'your car fixed' and get going again on your data science project.
+    - But if you are at a startup, working or your own project, or pushing data science forward in a company without devops expertise, you will likely need some level of devops skills to get your projects unstuck at times. 
+    - If you get stuck, and don't have the skills or access to someone with the skills to help , you can really spins some weheels and be stuck for a long time and it will be very frustrating. 
+
+### Get the file
+
+```{r}
+
+## Download and load urban pop excel file
+url_urban_pop <- "http://docs.google.com/spreadsheet/pub?key=pyj6tScZqmEfH89V6UQhpZA&output=xlsx"
+download.file(url_urban_pop, "data/urban_pop_orig.xlsx")
+
+```
+
+
+### Get and crunch data from original urban pop file
+
+```{r}
+my_book <- loadWorkbook('data/urban_pop_orig.xlsx')
+
+# List the sheets in my_book
+getSheets(my_book)
+
+## These are the worksheets I want
+## "1960-1966" "1967-1974" "1975-2011"
+
+# Get the data sheet with all the ... data
+data <- readWorksheet(my_book, sheet='Data')
+
+# I like to use stringr instead of gsub functions
+col_names <- colnames(data) %>%
+  str_replace("Urban.population","country") %>%
+  str_replace("^X","")
+col_names
+
+# Set the cleaned column names
+colnames(data) <- col_names
+  
+data1 <- data[,c("country",c(1960:1966))]
+data2 <- data[,c("country",c(1967:1974))]
+data3 <- data[,c("country",c(1975:2011))]
+
+### Save new urban pop xlsx file with and without column names
+## Now create the 3 sheets and add the data in each
+createSheet(my_book,"1960-1966")
+createSheet(my_book,"1967-1974")
+createSheet(my_book,"1975-2011")
+
+writeWorksheet(my_book, data1, "1960-1966")
+writeWorksheet(my_book, data2, "1967-1974")
+writeWorksheet(my_book, data3, "1975-2011")
+
+getSheets(my_book)
+
+## Get rid of the other sheets
+removeSheet(my_book, sheet=c("Data","About","Footnotes","Settings","Download","v"))
+
+getSheets(my_book)
+
+## save this off as the file just like in the course
+saveWorkbook(my_book, "data/urbanpop.xlsx")
+
+## Do it again with no column names
+writeWorksheet(my_book, data1, "1960-1966", header=F)
+writeWorksheet(my_book, data2, "1967-1974", header=F)
+writeWorksheet(my_book, data3, "1975-2011", header=F)
+
+saveWorkbook(my_book, "data/urbanpop_nonames.xlsx")
+
+dir('data/')
+
+```
+
+### create urban pop xls file
+
+```{r}
+
+## I can repeat the process to create the urbanpop.xls file
+## But I need to start from scratch and create the workbook as an xls file to begin with
+## If I try to use the xlsx workbbok it will be corrupted and not load correctly later
+
+my_book <- loadWorkbook('data/urbanpop.xls', create=T)
+
+createSheet(my_book,"1960-1966")
+createSheet(my_book,"1967-1974")
+createSheet(my_book,"1975-2011")
+
+writeWorksheet(my_book, data1, "1960-1966")
+writeWorksheet(my_book, data2, "1967-1974")
+writeWorksheet(my_book, data3, "1975-2011")
+
+saveWorkbook(my_book, "data/urbanpop.xls")
+
+dir('data/')
+
+```
+
+  - Okay that all worked pretty smooth.
+  - I had some trouble with making the xls file at first but figured out I needed to create it from scratch
+  - Now I can do all the exercises for loading excel files on some actual data. 
+  - Also I feel pretty comfortable now creating any excel file I need in the future.
+
+## readxl(1)
+
+  - excel_sheets() list different sheets
+  - read_excel() actually import data into R
+  
+## List the sheets of an Excel file
+
+```{r}
+
+# the readxl package is already loaded
+
+# Print out the names of both spreadsheets
+excel_sheets("data/urbanpop.xlsx")
+
+```
+
+## Import an Excel sheet
+
+```{r}
+
+# Read the sheets, one by one
+pop_1 <- read_excel("data/urbanpop.xlsx", sheet = 1)
+pop_2 <- read_excel("data/urbanpop.xlsx", sheet = 2)
+pop_3 <- read_excel("data/urbanpop.xlsx", sheet = 3)
+
+# Put pop_1, pop_2 and pop_3 in a list: pop_list
+pop_list <- list(pop_1, pop_2, pop_3)
+
+# Display the structure of pop_list
+str(pop_list)
+
+```
+
+## Reading a workbook
+
+```{r}
+
+# Read all Excel sheets with lapply(): pop_list
+pop_list <- lapply(
+  excel_sheets("data/urbanpop.xlsx"),
+  read_excel,
+  path = "data/urbanpop.xlsx"
+  )
+
+# Display the structure of pop_list
+str(pop_list)
+
+```
+
+## The col_names argument
+
+```{r}
+
+# Import the the first Excel sheet of urbanpop_nonames.xlsx (R gives names): pop_a
+pop_a <- read_excel("data/urbanpop_nonames.xlsx", sheet=1, col_names = F)
+
+# Import the the first Excel sheet of urbanpop_nonames.xlsx (specify col_names): pop_b
+cols <- c("country", paste0("year_", 1960:1966))
+
+pop_b <- read_excel("data/urbanpop_nonames.xlsx", sheet=1, col_names=cols)
+
+# Print the summary of pop_a
+summary(pop_a)
+
+# Print the summary of pop_b
+summary(pop_b)
+
+```
+
+## the skip argument
+
+```{r}
+
+# Import the second sheet of urbanpop.xlsx, skipping the first 21 rows: urbanpop_sel
+urbanpop_sel <- read_excel("data/urbanpop.xlsx", sheet=2, skip=21, col_names=F)
+
+# Print out the first observation from urbanpop_sel
+# I'm showing 5. We can see that we are on the countries starting with B
+urbanpop_sel[1:5,]
+
+```
+
+## gdata
+
+  - written in pearl
+  - wraps `read.table` and makes all of its arguments available
+  - Its pretty slow. It converts everything to csv then reads it in
+  - Its recommended to use readxl, but this is still under development
+  - gdata has been around for a while and is stable.
+  
+## Import a local file
+
+```{r}
+
+# gdata library is already loaded
+
+# Import the second sheet of urbanpop.xls: urban_pop
+urban_pop <- read.xls("data/urbanpop.xls", sheet=2)
+
+# Print the first 11 observations using head()
+head(urban_pop,11)
+```
+
+## read.xls() wraps around read.table()
+
+```{r}
+
+# Column names for urban_pop
+columns <- c("country", paste0("year_", 1967:1974))
+
+# Finish the read.xls call
+urban_pop <- read.xls("data/urbanpop.xls", sheet = 2,
+                      skip = 50, header = F, stringsAsFactors = F,
+                      col.names = columns)
+
+# Print first 10 observation of urban_pop
+head(urban_pop,10)
+
+```
+
+## Work that Excel data!
+
+```{r}
+
+# Add code to import data from all three sheets in urbanpop.xls
+path <- "data/urbanpop.xls"
+urban_sheet1 <- read.xls(path, sheet = 1, stringsAsFactors = FALSE)
+urban_sheet2 <- read.xls(path, sheet = 2, stringsAsFactors = FALSE)
+urban_sheet3 <- read.xls(path, sheet = 3, stringsAsFactors = FALSE)
+
+# Extend the cbind() call to include urban_sheet3: urban
+urban <- cbind(urban_sheet1, urban_sheet2[-1], urban_sheet3[-1])
+
+# Remove all rows with NAs from urban: urban_clean
+urban_clean <- na.omit(urban)
+
+# Print out a summary of urban_clean
+# Shortening the output to the first 5 columns
+summary(urban_clean[, 1:5])
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# Reproducible Excel work with XLConnect
+***  
+
+## Reading sheets
+
+  - bridge between excel and R
+  - uses java, installing package can have its difficulties
+    - I had some for sure
+  - works with xlsx and xls files
+  - They even note that you will probably need to google errors when trying to install this package. : ) 
+  
+
+## Connect to a workbook
+
+```{r}
+
+# The XLConnect package is already loaded
+
+# Build connection to urbanpop.xlsx: my_book
+my_book <- loadWorkbook('data/urbanpop.xlsx')
+
+# Print out the class of my_book
+class(my_book)
+
+```
+
+## List and read Excel sheets
+
+```{r}
+
+# Build connection to urbanpop.xlsx
+my_book <- loadWorkbook("data/urbanpop.xlsx")
+
+# List the sheets in my_book
+getSheets(my_book)
+
+# Import the second sheet in my_book
+head(readWorksheet(my_book, sheet=2),10)
+
+```
+
+## Customize readWorksheet
+
+```{r}
+
+# Build connection to urbanpop.xlsx
+my_book <- loadWorkbook("data/urbanpop.xlsx")
+
+# Import columns 3, 4, and 5 from second sheet in my_book: urbanpop_sel
+urbanpop_sel <- readWorksheet(my_book, sheet = 2, startCol=3, endCol=5)
+
+# Import first column from second sheet in my_book: countries
+countries <- readWorksheet(my_book, sheet = 2, startCol=1, endCol=1)
+
+## For some reason these have different number of rows
+str(urbanpop_sel)
+str(countries)
+
+## Welp, lets add some rows so we can cbind
+extra_rows <- rep(NA, nrow(countries) - nrow(urbanpop_sel))
+
+df_extra_rows <- data.frame(x1 = extra_rows,
+                            x2 = extra_rows,
+                            x3 = extra_rows)
+
+colnames(df_extra_rows) <- colnames(urbanpop_sel)
+
+urbanpop_sel_2 <- rbind(urbanpop_sel,df_extra_rows)
+
+str(urbanpop_sel_2)
+
+# cbind() urbanpop_sel and countries together: selection
+selection <- cbind(countries, urbanpop_sel_2)
+str(selection)
+
+```
+
+## Adapting sheets
+
+  - You can do a lot with XLConnect to change sheets in the workbook
+  - I go through the basics above when creating the excel datasets needed for these exercises
+  - But there is a lot of useful functionality for  styling cells, working with formulas, arranging cells, and more not covered here
+  - Check out the [XLConnect vignette](https://cran.r-project.org/web/packages/XLConnect/vignettes/XLConnect.pdf) to go more in depth with this
+  
+## Add worksheet
+
+
+```{r}
+
+# Build connection to urbanpop.xlsx
+my_book <- loadWorkbook("data/urbanpop.xlsx")
+
+# Add a worksheet to my_book, named "data_summary"
+createSheet(my_book,"data_summary")
+
+# Use getSheets() on my_book
+getSheets(my_book)
+
+```
+## Populate worksheet
+
+```{r}
+
+# Build connection to urbanpop.xlsx
+my_book <- loadWorkbook("data/urbanpop.xlsx")
+
+# Add a worksheet to my_book, named "data_summary"
+createSheet(my_book, "data_summary")
+
+# Create data frame: summ
+sheets <- getSheets(my_book)[1:3]
+dims <- sapply(sheets, function(x) dim(readWorksheet(my_book, sheet = x)), USE.NAMES = FALSE)
+summ <- data.frame(sheets = sheets,
+                   nrows = dims[1, ],
+                   ncols = dims[2, ])
+
+# Add data in summ to "data_summary" sheet
+writeWorksheet(my_book, summ, "data_summary")
+
+
+# Save workbook as summary.xlsx
+saveWorkbook(my_book, "data/summary.xlsx")
+
+dir('data/')
+
+```
+
+## Rename sheets
+
+```{r}
+
+# Rename "data_summary" sheet to "summary"
+renameSheet(my_book, sheet="data_summary", newName="summary")
+
+# Print out sheets of my_book
+getSheets(my_book)
+
+# Save workbook to "renamed.xlsx"
+saveWorkbook(my_book, "data/renamed.xlsx")
+
+dir('data/')
+
+```
+
+## Removing sheets
+
+```{r}
+
+# Build connection to renamed.xlsx: my_book
+my_book <- loadWorkbook("data/renamed.xlsx")
+
+# Remove the fourth sheet
+removeSheet(my_book, sheet="summary")
+
+# Save workbook to "clean.xlsx"
+saveWorkbook(my_book, "data/clean.xlsx")
+
+dir('data/')
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# Conclusion
+***  
+
+  - This all seems really handy for a finance department trying to move from excel to R
+  - Or taking over someone elses old excel sheets and making them more efficient
+  - Taking data out of an excel sheet is always useful because sometimes thats just where the data is located
+  - But doing the analysis in R, coded, commented, and reporducible with the power of the hadley verse then putting the results back into whatever worksheet you have is a big win.
+  - With this you could easily use all of the power of R to replace or enhance anything you have in an excel sheet
+  - And of course the same applies to any data that you have stored in a flat file. 
+  - In most cases I think presenting the data in a slide show, shiny app or html doc are the best wy to go
+  - But if the process requires excel sheets and things, than at least you can work in the flow until you create a better one. 
+  - There is always a flow of data and excel may be part of so this is good stuff to know. 
