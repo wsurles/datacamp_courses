@@ -1,0 +1,672 @@
+---
+title: "Cleaning Data in R"
+author: "William Surles"
+date: "2017-07-11"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+  toc: true
+  toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+
+library(dplyr)
+library(tidyr)
+library(lubridate)
+
+source('create_datasets.R')
+
+```
+
+***
+# Introduction
+***
+
+  - Course notes for [Cleaning Data in R](https://www.datacamp.com/courses/cleaning-data-in-r)
+
+## Whats Covered
+
+  - Introduction and exploring raw data
+    - `class`, `dim`, `names`, `str`, `glimpse`, `summary`
+    - `head`, `tail`, `print`
+    - `hist`, `plot`
+  - Tidying data
+  - Preparing data for analysis
+  - Putting it all together
+
+## Additional Resoruces
+
+  - [Hadley Wickhams's paper on tidy data 2014](http://vita.had.co.nz/papers/tidy-data.html)
+  -
+  
+&nbsp; &nbsp;
+
+***  
+# Introduction and exploring raw data
+***  
+
+## Here's what messy data look like
+
+  - X column is just the row number
+  - days are spread but should be part of the date field and have one row per date
+  - year and month and day should be one data column
+  - measures are melted but should be each in a column
+  - and so on...
+
+```{r}
+weather <- readRDS('data/weather.rds')
+
+# View the first 6 rows of data
+head(weather)
+
+# View the last 6 rows of data
+tail(weather)
+
+# View a condensed summary of the data
+str(weather)
+
+```
+
+## Here's what clean data look like
+
+  - Each row is a daily record of the weather
+  - There is a lot cleaned up here
+  - We will clean this data set in the last section
+
+```{r}
+
+weather_clean <- readRDS('data/weather_clean.rds')
+
+# View the first 6 rows of data
+head(weather_clean)
+
+# View the last 6 rows of data
+tail(weather_clean)
+
+# View a condensed summary of the data
+str(weather_clean)
+
+```
+
+## Exploring raw data
+
+  - `class`, `dim`, `names`, `str`, `glimpse`, `summary`
+
+## Getting a feel for your data
+
+```{r}
+
+bmi <- readRDS('data/bmi.rds')
+
+# Check the class of bmi
+class(bmi)
+
+# Check the dimensions of bmi
+dim(bmi)
+
+# View the column names of bmi
+colnames(bmi)
+
+```
+
+## Viewing the structure of your data
+
+```{r}
+
+# Check the structure of bmi
+str(bmi)
+
+# Load dplyr
+library(dplyr)
+
+# Check the structure of bmi, the dplyr way
+glimpse(bmi)
+
+# View a summary of bmi
+summary(bmi)
+
+```
+
+## Exploring raw data (part 2)
+
+  - `head`, `tail`, `print`
+  - `hist`, `plot`
+
+## Looking at your data
+
+```{r}
+
+# Print bmi to the console
+# Don't do this is just wastes space. Use the head, tail, str, and summary functions
+# bmi
+
+# View the first 6 rows
+head(bmi)
+
+# View the first 15 rows
+head(bmi,15)
+
+# View the last 6 rows
+tail(bmi)
+
+# View the last 10 rows
+tail(bmi, 10)
+
+```
+
+## Visualizing your data
+
+```{r}
+
+# Histogram of BMIs from 2008
+hist(bmi$Y2008)
+
+# Scatter plot comparing BMIs from 1980 to those from 2008
+plot(bmi$Y1980,bmi$Y2008)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+# Tidying data
+***  
+
+## Introduction to tidy data
+
+  - Hadley Wickham's [paper](http://vita.had.co.nz/papers/tidy-data.html) on this from 2014 is the best resource for understanding what is tidy data
+  - Essentially it mean one row per observation and one type of observation per table
+    - Observations as rows
+    - Variables as columns
+    - One type of observational unit per table
+  - If you see values in the column names like months or years, or stock names, you have untidy data
+
+## Introduction to tidyr
+
+  - Could do a whole notebook on this package, it does a lot
+  - Here we really just use 
+    - `gather` combines multiple columns into two rows with key and value
+    - `spread` moves key value columns to multiple columns with keys as column names 
+    - `separate` splits a column by `_` or whatever seperator you choose to multiple columns
+    - `unite` combines multiple columns to one column with `_` as the seperator
+
+## Gathering columns into key-value-pairs
+
+```{r}
+
+## the tidyr package is already loaded
+head(bmi)
+
+# Apply gather() to bmi and save the result as bmi_long
+bmi_long <- gather(bmi, year, bmi_val, -Country)
+
+# View the first 20 rows of the result
+head(bmi_long,20)
+
+```
+
+## Spreading key-value pairs
+
+```{r}
+
+# Apply spread() to bmi_long
+bmi_wide <- spread(bmi_long, year, bmi_val)
+
+# View the head of bmi_wide
+head(bmi_wide)
+
+```
+
+## Separating columns
+
+```{r}
+
+bmi_cc <- readRDS('data/bmi_cc.rds')
+head(bmi_cc)
+
+# Apply separate() to bmi_cc
+bmi_cc_clean <- separate(bmi_cc, col = Country_ISO, into = c("Country", "ISO"), sep = "/")
+
+# Print the head of the result
+head(bmi_cc_clean)
+
+```
+
+## Uniting columns
+
+```{r}
+
+# Apply unite() to bmi_cc_clean
+bmi_cc <- unite(bmi_cc_clean, Country_ISO, Country, ISO, sep = "-")
+
+# View the head of the result
+head(bmi_cc)
+
+```
+
+## Addressing common symptoms of messy data
+
+  - Column headers are values, not variable names
+    - eye colors as column names with boolean values in rows
+  - Variable are stored in both rows and columns
+    - pet counts stored as key value pair in two columns. n_dogs and n_cats should be seperate columns
+  - Multiple variables are stored in one column
+    - sex_age column with M.34, F.55 as values
+  - A single observational unit is stored in multiple tables
+  - Multiple types of observational units are stored in the same table
+    - This should be split into two tables with key like most sql beginner data sets of sales and sales persons
+    
+## Column headers are values, not variable names
+
+```{r}
+
+census <- readRDS('data/census.rds')
+
+# View the head of census
+head(census)
+
+# Gather the month columns
+census2 <- gather(census, month, amount, -YEAR)
+head(census2)
+
+# Arrange rows by YEAR using dplyr's arrange
+census2 <- arrange(census2, YEAR)
+
+# View first 20 rows of census2
+head(census2, 20)
+
+```
+
+## Variables are stored in both rows and columns
+
+```{r}
+
+census_long <- readRDS('data/census_long.rds')
+
+# View first 50 rows of census_long
+head(census_long, 50)
+
+# Spread the type column
+census_long2 <- spread(census_long, type, amount)
+
+# View first 20 rows of census_long2
+head(census_long2, 20)
+
+```
+
+## Multiple values are stored in one column
+
+```{r}
+
+census_long3 <- readRDS('data/census_long3.rds')
+
+# View the head of census_long3
+head(census_long3)
+
+# Separate the yr_month column into two
+census_long4 <- separate(census_long3, yr_month, c("year","month"))
+
+# View the first 6 rows of the result
+head(census_long4)
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# Preparing data for analysis
+***  
+
+## Type conversions
+
+  - common type conversions
+    - `as.character`
+    - `as.numeric`
+    - `as.integer`
+    - `as.factor`
+    - `as.logical`
+  - also a log of date conversions in `lubridate`
+    - `ymd`, `mdy`, `hms`, `ymd_hms`, etc
+    
+## Types of variables in R
+
+```{r}
+
+# Make this evaluate to character
+class(as.character('true'))
+
+# Make this evaluate to numeric
+class(as.numeric("8484.00"))
+
+# Make this evaluate to integer
+class(as.integer(99))
+
+# Make this evaluate to factor
+class(as.factor("factor"))
+
+# Make this evaluate to logical
+class(as.logical("FALSE"))
+
+```
+
+## Comon type conversions
+
+```{r}
+
+students <- readRDS('data/students.rds')
+
+# Preview students with str()
+str(students)
+
+# Coerce Grades to character
+students$Grades <- as.character(students$Grades)
+
+# Coerce Medu to factor
+students$Medu <- as.factor(students$Medu)
+
+# Coerce Fedu to factor
+students$Fedu <- as.factor(students$Medu) 
+    
+# Look at students once more with str()
+str(students)
+
+```
+
+## Working with dates
+
+```{r}
+
+students2 <- readRDS('data/students2.rds')
+
+# Preview students2 with str()
+str(students2)
+
+# The lubridate package is already loaded
+
+# Parse as date
+dmy("17 Sep 2015")
+
+# Parse as date and time (with no seconds!)
+mdy_hm("July 15, 2012 12:56")
+
+# Coerce dob to a date (with no time)
+students2$dob <- ymd(students2$dob)
+
+# Coerce nurse_visit to a date and time
+students2$nurse_visit <- ymd_hms(students2$nurse_visit)
+    
+# Look at students2 once more with str()
+str(students2)
+
+```
+
+## String manipulation
+
+  - I could make a whole notebook on the `stringr` package
+  - Here we use a few common functions
+    - `str_trim`, `str_pad`, `str_detect`, `str_replace`
+  - `stringr` replaces the disparate base r functions for working with stings
+    - `paste`, `paste0`, `gsub`, `grep`, etc
+
+## Trimming and padding strings
+
+```{r}
+
+# Load the stringr package
+library(stringr)
+
+# Trim all leading and trailing whitespace
+str_trim(c("   Filip ", "Nick  ", " Jonathan"))
+
+
+# Pad these strings with leading zeros
+str_pad(c("23485W", "8823453Q", "994Z"), width=9, side='left', pad="0")
+
+```
+
+## Upper and lower case
+
+```{r}
+
+states <- c("al", "ak", "az", "ar", "ca", "co", "ct", "de", "fl", "ga", 
+"hi", "id", "il", "in", "ia", "ks", "ky", "la", "me", "md", "ma", 
+"mi", "mn", "ms", "mo", "mt", "ne", "nv", "nh", "nj", "nm", "ny", 
+"nc", "nd", "oh", "ok", "or", "pa", "ri", "sc", "sd", "tn", "tx", 
+"ut", "vt", "va", "wa", "wv", "wi", "wy")
+
+# Make states all uppercase and save result to states_upper
+states_upper <- toupper(states)
+states_upper
+
+# Make states_upper all lowercase again
+states_lower <- tolower(states_upper)
+states_lower
+
+```
+
+## Finding and replacing strings
+
+```{r}
+
+# Look at the head of students2
+head(students2)
+
+# Detect all dates of birth (dob) in 1997
+str_detect(students2$dob, "1997")
+
+# In the sex column, replace "F" with "Female"...
+students2$sex <- str_replace(students2$sex, "F", "Female")
+
+# ...And "M" with "Male"
+students2$sex <- str_replace(students2$sex, "M", "Male")
+
+# View the head of students2
+head(students2)
+
+```
+
+## Missing and special values
+
+  - There may be complete observations that are missing
+    - This can happen if data ingestion process is interupted. 
+  - NA, NaN, Inf, #N/A (Excel), single dot (SPSS,SAS), -1, -99999
+  - Could be anything really
+
+```{r}
+
+```
+
+## Finding missing values
+
+```{r}
+
+social_df <- readRDS('data/social_df.rds')
+
+# Call is.na() on the full social_df to spot all NAs
+is.na(social_df)
+
+# Use the any() function to ask whether there are any NAs in the data
+any(is.na(social_df))
+
+# View a summary() of the dataset
+summary(social_df)
+
+# Call table() on the status column
+table(social_df$status)
+
+```
+
+## Dealing with missing values
+
+```{r}
+
+# Replace all empty strings in status with NA
+social_df$status[social_df$status == ""] <- NA
+
+# Print social_df to the console
+social_df
+
+# Use complete.cases() to see which rows have no missing values
+complete.cases(social_df)
+
+# Use na.omit() to remove all rows with any missing values
+na.omit(social_df)
+
+```
+
+## Outliers and obvious errors
+
+  - Could be from data entry errors, or some measurement error
+  - `summary` and visualizations like `hist` or `boxplot` are good for finding these
+
+## Dealing with outliers and obvious errors
+
+```{r}
+
+students3 <- readRDS('data/students3.rds')
+
+# Look at a summary() of students3
+summary(students3)
+
+# View a histogram of the age variable
+hist(students3$age)
+
+# View a histogram of the absences variable
+hist(students3$absences)
+
+# View a histogram of absences, but force zeros to be bucketed to the right of zero
+hist(students3$absences, right=F)
+
+```
+
+## Another look at strange values
+
+```{r}
+
+# View a boxplot of age
+boxplot(students3$age)
+
+# View a boxplot of absences
+boxplot(students3$absences)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+# Putting it all together
+***  
+
+## Time to put it all together!
+
+```{r}
+
+```
+
+## Get a feel for the data
+
+```{r}
+
+```
+
+## Summarize the data
+
+```{r}
+
+```
+
+## Take a closer look
+
+```{r}
+
+```
+
+## Lets tidy the data
+
+```{r}
+
+```
+
+## Column names are values
+
+```{r}
+
+```
+
+## Values are variable names
+
+```{r}
+
+```
+
+## Prepare the data for analysis
+
+```{r}
+
+```
+
+## Clean up dates
+
+```{r}
+
+```
+
+## A closer look at column types
+
+```{r}
+
+```
+
+## Column type conversions
+
+```{r}
+
+```
+
+## Missing, extreme, and unexpected values
+
+```{r}
+
+```
+
+## Find missing values
+
+```{r}
+
+```
+
+## An obvious error
+
+```{r}
+
+```
+
+## Another obvious error
+
+```{r}
+
+```
+
+## Check other extreme values
+
+```{r}
+
+```
+
+## Finishing touches
+
+```{r}
+
+```
+
+## Your data are clean!
+
+```{r}
+
+```
+

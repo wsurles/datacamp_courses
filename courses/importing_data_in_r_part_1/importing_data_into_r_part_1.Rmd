@@ -7,12 +7,9 @@ output:
   self_contained: yes
   theme: flatly
   highlight: tango
+  toc: true
+  toc_float: true
 ---
-
-***
-> This document was updated on **`r Sys.Date()`**.
-
-***
 
 ```{r setup, include=FALSE, results='hide'}
 knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
@@ -35,9 +32,11 @@ unlink("data/*")
 
 ```
 
+***
 # Introduction
+***
 
-  - Course notes for [Importing Data in R (Part 1)](https://www.datacamp.com/courses/importing-data-in-r-part-1)
+Course notes for [Importing Data in R (Part 1)](https://www.datacamp.com/courses/importing-data-in-r-part-1)
 
 ## Whats Covered
 

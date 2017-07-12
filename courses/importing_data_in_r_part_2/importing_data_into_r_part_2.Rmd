@@ -7,12 +7,9 @@ output:
   self_contained: yes
   theme: flatly
   highlight: tango
+  toc: true
+  toc_float: true
 ---
-
-***
-> This document was updated on **`r Sys.Date()`**.
-
-***
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
@@ -33,9 +30,11 @@ unlink("data/*")
 
 ```
 
+***  
 # Introduction
+***  
 
-  - Course notes for [Importing Data in R (Part 2)](https://www.datacamp.com/courses/importing-data-in-r-part-2)
+Course notes for [Importing Data in R (Part 2)](https://www.datacamp.com/courses/importing-data-in-r-part-2)
 
 ## Whats Covered
 
@@ -53,7 +52,7 @@ unlink("data/*")
 &nbsp; &nbsp;
 
 ***  
-# Importing data from databases (Part 1)
+# Importing data from databases (1)
 ***  
 
 ## Connect to a database
@@ -136,7 +135,7 @@ tables
 &nbsp; &nbsp;
 
 ***  
-# Importing data from databases (Part 2)
+# Importing data from databases (2)
 ***  
 
 ## SQL Queries from inside R
@@ -245,7 +244,7 @@ dbDisconnect(con)
 &nbsp; &nbsp;
 
 ***  
-# Importing data from the web (Part 1)
+# Importing data from the web (1)
 ***  
 
 ## HTTP
@@ -401,7 +400,7 @@ content(resp)
 &nbsp; &nbsp;
 
 ***  
-# Importing data from the web (Part 2)
+# Importing data from the web (2)
 ***  
 
 ## APIs & JSON
