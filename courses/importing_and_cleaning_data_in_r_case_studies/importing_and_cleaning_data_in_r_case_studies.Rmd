@@ -1,0 +1,694 @@
+---
+title: "Importing and Cleaning Data in R: Case Studies"
+author: "William Surles"
+date: "2017-07-13"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+  toc: true
+  toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+
+
+# source('create_datasets.R')
+
+```
+
+***
+# Introduction
+***
+
+Course notes for [Importing and Cleaning Data in R: Case Studies](https://www.datacamp.com/courses/importing-cleaning-data-in-r-case-studies)
+
+## Whats Covered
+
+  - Ticket Sales Data
+  - MBTA Ridership Data
+  - World Food Facts
+  - School Attendance Data
+
+&nbsp; &nbsp;
+
+***  
+# Ticket Sales Data
+***  
+
+## Importing the data
+
+```{r}
+
+# Import sales.csv: sales
+url_sales <- 'http://s3.amazonaws.com/assets.datacamp.com/production/course_1294/datasets/sales.csv'
+sales <- read.csv(url_sales, stringsAsFactors=F)
+
+```
+
+## Examining the data
+
+```{r}
+
+# View dimensions of sales
+dim(sales)
+
+# Inspect first 6 rows of sales
+head(sales)
+
+# View column names of sales
+names(sales)
+
+```
+
+## Summarizing the data
+
+```{r}
+
+# Look at structure of sales
+str(sales)
+
+# View a summary of sales
+summary(sales)
+
+# Load dplyr
+library(dplyr)
+
+# Get a glimpse of sales
+glimpse(sales)
+
+```
+
+## Removing redundant info
+
+```{r}
+
+# Remove the first column of sales: sales2
+sales2 <- sales[,-1]
+str(sales[,1:5])
+str(sales2[,1:5])
+
+```
+
+## Information not worth keeping
+
+```{r}
+
+# Define a vector of column indices: keep
+## We don't want the first 4 coumns or the last 15
+keep <- seq(5,ncol(sales2)-15,1)
+
+# Subset sales2 using keep: sales3
+sales3 <- sales2[,keep]
+glimpse(sales3)
+
+```
+
+## Separating columns
+
+```{r}
+
+# Load tidyr
+library(tidyr)
+
+# Split event_date_time: sales4
+head(sales3$event_date_time)
+
+sales4 <- separate(sales3, event_date_time, c('event_dt', 'event_time'), sep = " ")
+
+## check new columns
+col <- str_detect(names(sales4),'event')
+glimpse(sales4[,col])
+
+# Split sales_ord_create_dttm: sales5
+head(sales4$sales_ord_create_dttm)
+
+sales5 <- separate(sales4, sales_ord_create_dttm, c('ord_create_dt', 'ord_create_time'), sep = " ")
+
+## check new columns
+col <- str_detect(names(sales5),'ord_create')
+glimpse(sales5[,col])
+
+```
+
+## Dealing with warnings
+
+  - When running the `separate` in the last code block the following warning is printed to the console
+    - `Warning message: Too few values at 4 locations: 2516, 3863, 4082, 4183`
+    - This does not show in the html doc becasue I have `warnings=F` set on all code chunks 
+    - I do this so warnings don't make the final doc messy, but its still a good idea to check on them as they do in the next couple exercises
+
+```{r}
+
+# Define an issues vector
+issues <- c(2516, 3863, 4082, 4183)
+
+# Print values of sales_ord_create_dttm at these indices
+sales3$sales_ord_create_dttm[issues]
+
+# Print a well-behaved value of sales_ord_create_dttm
+sales3$sales_ord_create_dttm[2517]
+
+```
+  - This just shows that the values in these rows indicated in the warning are NULL. 
+  - So, it makes sense that there would be a warnging, but there is nothing we can do about it.
+  
+## Identifying dates
+
+```{r}
+
+# Load stringr
+library(stringr)
+
+# Find columns of sales5 containing "dt": date_cols
+date_cols <- str_detect(colnames(sales5), "dt")
+glimpse(sales5[,date_cols])
+
+# Load lubridate
+library(lubridate)
+
+# Coerce date columns into Date objects
+sales5[, date_cols] <- lapply(sales5[, date_cols], ymd)
+
+# Check column types
+glimpse(sales5[,date_cols])
+
+
+```
+
+## More warnings!
+
+  - Aight, so when running the `ymd` function in the lapply above I get the following warnings in the console
+    - `Warning message:  2892 failed to parse.`
+    - `Warning message:  101 failed to parse.`
+    - `Warning message:  4 failed to parse.`
+    - `Warning message:  424 failed to parse.`
+  - These warnings are saying there were values that could not be converted to a date. 
+    - We can check to see if these just match up to the number of values that are `NA`
+    - We `lapply` the `ia.na` function on all date columns
+    - Then count the number of `TRUE`s 
+    - And we see that the counts match the warnings exactly. 
+
+```{r}
+
+## stringr is loaded
+
+# Find date columns (don't change)
+date_cols <- str_detect(names(sales5), "dt")
+
+# Create logical vectors indicating missing values (don't change)
+missing <- lapply(sales5[, date_cols], is.na)
+
+# Create a numerical vector that counts missing values: num_missing
+num_missing <- sapply(missing, sum)
+
+# Print num_missing
+num_missing
+
+```
+## Combining columns
+
+```{r}
+
+## tidyr is loaded
+
+# Combine the venue_city and venue_state columns
+sales6 <- unite(sales5, venue_city_state, venue_city, venue_state, sep = ", ")
+
+# View the head of sales6
+head(sales6)
+head(sales6$venue_city_state)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+# MBTA Ridership Data
+***  
+
+## Using readxl
+
+  - I need to pull this dataset down from aws then load
+  
+```{r}
+
+# Load readxl
+library(readxl)
+
+# Import mbta.xlsx and skip first row: mbta
+url_mbta <- 'http://s3.amazonaws.com/assets.datacamp.com/production/course_1294/datasets/mbta.xlsx'
+download.file(url_mbta, 'data/mbta.xlsx')
+mbta <- read_excel('data/mbta.xlsx', skip=1)
+
+```
+
+## Examining the data
+
+```{r}
+
+# View the structure of mbta
+str(mbta)
+
+# View the first 6 rows of mbta
+head(mbta)
+
+# View a summary of mbta
+summary(mbta)
+```
+
+## Removing unnecessry rows and columns
+
+  - Some of these rows are from analysis mixed in with the data in the excel sheet
+    - This is super common in excel but makes the data messy and less usable
+  - The first column is just the row number
+
+```{r}
+
+# Remove rows 1, 7, and 11 of mbta: mbta2
+keep <- !(mbta$mode %in% c('All Modes by Qtr', 'Pct Chg / Yr', 'TOTAL'))
+
+mbta2 <- mbta[keep,]
+glimpse(mbta2)
+
+# Remove the first column of mbta2: mbta3
+mbta3 <- mbta2[,-1]
+glimpse(mbta3)
+
+```
+
+## Observations are stored in columns
+
+  - This data is pretty much stored backwards
+  - The observation of rider count is being made each month for differnt transit types
+    - The month is the observation unique key and should be a column value
+  - The mode of transportation could be a variable and be in one column or it could be spread and have one column per type
+
+```{r}
+
+## mbta3 is pre-loaded
+head(mbta3)
+
+# Load tidyr
+library(tidyr)
+
+# Gather columns of mbta3: mbta4
+mbta4 <- gather(mbta3, month, thou_riders, -mode)
+
+# View the head of mbta4
+head(mbta4)
+
+```
+
+## Type conversions
+
+```{r}
+
+## mbta4 is pre-loaded
+head(mbta4)
+
+# Coerce thou_riders to numeric
+mbta4$thou_riders <- as.numeric(mbta4$thou_riders)
+
+```
+
+## Variables are stored in both rows and columns
+
+  - Here they want to spread all the modes of transportaion into separate columns
+  - I actually like it in a column for these reasons...
+    - I think of the variables as month, trasportation mode, and rider count. 
+    - If doing a group by and summarize it needs to be in a column to group by type
+    - Also ggplot will require it in a column
+  - But The exercise is to spread it out. Though they make a chart and have to re-melt it later! : )
+    - But its not a big deal. Its easy to gather or spread this info based on whats needed for analysis. 
+  
+```{r}
+
+## tidyr is pre-loaded
+
+# Spread the contents of mbta4: mbta5
+head(mbta4)
+mbta5 <- spread(mbta4, mode, thou_riders)
+
+# View the head of mbta5
+head(mbta5)
+
+```
+
+## Separating columns
+
+```{r}
+
+# View the head of mbta5
+head(mbta5)
+
+# Split month column into month and year: mbta6
+mbta6 <- separate(mbta5, month, c('year', 'month'))
+
+# View the head of mbta6
+head(mbta6)
+
+```
+
+## Do your values seem reasonable?
+
+  - See, I would have just filtered the mode to Boat then made the hist
+  
+```{r}
+
+# View a summary of mbta6
+summary(mbta6)
+
+# Generate a histogram of Boat ridership
+hist(mbta6$Boat)
+
+```
+
+## Dealing with entry error
+
+```{r}
+
+# Find the row number of the incorrect value: i
+i <- which(mbta6$Boat == 40)
+
+# Replace the incorrect value with 4
+mbta6$Boat[i] <- 4
+
+# Generate a histogram of Boat column
+hist(mbta6$Boat)
+
+```
+
+## Extra plots
+
+  - As a teaser for a later class I guess, they threw in some ggplot charts at the very end of this exercise
+    - They use a couple dataframes that they have made themselves.
+    - I will need to get dplyr and ggplot and make the same data frames they use here to copy these charts
+    - And ironically I will need to gather the data back by mode, and reunite the year month. : ) 
+
+```{r}
+
+library(dplyr)
+library(ggplot2)
+
+## need to use the old mbta data frame because ggplot likes the variables to be melted
+head(mbta6)
+table(mbta4$mode)
+
+mbta_all <- mbta6 %>%
+  unite(year_mon, year, month, sep = "") %>%
+  gather(mode, thou_riders, -year_mon)
+  
+mbta_boat <- mbta_all %>%
+  filter(mode %in% c("Boat","Trackless Trolley"))
+
+head(mbta_boat)
+table(mbta_boat$mode)
+
+# Look at Boat and Trackless Trolley ridership over time (don't change)
+## The old outlier point for boat is still in here
+ggplot(mbta_boat, aes(x = year_mon, y = thou_riders, col = mode)) +  geom_point() + 
+  scale_x_discrete(name = "Month", breaks = c(200701, 200801, 200901, 201001, 201101)) + 
+  scale_y_continuous(name = "Avg Weekday Ridership (thousands)")
+
+# Look at all T ridership over time (don't change)
+ggplot(mbta_all, aes(x = year_mon, y = thou_riders, col = mode)) + geom_point() + 
+  scale_x_discrete(name = "Month", breaks = c(200701, 200801, 200901, 201001, 201101)) +  
+  scale_y_continuous(name = "Avg Weekday Ridership (thousands)")
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# World Food Facts
+***  
+
+## Importing the data
+
+```{r}
+
+# Load data.table
+library(data.table)
+
+# Import food.csv: food
+url_food <- 'http://s3.amazonaws.com/assets.datacamp.com/production/course_1294/datasets/food.csv'
+food <- fread(url_food)
+
+# Convert food to a data frame
+food <- data.frame(food)
+```
+
+## Examining the data
+
+```{r}
+
+# Loaded dplyr
+
+# View a glimpse of food
+glimpse(food)
+
+# View column names of food
+names(food)
+
+```
+
+  - sheesh, this is a lot of variables
+  
+## Inspecting variables
+
+  - I really don't want to print this all out in the doc so I am limiting the variables here
+
+```{r}
+
+# View summary of food
+summary(food[,1:10])
+
+# View head of food
+head(food[,1:10])
+
+# View structure of food
+str(food[,1:10])
+
+```
+
+## Removing dupicate info
+
+  - These may be off a bit, this gets rid of the packaging_tags column which is needed later to do the counts of `plasti`
+
+```{r}
+
+# Define vector of duplicate cols (don't change)
+duplicates <- c(4, 6, 11, 13, 15, 17, 18, 20, 22, 
+                24, 25, 28, 32, 34, 36, 38, 40, 
+                44, 46, 48, 51, 54, 65, 158)
+
+# Remove duplicates from food: food2
+food2 <- food[,-duplicates]
+
+```
+
+## Removing useless info
+
+```{r}
+
+# Define useless vector (don't change)
+useless <- c(1, 2, 3, 32:41)
+
+# Remove useless columns from food2: food3
+food3 <- food2[,-useless]
+
+```
+
+## Finding columns
+
+```{r}
+
+# Create vector of column indices: nutrition
+nutrition <- str_detect(names(food3),"100g")
+
+# View a summary of nutrition columns
+summary(food3[,nutrition])
+
+```
+
+## Replacing missing values
+
+```{r}
+
+# Find indices of sugar NA values: missing
+missing <- is.na(food3$sugars_100g)
+
+# Replace NA values with 0
+food3$sugars_100g[missing] <- 0
+
+# Create first histogram
+hist(food3$sugars_100g, breaks=100)
+
+# Create food4
+food4 <- food3[food3$sugars_100g != 0, ]
+
+# Create second histogram
+hist(food4$sugars_100g, breaks=100)
+
+```
+
+## Dealing with messy data
+
+  - This exercise is attempting to estimate the number of food items in plastic packaging
+  - going back to the original food dataframe here 
+    - `packagin_tags` column was removed in an earlier exercise. that maybe a mistake
+  
+    
+```{r}
+
+# Find entries containing "plasti": plastic
+plastic <- str_detect(food$packaging_tags,"plasti")
+
+# Print the sum of plastic
+sum(plastic)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+# School Attendance Data
+***
+
+## Importing the data
+
+```{r}
+# Load the gdata package
+library(gdata)
+
+# Import the spreadsheet: att
+url_att <- 'http://s3.amazonaws.com/assets.datacamp.com/production/course_1294/datasets/attendance.xls'
+att <- read.xls(url_att)
+
+```
+
+## Examining the data
+
+```{r}
+
+# Print the column names 
+names(att)
+
+# Print the first 6 rows
+head(att)
+
+# Print the last 6 rows
+tail(att)
+
+# Print the structure
+str(att)
+
+```
+
+## Removing unnecessary rows
+
+```{r}
+
+# Create remove
+remove <- c(3,56:59)
+
+# Create att2
+att2 <- att[-remove,]
+
+```
+
+## Removing useless columns
+
+```{r}
+
+# Create remove
+remove <- seq(3,17,2)
+
+# Create att3
+att3 <- att2[,-remove]
+
+```
+
+## Splitting the data
+
+```{r}
+
+head(att3)
+
+# Subset just elementary schools: att_elem
+att_elem <- att3[,c(1,6,7)]
+head(att_elem)
+
+# Subset just secondary schools: att_sec
+att_sec <- att3[,c(1,8,9)]
+head(att_sec)
+
+# Subset all schools: att4
+att4 <- att3[,1:5]
+head(att4)
+
+```
+
+## Replacing the names
+
+```{r}
+
+# Define cnames vector (don't change)
+cnames <- c("state", "avg_attend_pct", "avg_hr_per_day", 
+            "avg_day_per_yr", "avg_hr_per_yr")
+
+# Assign column names of att4
+colnames(att4) <- cnames
+head(att4)
+
+# Remove first two rows of att4: att5
+att5 <- att4[-c(1,2),]
+
+# View the names of att5
+names(att5)
+head(att5)
+
+```
+
+## Cleaning up extra characters
+
+```{r}
+
+## stringr and att5 are pre-loaded
+head(att5)
+
+# Remove all periods in state column
+att5$state <- str_replace_all(att5$state, "\\.","")
+head(att5)
+
+# Remove white space around state names
+att5$state <- str_trim(att5$state)
+
+# View the head of att5
+head(att5)
+
+```
+
+## Some final type conversions
+
+  - dplyr class comes later so this part is just an example here
+  - This is how you should do it but the not dplyr (old) way is to use sapply
+  
+```{r}
+
+# Change columns to numeric using dplyr (don't change)
+library(dplyr)
+example <- mutate_each(att5, funs(as.numeric), -state)
+str(example)
+
+# Define vector containing numerical columns: cols
+cols <- c(2:5)
+
+# Use sapply to coerce cols to numeric
+att5[, cols] <- sapply(att5[,cols], as.numeric)
+str(att5)
+```

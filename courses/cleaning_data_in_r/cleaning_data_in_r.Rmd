@@ -27,7 +27,7 @@ source('create_datasets.R')
 # Introduction
 ***
 
-  - Course notes for [Cleaning Data in R](https://www.datacamp.com/courses/cleaning-data-in-r)
+Course notes for [Cleaning Data in R](https://www.datacamp.com/courses/cleaning-data-in-r)
 
 ## Whats Covered
 
