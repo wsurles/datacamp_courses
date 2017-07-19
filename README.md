@@ -1,6 +1,6 @@
 My datacamp courses
 
-My course docs are hosted on [shinyapps.io](http://www.shinyapps.io)
+My course docs are hosted on [shinyapps.io](http://www.shinyapps.io) and [RPubs](http://rpubs.com/)
 
  - [Introduction to R](https://surlyanalytics.shinyapps.io/introduction_to_r/)
  - [Intermediate R](https://surlyanalytics.shinyapps.io/intermediate_r/)
