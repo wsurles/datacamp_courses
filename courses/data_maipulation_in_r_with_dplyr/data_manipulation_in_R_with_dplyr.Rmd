@@ -1,0 +1,711 @@
+---
+title: "Data Manipulation in R with dplyr"
+author: "William Surles"
+date: "2017-07-19"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+  toc: true
+  toc_float: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+
+
+# library(shiny)
+# library(codetools)
+
+```
+
+# Introduction
+
+  - This all comes from the [Data Manipulation in R with dplyr](https://www.datacamp.com/courses/dplyr-data-manipulation-r-tutorial) course on DataCamp
+    - I highly recommend the [DataCamp](https://www.datacamp.com/home) courses
+    - Go *do* the [course](https://www.datacamp.com/courses/dplyr-data-manipulation-r-tutorial) for yourself to get more details and videos on these topics
+  - I am copying my work from the class to this document and adding comments for my own future reference
+
+## Whats Covered
+
+  - Introduction to dplyr and tbls
+  - Select and mutate
+  - Filter and arrange
+  - Summarise and the pipe operator
+  - Group_by and working with databases
+    
+## Aditional Resources
+
+  - [dplyr vignette](http://dplyr.tidyverse.org/)
+  - [Data Wrangling Cheat Sheet (dplyr and tidyr)](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
+  
+&nbsp; &nbsp;
+
+***  
+# Introduction to dplyr and tbls
+***  
+
+## Section 1 - Introduction to dplyr
+
+  - dplyr is a grammar of data manipulation
+  - it provides a consistent set of vebs that help you solve the most common data manipulation challenges
+  - `mutate`, `select`, `filter`, `summarise`, `arrange`, and the joins
+  - [dplyr vignette](http://dplyr.tidyverse.org/)
+
+## Load the dplyr and hflights package
+
+```{r}
+
+# Load the dplyr package
+library(dplyr)
+
+# Load the hflights package
+library(hflights)
+
+# Call both head() and summary() on hflights
+head(hflights)
+summary(hflights)
+
+```
+
+## Explore the dataset
+
+```{r}
+
+str(hflights)
+
+```
+
+## Section 2 - tbl, a special type of data.frame
+
+  - tibble print adapts to the size of your window
+  - glimpse gives you a more complete view of the tibble
+  - if you don't like it go back to data.frame and use `str` and `head`
+
+## Convert data.frame to tibble
+
+```{r}
+
+# Convert the hflights data.frame into a hflights tbl
+hflights <- tbl_df(hflights)
+
+# Display the hflights tbl
+hflights
+glimpse(hflights)
+
+# Create the object carriers, containing only the UniqueCarrier variable of hflights
+carriers <- hflights$UniqueCarrier
+str(carriers)
+
+```
+
+## Changing labels of hflight, part 1 of 2
+
+```{r}
+
+# Both the dplyr and hflights packages are loaded into workspace
+lut <- c("AA" = "American", "AS" = "Alaska", "B6" = "JetBlue", "CO" = "Continental", 
+         "DL" = "Delta", "OO" = "SkyWest", "UA" = "United", "US" = "US_Airways", 
+         "WN" = "Southwest", "EV" = "Atlantic_Southeast", "F9" = "Frontier", 
+         "FL" = "AirTran", "MQ" = "American_Eagle", "XE" = "ExpressJet", "YV" = "Mesa")
+
+# Use lut to translate the UniqueCarrier column of hflights
+hflights$UniqueCarrier <- lut[hflights$UniqueCarrier]
+
+# Inspect the resulting raw values of your variables
+glimpse(hflights)
+
+```
+
+## Changing labels of hflights, part 2 or 2
+
+```{r}
+## The "E" in my dataset is "" for some reason so I have changed it here
+table(hflights$CancellationCode)
+
+hflights <- hflights %>%
+  mutate(
+    CancellationCode = ifelse(CancellationCode == "", "E", CancellationCode)
+  )
+
+table(hflights$CancellationCode)
+
+# Build the lookup table: lut
+lut <- c("A" = "carrier",
+         "B" = "weather",
+         "C" = "FFA",
+         "D" = "security",
+         "E" = "not cancelled")
+
+# Use the lookup table to create a vector of code labels. Assign the vector to the CancellationCode column of hflights
+hflights$Code <- lut[hflights$CancellationCode]
+
+# Inspect the resulting raw values of your variables
+glimpse(hflights)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+# Select and mutate
+***  
+
+## Section 3 - The five verbs and select in more detail
+
+  - 5 verbs
+    - `select()` which returns a subset of the columns,
+    - `filter()` that is able to return a subset of the rows,
+    - `arrange()` that reorders the rows according to single or multiple variables,
+    - `mutate()` used to add columns from existing data,
+    - `summarise()` which reduces each group to a single row by calculating aggregate measures.
+  - verb focus
+    - `select` and `mutate` manipulate variables
+    - `filter` and `arrange` manipulate observations
+    - `summarize` manipulates `groups` of observations
+
+## Choosing is not losing! The select verb
+
+```{r}
+
+# Print out a tbl with the four columns of hflights related to delay
+select(hflights, ActualElapsedTime, AirTime, ArrDelay, DepDelay)
+
+# Print out hflights, nothing has changed!
+hflights
+
+# Print out the columns Origin up to Cancelled of hflights
+select(hflights, Origin:Cancelled)
+
+# Answer to last question: be concise!
+select(hflights, 1:4, 12:21)
+
+```
+
+## Helper functions for variable selection
+
+```{r}
+
+# Print out a tbl containing just ArrDelay and DepDelay
+select(hflights, ends_with(c('Delay')))
+
+# Print out a tbl as described in the second instruction, using both helper functions and variable names
+select(hflights, UniqueCarrier, ends_with(c('Num')), starts_with(c('Cancel')))
+
+# Print out a tbl as described in the third instruction, using only helper functions.
+select(hflights, contains(c('Time')), contains(c('Delay')))
+
+```
+
+## Comparison to base R
+
+```{r}
+
+ex1r <- hflights[c("TaxiIn","TaxiOut","Distance")]
+ex1d <- select(hflights, contains(c('Taxi')), Distance)
+
+ex2r <- hflights[c("Year","Month","DayOfWeek","DepTime","ArrTime")]
+ex2d <- select(hflights, Year:ArrTime, -3)
+
+ex3r <- hflights[c("TailNum","TaxiIn","TaxiOut")]
+ex3d <- select(hflights, TailNum, contains(c('Taxi')))
+
+```
+
+## Section 4 - The second of five verbs: mutate
+
+## Mutating is creating
+
+```{r}
+
+# Add the new variable ActualGroundTime to a copy of hflights and save the result as g1.
+g1 <- mutate(hflights, ActualGroundTime = ActualElapsedTime - AirTime)
+
+# Add the new variable GroundTime to a g1. Save the result as g2.
+g2 <- mutate(g1, GroundTime = TaxiIn + TaxiOut)
+
+# Add the new variable AverageSpeed to g2. Save the result as g3.
+g3 <- mutate(g2, AverageSpeed = Distance / AirTime * 60)
+
+# Print out g3
+glimpse(g3)
+
+```
+
+## Add multiple variables using mutate
+
+```{r}
+# hflights and dplyr are ready, are you?
+
+# Add a second variable loss_percent to the dataset: m1
+m1 <- mutate(hflights, 
+        loss = ArrDelay - DepDelay,
+        loss_percent = (ArrDelay - DepDelay)/DepDelay * 100
+        )
+glimpse(m1)
+
+# Copy and adapt the previous command to reduce redendancy: m2
+m2 <- mutate(hflights, 
+        loss = ArrDelay - DepDelay,
+        loss_percent = loss/DepDelay * 100
+        )
+glimpse(m2)
+
+# Add the three variables as described in the third instruction: m3
+m3 <- mutate(hflights, 
+        TotalTaxi = TaxiIn + TaxiOut,
+        ActualGroundTime = ActualElapsedTime - AirTime,
+        Diff = TotalTaxi - ActualGroundTime
+        )
+glimpse(m3)
+```
+
+&nbsp; &nbsp;
+
+***  
+# Filter and arrange
+***  
+
+## Section 5 - The third of five verbs: filter
+
+## Logical operators
+
+```{r}
+
+# All flights that traveled 3000 miles or more
+filter(hflights, Distance >= 3000) %>% glimpse()
+
+# All flights flown by one of JetBlue, Southwest, or Delta
+filter(hflights, UniqueCarrier %in% c('JetBlue', 'Southwest', 'Delta')) %>% glimpse()
+
+# All flights where taxiing took longer than flying
+filter(hflights, (TaxiIn + TaxiOut) > AirTime) %>% glimpse()
+
+```
+
+## Combining tests using boolean operators
+
+```{r}
+
+# All flights that departed before 5am or arrived after 10pm
+filter(hflights, DepTime < 500 | ArrTime > 2200) %>% glimpse()
+
+# All flights that departed late but arrived ahead of schedule
+filter(hflights, DepDelay > 0 & ArrDelay < 0) %>% glimpse()
+
+# All cancelled weekend flights
+filter(hflights, Cancelled == 1 & DayOfWeek %in% c(6,7)) %>% glimpse()
+
+# All flights that were cancelled after being delayed
+filter(hflights, DepDelay > 0 & Cancelled == 1) %>% glimpse()
+
+```
+
+## Blend together what you've learned!
+
+```{r}
+
+# Select the flights that had JFK as their destination: c1
+c1 <- filter(hflights, Dest == 'JFK')
+
+# Combine the Year, Month and DayofMonth variables to create a Date column: c2
+c2 <- mutate(c1, Date = paste(Year,Month,DayofMonth, sep="-"))
+
+# Print out a selection of columns of c2
+select(c2, Date, DepTime, ArrTime, TailNum)
+
+```
+
+## Recap on select, mutate and filter
+
+  - How many weekend flights flew a distance of more than 1000 miles but had a total taxiing time below 15 minutes?
+  
+```{r}
+
+hflights %>%
+  filter(
+    Distance > 1000,
+    DayOfWeek > 5,
+    TaxiIn + TaxiOut < 15
+    ) %>%
+  glimpse()
+    
+```
+
+  - In this dataset it is 1,739 flights
+  - In the class the answer was 155
+  - I think they just have the data filtered to one city (Houston)
+
+## Section 6 - Almost there: the arrange verb
+
+## Arranging your data
+
+```{r}
+
+# Definition of dtc
+dtc <- filter(hflights, Cancelled == 1, !is.na(DepDelay))
+
+# Arrange dtc by departure delays
+arrange(dtc, DepDelay) %>% glimpse()
+
+# Arrange dtc so that cancellation reasons are grouped
+arrange(dtc, CancellationCode) %>% glimpse()
+
+# Arrange dtc according to carrier and departure delays
+arrange(dtc, UniqueCarrier, DepDelay) %>% glimpse()
+
+```
+
+## Reverse the order of arranging
+
+```{r}
+
+# Arrange according to carrier and decreasing departure delays
+arrange(hflights, UniqueCarrier, desc(DepDelay)) %>% glimpse()
+
+# Arrange flights by total delay (normal order).
+arrange(hflights, (DepDelay + ArrDelay)) %>% glimpse()
+
+# Keep flights leaving to DFW before 8am and arrange according to decreasing AirTime 
+hflights %>% filter(Dest == 'DFW', DepTime < 800) %>% arrange(desc(AirTime)) %>% glimpse()
+
+```
+
+&nbsp; &nbsp;
+
+***  
+# Summarise and the pipe operator
+***  
+
+## Section 7 - Last but not least: summarise
+
+## The syntax of summarize
+
+```{r}
+
+glimpse(hflights)
+
+# Print out a summary with variables min_dist and max_dist
+summarize(hflights, min_dist = min(Distance), max_dist = max(Distance))
+
+# Print out a summary with variable max_div
+hflights %>% filter(Diverted == 1) %>% summarize(max_div = max(Distance))
+
+```
+
+## Aggregate functions
+
+Aggregate functions defined in R:
+
+  - `min(x)` - minimum value of vector x
+  - `max(x)` - maximum value of vector x
+  - `mean(x)` - mean value of vector x
+  - `median(x)` - median value of vector x
+  - `quantile(x, p)` - pth quantile of vector x
+  - `sd(x)` - standard deviation of vector x
+  - `var(x)` - variance of vector x
+  - `IQR(x)` - Inter Quartile Range (IQR) of vector x
+  - `diff(range(x))` - total range of vector x
+  
+```{r}
+
+# Remove rows that have NA ArrDelay: temp1
+temp1 <- filter(hflights, !is.na(ArrDelay))
+
+# Generate summary about ArrDelay column of temp1
+summarize(temp1, 
+  earliest = min(ArrDelay),
+  average = mean(ArrDelay),
+  latest = max(ArrDelay),
+  sd = sd(ArrDelay)
+  )
+
+# Keep rows that have no NA TaxiIn and no NA TaxiOut: temp2
+temp2 <- filter(hflights, !is.na(TaxiIn) & !is.na(TaxiOut))
+
+# Print the maximum taxiing difference of temp2 with summarise()
+summarise(temp2, max_taxi_diff = max(abs(TaxiIn - TaxiOut)))
+
+```
+
+## dplyr aggregate functions
+
+dplyr has some of its own aggregate functions:
+
+  - `first(x)` - The first element of vector x
+  - `last(x)` - The last element of vector x
+  - `nth(x, n)` - The nth element of vector x
+  - `n()` - The number of rows in the data.frame or group of observations that summarise() describes
+  - `n_distinct(x)` - The number of unique values in vector x
+  
+```{r}
+
+# Generate summarizing statistics for hflights
+summarise(hflights, 
+  n_obs = n(),
+  n_carrier = n_distinct(UniqueCarrier),
+  n_dest = n_distinct(Dest),
+  dest100 = nth(Dest, 100)
+  )
+
+# Filter hflights to keep all American Airline flights: aa
+aa <- filter(hflights, UniqueCarrier == 'American')
+
+# Generate summarizing statistics for aa 
+summarise(aa, 
+  n_flights = n(),
+  n_canc = sum(Cancelled),
+  p_canc = n_canc/n_flights * 100,
+  avg_delay = mean(ArrDelay, na.rm=T)
+  )
+
+```
+
+## Section 8 - Chaining your functions: the pipe operator
+
+  - the pipe operator `%>%` is probably my favorite thing in R
+  - it takes the output from the last function and passes it into the next function as the first argument
+    - But you can also use a `.` to pass it into the next function in any location!
+  - This lets you make code easily readable from left to right and top to bottom. 
+    - I can't say enough about how much better this makes it to read code and see what someone is doing
+    
+## Overview of syntax
+
+```{r}
+
+# Write the 'piped' version of the English sentences.
+hflights %>%
+  mutate(diff = TaxiOut - TaxiIn) %>%
+  filter(!is.na(diff)) %>%
+  summarize(avg = mean(diff))
+
+```
+
+## Drive of fly? Part 1 of 2
+
+```{r}
+
+# Build data frame with 4 columns of hflights and 2 self-defined columns: d
+d <- hflights %>%
+  select(Dest, UniqueCarrier, Distance, ActualElapsedTime) %>%
+  mutate(
+    RealTime = ActualElapsedTime + 100,
+    mph = Distance/RealTime*60
+    )
+
+# Filter and summarise d according to the instructions
+d %>%
+  filter(
+    !is.na(mph),
+    mph < 70
+    ) %>%
+  summarize(
+    n_less = n(),
+    n_dest = n_distinct(Dest),
+    min_dist = min(Distance),
+    max_dist = max(Distance)
+    )
+  
+```
+
+## Drive or fly? Part 2 of 2
+
+```{r}
+
+# Solve the exercise using a combination of dplyr verbs and %>%
+hflights %>%
+  mutate(RealTime = ActualElapsedTime + 100, mph = Distance / RealTime * 60) %>%
+  filter(mph < 105 | Cancelled == 1 | Diverted == 1) %>%
+  summarise(n_non = n(), 
+            p_non = n_non / nrow(hflights) * 100, 
+            n_dest = n_distinct(Dest), 
+            min_dist = min (Distance), 
+            max_dist = max(Distance))
+
+```
+
+## Advanced piping exercise
+
+```{r}
+
+hflights %>%
+  filter(
+    !is.na(ArrTime),
+    !is.na(DepTime),
+    ArrTime < DepTime
+    ) %>%
+  summarise(n = n())
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# Group_by and working with databases
+***
+
+## Section 9 - get group-wise insights: group_by
+
+  - Combining `group_by` with `summarize` is very powerful
+    - You can also combine it with `mutate` and `arrange` to create powerful window functions
+    
+## Unite and conquer using group_by
+
+```{r}
+
+# Make an ordered per-carrier summary of hflights
+hflights %>%
+ group_by(UniqueCarrier) %>%
+ summarise(
+   n_flights = n(),
+   n_canc = sum(Cancelled),
+   p_canc = n_canc/n_flights * 100,
+   avg_delay = mean(ArrDelay, na.rm=T)
+   ) %>%
+ arrange(avg_delay, p_canc)
+
+# Make an ordered per-day summary of hflights
+hflights %>%
+  group_by(DayOfWeek) %>%
+  summarize(avg_taxi = mean(TaxiIn + TaxiOut, na.rm=T)) %>%
+  arrange(desc(avg_taxi))
+
+```
+
+## Combine group_by with mutate
+
+```{r}
+
+# Solution to first instruction
+hflights %>%
+  filter(!is.na(ArrDelay)) %>%
+  group_by(UniqueCarrier) %>%
+  summarize(p_delay = sum(ArrDelay > 0)/n()) %>%
+  mutate(rank = rank(p_delay)) %>%
+  arrange(rank)
+
+# Solution to second instruction
+hflights %>%
+  filter(
+    !is.na(ArrDelay),
+    ArrDelay > 0
+    ) %>%
+  group_by(UniqueCarrier) %>%
+  summarize(avg = mean(ArrDelay)) %>%
+  mutate(rank = rank(avg)) %>%
+  arrange(rank)
+
+```
+
+## Advanced group_by exercises
+
+```{r}
+
+# Which plane (by tail number) flew out of Houston the most times? How many times? adv1
+adv1 <- hflights %>%
+  group_by(TailNum) %>%
+  summarize(n = n()) %>%
+  filter(n == max(n))
+adv1
+
+# How many airplanes only flew to one destination from Houston? adv2
+adv2 <- hflights %>%
+  group_by(TailNum) %>%
+  summarize(n_dest = n_distinct(Dest)) %>%
+  filter(n_dest == 1) %>%
+  summarize(nplanes = n())
+adv2
+
+# Find the most visited destination for each carrier: adv3
+adv3 <- hflights %>%
+  group_by(UniqueCarrier, Dest) %>%
+  summarize(n = n()) %>%
+  group_by(UniqueCarrier) %>%
+  mutate(rank = rank(desc(n))) %>%
+  filter(rank == 1) %>%
+  arrange(UniqueCarrier, rank)
+adv3
+
+# Find the carrier that travels to each destination the most: adv4
+adv4 <- hflights %>%
+  group_by(Dest, UniqueCarrier) %>%
+  summarize(n = n()) %>%
+  group_by(Dest) %>%
+  mutate(rank = rank(desc(n))) %>%
+  filter(rank == 1)
+adv4  
+  
+```
+
+## Section 10 - dplyr and databases
+
+  - dplyr can connect to a database
+    - You can manipulate the data in the dabase (query essentially) and then only pull back the result into R
+    - This lets you work with much larger datasets stored in a relational database than you could on your local machine or having to augment R with hadoop
+  - I used this functionality a lot at work.
+    - Getting comfortable with this also help when using spark and sparklyr. 
+    - It really nice to have one consistent way to manipulate data where ever its stored: 
+      - locally in the workspace, 
+      - a relational database
+      - in HDFS
+      - any file system accessed with spark
+
+## dplyr deals with different types
+  
+```{r}
+library(data.table)
+
+# Convert hflights to a data.table
+class(hflights)
+hflights2 <- as.data.table(hflights)
+class(hflights2)
+
+# Use summarise to calculate n_carrier
+s2 <- hflights2 %>%
+  summarize(n_carrier = n_distinct(UniqueCarrier))
+s2
+```
+
+## dplyr and mySQL databases
+
+```{r}
+
+library(RMySQL)
+library(dbplyr)
+
+# Set up a connection to the mysql database
+my_db <- src_mysql(dbname = "dplyr", 
+                   host = "courses.csrrinzqubik.us-east-1.rds.amazonaws.com", 
+                   port = 3306, 
+                   user = "student",
+                   password = "datacamp")
+
+# Reference a table within that source: nycflights
+nycflights <- tbl(my_db, "dplyr")
+
+# glimpse at nycflights
+glimpse(nycflights)
+
+# Ordered, grouped summary of nycflights
+nycflights %>%
+   group_by(carrier) %>%
+   summarise(n_flights = n(), avg_delay = mean(arr_delay)) %>%
+   arrange(avg_delay)
+ 
+```
+
+## Talk with Hadley Wickham
+
+  - Two goals
+    - Make it easier to think about data manipulation. What are the fundamental verbs
+    - Compute efficiently with the data. It uses C++. It can generate SQL for you and send to database
+  - plyr was about using split, apply, combine
+    - dplyr focuses on just data frames, but thats what most people use anyways
+  - Learn about tidy data
+  - Get a dataset you are motivated by and start playing with it
+  - Get familiar with window functions
+    - There are a wide class a problems that can be solved by window functions
+    
