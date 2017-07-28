@@ -27,7 +27,9 @@ library(ggplot2)
   - Course notes from the [Data Vizualization with ggplot2 (Part 1)](https://www.datacamp.com/courses/data-visualization-with-ggplot2-1) course on DataCamp
   
 ## Whats Covered
+
 I had to split this up becasue of the size of the document.
+
   - Doc A 
     - Introduction 
     - Data
