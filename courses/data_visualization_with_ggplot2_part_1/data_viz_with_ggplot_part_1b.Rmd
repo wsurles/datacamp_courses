@@ -1,0 +1,561 @@
+---
+title: "Data Visualization with ggplot2 (Part 1) - Chapter 4 and 5"
+author: "William Surles"
+date: "2017-07-26"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+  toc: true
+  toc_float: true
+  toc_depth: 3
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+
+source("create_datasets.R")
+
+library(dplyr)
+library(ggplot2)
+```
+
+# My Introduction
+
+  - Course notes from the [Data Vizualization with ggplot2 (Part 1)](https://www.datacamp.com/courses/data-visualization-with-ggplot2-1) course on DataCamp
+  
+## Whats Covered
+I had to split this up becasue of the size of the document.
+  - Doc A 
+    - Introduction 
+    - Data
+    - Aesthetics
+  - Doc B 
+    - Geometries
+    - qplot and wrap-up
+    
+## Aditional Resources
+ 
+&nbsp; &nbsp;
+
+***  
+# Geometries
+***  
+
+## Scatter Plots
+
+  - 37 geometries. whaa!
+    - `abline`, `area`, `bar`, `bin2d`, `blank`, `boxplot`
+    - `contour`, `crossbar`, `density`, `density2d`, `dotplot`
+    - `errorbar`, `errorbarh`, `freqpoly`, `hex`, `histogram`, `hline`
+    - `jitter`, `line`, `linerange`, `map`, `path`, `point`, `pointrange`
+    - `polygon`, `quantile`, `raster`, `rect`, `ribbon`, `rug`
+    - `segment`, `smooth`, `step`, `text`, `tile`, `violin`, `vline`
+  - 3 common plots
+    - scatter plots -- `points`, `jitter`, `abline`
+    - bar plots -- `histogram`, `bar`, `errorbar`
+    - line plots -- `line`
+  - You can also add a nother variable, such as summary statistics in the geom_point
+  - Jitter and alpha are common to deal with overplotting
+
+### -- Scatter plots and jittering (1)
+
+```{r}
+
+# Shown in the viewer:
+ggplot(mtcars, aes(x = cyl, y = wt)) +
+  geom_point()
+
+# Solutions:
+# 1 - With geom_jitter()
+ggplot(mtcars, aes(x = cyl, y = wt)) +
+  geom_jitter()
+
+```
+
+  - Thats a little too much jitter
+  - We lose the sense of separate variables
+  - We can adjust the jitter width to fix this
+  
+```{r}
+# 2 - Set width in geom_jitter()
+ggplot(mtcars, aes(x = cyl, y = wt)) +
+  geom_jitter(width = 0.1)
+
+# 3 - Set position = position_jitter() in geom_point() ()
+ggplot(mtcars, aes(x = cyl, y = wt)) +
+  geom_point(position = position_jitter(0.1))
+
+```
+
+### -- Scatter plots and jittering (2)
+
+```{r}
+
+# Examine the structure of Vocab
+library(car)
+str(Vocab)
+
+# Basic scatter plot of vocabulary (y) against education (x). Use geom_point()
+ggplot(Vocab, aes(education, vocabulary)) + 
+  geom_point()
+
+
+# Use geom_jitter() instead of geom_point()
+ggplot(Vocab, aes(education, vocabulary)) + 
+  geom_jitter()
+
+  
+# Using the above plotting command, set alpha to a very low 0.2
+ggplot(Vocab, aes(education, vocabulary)) + 
+  geom_jitter(alpha = 0.2)
+
+  
+# Using the above plotting command, set the shape to 1
+ggplot(Vocab, aes(education, vocabulary)) + 
+  geom_jitter(alpha = 0.2, shape = 1)
+
+```
+
+## Bar Plots
+
+### -- Histograms
+
+```{r}
+
+# 1 - Make a univariate histogram
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram()
+
+```
+
+  - By default the bin width is the range/30
+  
+```{r}
+# 2 - Plot 1, plus set binwidth to 1 in the geom layer
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(binwidth = 1)
+
+```
+
+  - We also have access to internal data frame for the plot
+  - We can change the y aes to `..density..` 
+  - This is calculated internally in the summary stats just like `count`
+
+```{r}
+# 3 - Plot 2, plus MAP ..density.. to the y aesthetic (i.e. in a second aes() function)
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(aes(y = ..density..), binwidth = 1)
+
+# 4 - plot 3, plus SET the fill attribute to "#377EB8"
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(aes(y = ..density..), binwidth = 1, fill = "#377EB8")
+
+```
+
+### -- Position
+
+```{r}
+
+# Draw a bar plot of cyl, filled according to am
+ggplot(mtcars, aes(x = cyl, fill = am)) +
+  geom_bar()
+
+```
+
+  - `stack` is the default
+  
+```{r}
+# Change the position argument to stack
+ggplot(mtcars, aes(x = cyl, fill = am)) +
+  geom_bar(position = "stack")
+
+# Change the position argument to fill
+ggplot(mtcars, aes(x = cyl, fill = am)) +
+  geom_bar(position = "fill")
+
+# Change the position argument to dodge
+ggplot(mtcars, aes(x = cyl, fill = am)) +
+  geom_bar(position = "dodge")
+
+```
+
+### -- Overlapping bar plots
+
+```{r}
+
+# 1 - The last plot form the previous exercise
+# ggplot(mtcars, aes(x = cyl, fill = am)) + 
+#   geom_bar(position = "dodge")
+
+# 2 - Define posn_d with position_dodge()
+posn_d <- position_dodge(width = 0.2)
+
+# 3 - Change the position argument to posn_d
+ggplot(mtcars, aes(x = cyl, fill = am)) + 
+  geom_bar(position = posn_d)
+
+
+# 4 - Use posn_d as position and adjust alpha to 0.6
+ggplot(mtcars, aes(x = cyl, fill = am)) + 
+  geom_bar(position = posn_d, alpha = 0.6)
+
+```
+
+### -- Overlapping histograms
+
+```{r}
+
+# A basic histogram, add coloring defined by cyl 
+ggplot(mtcars, aes(mpg, fill = cyl)) +
+  geom_histogram(binwidth = 1)
+
+# Change position to identity 
+ggplot(mtcars, aes(mpg, fill = cyl)) +
+  geom_histogram(binwidth = 1, position = 'identity')
+
+```
+
+  - Now the bars are not stacked, but some are hidden behind others
+  
+```{r}
+# Change geom to freqpoly (position is identity by default) 
+ggplot(mtcars, aes(mpg, col = cyl)) +
+  geom_freqpoly(binwidth = 1)
+
+```
+
+  - This would look much better with a more full histogram
+  
+### -- Bar plots with color ramp, part 1
+
+  - Color brewer is a great package for working with colors
+  - Its worth its own chapter probably. 
+```{r}
+
+# Example of how to use a brewed color palette
+ggplot(mtcars, aes(x = cyl, fill = am)) +
+  geom_bar() +
+  scale_fill_brewer(palette = "Set1")
+
+# Use str() on Vocab to check out the structure
+Vocab$education <- as.factor(Vocab$education)
+Vocab$vocabulary <- as.factor(Vocab$vocabulary)
+str(Vocab)
+
+# Plot education on x and vocabulary on fill
+# Use the default brewed color palette
+ggplot(Vocab, aes(x = education, fill = vocabulary)) +
+  geom_bar(position = 'fill') + 
+  scale_fill_brewer()
+
+```
+
+  - There are only 9 colors in the "Blues" palette, but we have 11 categories under vocabulary
+    - So we get an error. And a weird looking chart. groups 9 and 10 are blank
+    - We need to create our own palette with the same number of colors as groups
+    
+### -- Bar plots with color ramp, part 2
+
+  - A quick example of how the colorRampPalette works
+    - It returns a function that can be used to make a new palette
+    - You can just use two colors and it will scale between them
+    - Or you can use many colors or an existing palette 
+    
+```{r}
+
+new_col <- colorRampPalette(c("#FFFFFF", "#0000FF"))
+new_col(4) # the newly extrapolated colours
+munsell::plot_hex(new_col(4)) # Quick and dirty plot
+
+```
+
+```{r}
+library(RColorBrewer)
+
+# Final plot of last exercise
+ggplot(Vocab, aes(x = education, fill = vocabulary)) +
+  geom_bar(position = "fill") +
+  scale_fill_brewer()
+  
+# Definition of a set of blue colors
+blues <- brewer.pal(9, "Blues") # from the RColorBrewer package
+blues
+
+# 1 - Make a color range using colorRampPalette() and the set of blues
+blue_range <- colorRampPalette(blues)
+
+# This is our new pallete. We can create it with as many colors as we want. 
+munsell::plot_hex(blue_range(11)) 
+
+# 2 - Use blue_range to adjust the color of the bars, use scale_fill_manual()
+ggplot(Vocab, aes(x = education, fill = vocabulary)) +
+  geom_bar(position = "fill") +
+  scale_fill_manual(values = blue_range(11))
+
+```
+  - Nice. Thats much better. 
+  
+### -- Overlapping histograms (2)
+
+```{r}
+
+# 1 - Basic histogram plot command
+ggplot(mtcars, aes(mpg)) + 
+  geom_histogram(binwidth = 1)
+
+# 2 - Plot 1, Expand aesthetics: am onto fill
+ggplot(mtcars, aes(mpg, fill = am)) + 
+  geom_histogram(binwidth = 1)
+
+# 3 - Plot 2, change position = "dodge"
+ggplot(mtcars, aes(mpg, fill = am)) + 
+  geom_histogram(binwidth = 1, position = "dodge")
+
+# 4 - Plot 3, change position = "fill"
+## In this case, none of these positions really work well, because it's difficult to compare the distributions directly.
+ggplot(mtcars, aes(mpg, fill = am)) + 
+  geom_histogram(binwidth = 1, position = "fill")
+
+# 5 - Plot 4, plus change position = "identity" and alpha = 0.4
+ggplot(mtcars, aes(mpg, fill = am)) + 
+  geom_histogram(binwidth = 1, 
+    position = "identity",
+    alpha = 0.4)
+
+# 6 - Plot 5, plus change mapping: cyl onto fill
+ggplot(mtcars, aes(mpg, fill = cyl)) + 
+  geom_histogram(binwidth = 1, 
+    position = "identity",
+    alpha = 0.4)
+
+```
+
+## Line Plots - Time Series
+
+### -- Line plots
+
+```{r}
+
+# Print out head of economics
+head(economics)
+
+# Plot unemploy as a function of date using a line plot
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_line()
+  
+  
+# Adjust plot to represent the fraction of total population that is unemployed
+ggplot(economics, aes(x = date, y = unemploy/pop)) +
+  geom_line()
+
+```
+
+### -- Periods of recession
+
+```{r}
+# Basic line plot
+# ggplot(economics, aes(x = date, y = unemploy/pop)) +
+#   geom_line()
+
+# Expand the following command with geom_rect() to draw the recess periods
+ggplot(economics, aes(x = date, y = unemploy/pop)) +
+  geom_rect(data = recess,
+         aes(xmin = begin, 
+             xmax = end, 
+             ymin = -Inf, 
+             ymax = Inf),
+            inherit.aes = FALSE,
+            fill = "red", 
+            alpha = 0.2
+            ) + 
+  geom_line()
+
+```
+
+### -- Multiple time series, part 1
+
+```{r}
+
+# Check the structure as a starting point
+str(fish.species)
+
+# Use gather to go from fish.species to fish.tidy
+fish.tidy <- gather(fish.species, Species, Capture, -Year)
+
+str(fish.tidy)
+
+```
+
+### -- Multiple time series, part 2
+
+```{r}
+
+# Recreate the plot shown on the right
+ggplot(fish.tidy, aes(x = Year, y = Capture, col = Species)) +
+  geom_line()
+  
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# qplot and wrap-up
+***  
+
+## qplot
+
+  - qplot is sort of the base R eqivalent in terms of syntax
+    - you can make charts quick and easy. It will guess the geom for you
+  - But its better just to know the ggplot layers and be explicit and build your plots.
+    - This is intuative and not that much more typing. 
+    - Its still good to know about qplot because you will see it 
+
+### -- Using qplot
+
+```{r}
+
+# The old way (shown)
+plot(mpg ~ wt, data = mtcars) # formula notation
+with(mtcars, plot(wt, mpg)) # x, y notation
+
+# Using ggplot:
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point()
+
+# Using qplot:
+qplot(wt, mpg, data = mtcars)
+
+```
+
+### -- Using aesthetics
+
+```{r}
+
+# Categorical variable mapped onto size:
+# cyl
+qplot(wt, mpg, data = mtcars, size = factor(cyl))
+
+# gear
+qplot(wt, mpg, data = mtcars, size = factor(gear))
+
+# Continuous variable mapped onto col:
+# hp
+qplot(wt, mpg, data = mtcars, col = hp)
+
+# qsec
+qplot(wt, mpg, data = mtcars, col = qsec)
+
+```
+
+### -- Choosing geoms, part 1
+
+```{r}
+
+# qplot() with x only
+qplot(x = factor(cyl), data = mtcars)
+
+# qplot() with x and y
+qplot(x = factor(cyl), y = factor(vs), data = mtcars)
+
+# qplot() with geom set to jitter manually
+qplot(x = factor(cyl), y = factor(vs), data = mtcars, geom = 'jitter')
+
+```
+
+### -- Choosing geoms, part 2 - dotplot
+
+```{r}
+
+# cyl and am are factors, wt is numeric
+class(mtcars$cyl)
+class(mtcars$am)
+class(mtcars$wt)
+
+# "Basic" dot plot, with geom_point():
+ggplot(mtcars, aes(cyl, wt, col = am)) +
+  geom_point(position = position_jitter(0.2, 0))
+
+# 1 - "True" dot plot, with geom_dotplot():
+ggplot(mtcars, aes(cyl, wt, fill = am)) +
+  geom_dotplot(binaxis = "y", stackdir = "center")
+
+# 2 - qplot with geom "dotplot", binaxis = "y" and stackdir = "center"
+qplot(
+  cyl, wt, 
+  data = mtcars, 
+  fill = am, 
+  geom = "dotplot", 
+  binaxis = "y", 
+  stackdir = "center"
+)
+
+```
+
+## Wrap-up
+
+### -- Chicken weight
+
+```{r}
+
+# ChickWeight is available in your workspace
+# 1 - Check out the head of ChickWeight
+head(ChickWeight)
+
+# 2 - Basic line plot
+ggplot(ChickWeight, aes(x = Time, y = weight)) + 
+  geom_line(aes(group = Chick))
+
+# 3 - Take plot 2, map Diet onto col.
+ggplot(ChickWeight, 
+    aes(x = Time, y = weight, col = Diet)) + 
+  geom_line(
+    aes(group = Chick))
+
+
+# 4 - Take plot 3, add geom_smooth()
+ggplot(ChickWeight, 
+    aes(x = Time, y = weight, col = Diet)) + 
+  geom_line(
+    aes(group = Chick), alpha = 0.3) + 
+  geom_smooth(lwd = 2, se = F)
+
+```
+
+### -- Titanic
+
+```{r}
+
+# titanic is avaliable in your workspace
+# 1 - Check the structure of titanic
+str(titanic)
+
+# 2 - Use ggplot() for the first instruction
+ggplot(titanic, 
+    aes(x = Pclass, fill = Sex)) + 
+  geom_bar(
+    position = "dodge")
+
+# 3 - Plot 2, add facet_grid() layer
+ggplot(titanic, 
+    aes(x = Pclass, fill = Sex)) + 
+  geom_bar(
+    position = "dodge") +
+  facet_grid(. ~ Survived)
+
+# 4 - Define an object for position jitterdodge, to use below
+posn.jd <- position_jitterdodge(0.5, 0, 0.6)
+
+# 5 - Plot 3, but use the position object from instruction 4
+ggplot(titanic, 
+    aes(x = Pclass, y = Age, col = Sex)) + 
+  geom_point(
+    size = 3, alpha = 0.5, position = posn.jd) +
+  facet_grid(. ~ Survived)
+
+```
+
+
