@@ -14,5 +14,6 @@ My course docs are hosted on [shinyapps.io](http://www.shinyapps.io) and [RPubs]
  - [Joining Data in R with dplyr](http://rpubs.com/williamsurles/293454)
  - [Data Visualization in R](http://rpubs.com/williamsurles/294096)
  - Data Visualization with ggplot2 (Part 1)
-   - [Doc A](http://rpubs.com/williamsurles/294962)
-   - [Doc B](http://rpubs.com/williamsurles/294957)
+   - [Section 1,2,3](http://rpubs.com/williamsurles/294962)
+   - [Section 4,5](http://rpubs.com/williamsurles/294957)
+- [Data Visualization with ggplot2 (Part 2)](http://rpubs.com/williamsurles/295930)
