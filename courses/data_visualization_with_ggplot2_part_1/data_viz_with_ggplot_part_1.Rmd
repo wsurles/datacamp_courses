@@ -28,7 +28,7 @@ library(ggplot2)
   
 ## Whats Covered
 
-This class is slit into two documents due to size.
+These notes are split into two documents due to size.
 
   - Doc A 
     - Introduction 
