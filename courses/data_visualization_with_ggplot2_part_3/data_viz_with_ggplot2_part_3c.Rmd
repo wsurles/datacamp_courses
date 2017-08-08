@@ -1,0 +1,950 @@
+---
+title: "Data Visualization with ggplot2 (Part 3-C)"
+author: "William Surles"
+date: "2017-08-02"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+  toc: true
+  toc_float: true
+  toc_depth: 3
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+
+```
+
+# Introduction
+
+  - Course notes from the [Data Vizualization with ggplot2 (Part 3)](https://www.datacamp.com/courses/data-visualization-with-ggplot2-part-3) course on DataCamp
+  
+## Whats Covered
+
+Part A:
+
+  - Statistical plots
+    - Aesthetics review, 
+    - box plots, density plots 
+    - multiple groups/variables
+  - Plots for specific data types (Part 1)
+    - graphics of large data
+    - Ternary plots
+    - Network plots
+    - Diagnostic plots
+
+Part B:
+
+  - Plots for specific data types (Part 2)
+    - choropleths
+    - cartographic maps
+    - animations
+    
+**Part C:**
+
+  - ggplot2 internals
+    - grid graphics, grid grapshics in ggplot2
+    - ggplot objects
+    - gridExtra
+  - Data Munging and Visualization Case Study
+    - Bag plot case study, weather case study
+
+## Libraries and Data
+
+```{r} 
+
+source("create_datasets.R")
+load('data/test_datasets.RData')
+
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+
+library(grid)
+library(gtable)
+library(aplpack)
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# ggplot2 internals
+***  
+
+## Grid Graphics
+
+### -- Viewport basics (1)
+
+```{r}
+# the grid library is loaded
+
+# Draw rectangle in null viewport
+grid.rect(gp = gpar(fill = "grey90"))
+
+# Write text in null viewport
+grid.text("null viewport")
+
+# Draw a line
+grid.lines(x = c(0, 0.75), y = c(0.25, 1),
+          gp = gpar(lty = 2, col = "red"))
+
+```
+
+### -- Viewport basics (2)
+
+```{r}
+
+# Populate null viewport
+grid.rect(gp = gpar(fill = "grey90"))
+grid.text("null viewport")
+grid.lines(x = c(0,0.75), y = c(0.25, 1),
+           gp = gpar(lty = 2, col = "red"))
+
+# Create new viewport: vp
+vp <- viewport(x = 0.5, y = 0.5, width = 0.5, height = 0.5, just = "center")
+
+# Push vp
+pushViewport(vp)
+
+# Populate new viewport with rectangle
+grid.rect(gp = gpar(fill = "blue"))
+
+```
+
+### -- Build a plot from scratch (1)
+
+```{r}
+
+# 1 - Create plot viewport: pvp
+mar <- c(5, 4, 2, 2)
+pvp <- plotViewport(mar)
+
+# 2 - Push pvp
+pushViewport(pvp)
+
+# 3 - Add rectangle
+grid.rect(gp = gpar(fill = "grey80"))
+
+# Create data viewport: dvp
+dvp <- dataViewport(xData = mtcars$wt, yData = mtcars$mpg)
+
+# 4 - Push dvp
+pushViewport(dvp)
+
+# Add two axes
+grid.xaxis()
+grid.yaxis()
+
+```
+
+### -- Build a plot from scratch (2)
+
+```{r}
+
+# Work from before
+pushViewport(plotViewport(c(5, 4, 2, 2)))
+grid.rect(gp = gpar())
+pushViewport(dataViewport(xData = mtcars$wt, yData = mtcars$mpg))
+grid.xaxis()
+grid.yaxis()
+
+# 1 - Add text to x axis
+grid.text("Weight", y = unit(-3, "lines"))
+
+# 2 - Add text to y axis
+grid.text("MPG", x = unit(-3, "lines"), rot = 90)
+
+# 3 - Add points
+grid.points(x = mtcars$wt, y = mtcars$mpg, pch = 16)
+
+```
+
+### -- Modifying a plot with grid.edit
+
+```{r}
+
+# Work from before
+pushViewport(plotViewport(c(5, 4, 2, 2)))
+grid.rect(gp = gpar())
+pushViewport(dataViewport(xData = mtcars$wt, yData = mtcars$mpg))
+grid.xaxis()
+grid.yaxis()
+
+# Work from before - add names
+grid.text("Weight", y = unit(-3, "lines"), name = "xaxis")
+grid.text("MPG", x = unit(-3, "lines"), rot = 90, name = "yaxis")
+grid.points(x = mtcars$wt, y = mtcars$mpg, pch = 16, name = "datapoints")
+
+# Edit "xaxis"
+grid.edit("xaxis", label = "Weight (1000 lbs)")
+
+# Edit "yaxis"
+grid.edit("yaxis", label = "Miles/(US) gallon")
+
+# Edit "datapoints"
+grid.edit("datapoints", 
+  gp = gpar(col = "#C3212766", cex = 2))
+
+```
+
+## Grid Graphics in ggplot2
+
+### -- Exploring the gTable
+
+```{r}
+
+# A simple plot p
+p <- ggplot(mtcars, aes(x = wt, y = mpg, col = factor(cyl))) + geom_point()
+
+# Create gtab with ggplotGrob()
+gtab <- ggplotGrob(p)
+
+# Print out gtab
+gtab
+
+# Extract the grobs from gtab: gtab
+g <- gtab$grob
+ 
+# Draw only the legend
+legend_index <- which(vapply(g, inherits, what = "gtable", logical(1)))
+grid::grid.draw(g[[legend_index]])
+
+```
+
+### -- Modifying the gTable
+
+  - This seems to not work in the notebook. Its very weird. Something I will need to dig into more later
+    - It seems to work fine in Rstudio though
+  - Also, the `grid` library seems really flaky. None of its functions were working in this code chunk
+    - They work fine in some of the above code chuncks
+    - I reloaded it here and that seems to help. 
+  - Over messing with the grid graphics seems like flaky business. 
+  
+```{r}
+
+library(grid)
+
+# Code from before
+p <- ggplot(mtcars, aes(x = wt, y = mpg, col = factor(cyl))) + geom_point()
+gtab <- ggplotGrob(p)
+g <- gtab$grobs
+legend_index <- which(vapply(g, inherits, what = "gtable", logical(1)))
+grid::grid.draw(g[[legend_index]])
+
+# the gtable library is loaded
+
+# 1 - Show layout of legend grob
+## this is not printing in the html but it shows fine in the console. 
+gtable_show_layout(g[[legend_index]])
+
+# Create text grob
+my_text <- grid::textGrob(label = "Motor Trend, 1974", gp = gpar(fontsize = 7, col = "gray25"))
+
+# 2 - Use gtable_add_grob to modify original gtab
+new_legend <- gtable_add_grob(
+  gtab$grobs[[legend_index]], my_text, 3, 2)
+
+# 3 - Update in gtab
+gtab$grobs[[legend_index]] <- new_legend
+
+# 4 - Draw gtab
+grid::grid.draw(gtab)
+
+```
+
+## ggplot Objects
+
+### -- Exploring ggplot objects
+
+```{r}
+
+# Simple plot p
+p <- ggplot(mtcars, aes(x = wt, y = mpg, col = factor(cyl))) + geom_point()
+
+# Examine class() and names()
+class(p)
+names(p)
+
+
+# Print the scales sub-list
+p$scales$scales
+
+# Update p
+p <- p +
+  scale_x_continuous("Length", limits = c(4, 8), expand = c(0, 0)) +
+  scale_y_continuous("Width", limits = c(2, 4.5), expand = c(0, 0))
+
+# Print the scales sub-list
+p$scales$scales
+
+```
+
+### -- ggplot_build and ggplot_gtable
+
+```{r}
+
+# Box plot of mtcars: p
+p <- ggplot(mtcars, aes(x = factor(cyl), y = wt)) + geom_boxplot()
+
+# Create pbuild
+pbuild <- ggplot_build(p)
+
+# a list of 3 elements
+names(pbuild)
+
+# Print out each element in pbuild
+# In the exercise they have panel as an option. But its `plot now`
+pbuild$data
+pbuild$layout
+## This should show the plot. Not working in the markdown doc though. 
+pbuild$plot
+
+# Create gtab from pbuild
+gtab <- ggplot_gtable(pbuild)
+
+# Draw gtab
+grid::grid.draw(gtab)
+
+```
+
+### -- Extracting details
+
+  - This is cool becasue we can get exact values of the box plot. 
+  - There are many ways to calculate quartiles and if we do it ourselves outside the plot, its likely we will have different values
+  
+```{r}
+
+# Box plot of mtcars: p
+p <- ggplot(mtcars, aes(x = factor(cyl), y = wt)) + geom_boxplot()
+
+# Build pdata
+pdata <- ggplot_build(p)$data
+
+# confirm that the first element of the list is a data frame
+class(pdata[[1]])
+
+# Isolate this data frame
+my_df <- pdata[[1]]
+
+# The x labels
+my_df$group <- ggplot_build(p)$layout$panel_ranges[[1]]$x.labels
+
+# Print out specific variables
+my_df[c(1:6, 11)]
+
+```
+
+## gridExtra
+
+### -- Arranging plots (1)
+
+```{r}
+
+# Add a theme (legend at the bottom)
+g1 <- ggplot(mtcars, aes(wt, mpg, col = cyl)) +
+  geom_point(alpha = 0.5) +
+  theme(legend.position = "bottom")
+
+# Add a theme (no legend)
+g2 <- ggplot(mtcars, aes(disp, fill = cyl)) +
+  geom_histogram(position = "identity", alpha = 0.5, binwidth = 20) +
+  theme(legend.position = "none")
+
+# Load gridExtra
+library(gridExtra)
+
+# Call grid.arrange()
+grid.arrange(g1, g2, ncol = 2)
+
+```
+
+### -- Arranging plots (2)
+
+```{r}
+
+# ggplot2, grid and gridExtra have been loaded for you
+# Definitions of g1 and g2
+g1 <- ggplot(mtcars, aes(wt, mpg, col = cyl)) +
+  geom_point() +
+  theme(legend.position = "bottom")
+
+g2 <- ggplot(mtcars, aes(disp, fill = cyl)) +
+  geom_histogram(binwidth = 20) +
+  theme(legend.position = "none")
+
+# Extract the legend from g1
+my_legend <- ggplotGrob(g1)$grobs[[legend_index]]  
+
+# Create g1_noleg
+g1_noleg <- g1 + 
+    theme(legend.position = "none")
+
+# Calculate the height: legend_height
+legend_height <- sum(my_legend$heights)
+
+# Arrange g1_noleg, g2 and my_legend
+grid.arrange(
+  g1_noleg, g2, my_legend,
+  layout_matrix = matrix(
+    c(1,3,2,3), 
+    ncol = 2),
+    heights = unit.c(unit(1, "npc") - legend_height, legend_height))
+
+```
+
+&nbsp; &nbsp;
+
+***  
+# Data Munging and Visualization Case Study
+***  
+
+## Case Study I - Bag Plot
+
+### -- Base package bag plot
+
+```{r}
+
+# test_datasets.RData has been loaded
+
+# Call bagplot() on test_data
+# The aplpack library has been loaded
+head(ch5_test_data)
+bagplot(ch5_test_data)
+
+# Call compute.bagplot on test_data, assign to bag
+bag <- compute.bagplot(ch5_test_data)
+
+# Display information
+bag$hull.loop
+bag$hull.bag
+bag$pxy.outlier
+
+# Highlight components
+points(bag$hull.loop, col = "green", pch = 16)
+points(bag$hull.bag, col = "orange", pch = 16)
+points(bag$pxy.outlier, col = "purple", pch = 16)
+
+```
+
+### -- Multilayer ggplot2 bag plot
+
+```{r}
+
+# bag and ch5_test_data are available
+
+# Create data frames from matrices
+hull.loop <- data.frame(x = bag$hull.loop[,1], y = bag$hull.loop[,2])
+hull.bag <- data.frame(x = bag$hull.bag[,1], y = bag$hull.bag[,2])
+pxy.outlier <- data.frame(x = bag$pxy.outlier[,1], y = bag$pxy.outlier[,2])
+
+# Finish the ggplot command
+ggplot(ch5_test_data, aes(x = x,  y = y)) +
+  geom_polygon(data = hull.loop, fill = "green") +
+  geom_polygon(data = hull.bag, fill = "orange") +
+  geom_point(data = pxy.outlier, col = "purple", pch = 16, cex = 1.5)
+
+```
+
+### -- Creating ggproto functions
+
+```{r}
+
+# ggproto for StatLoop (hull.loop)
+StatLoop <- ggproto(
+  "StatLoop", 
+  Stat,
+  required_aes = c("x", "y"),
+  compute_group = function(data, scales) {
+    bag <- compute.bagplot(x = data$x, y = data$y)
+    data.frame(x = bag$hull.loop[,1], y = bag$hull.loop[,2])
+  })
+
+# ggproto for StatBag (hull.bag)
+StatBag <- ggproto(
+  "StatBag", 
+  Stat,
+  required_aes = c("x", "y"),
+  compute_group = function(data, scales) {
+   bag <- compute.bagplot(x = data$x, y = data$y)
+   data.frame(x = bag$hull.bag[,1], y = bag$hull.bag[,2])
+  })
+
+# ggproto for StatOut (pxy.outlier)
+StatOut <- ggproto(
+  "StatOut", 
+  Stat,
+  required_aes = c("x", "y"),
+  compute_group = function(data, scales) {
+   bag <- compute.bagplot(x = data$x, y = data$y)
+   data.frame(x = bag$pxy.outlier[,1], y = bag$pxy.outlier[,2])
+  })
+
+```
+
+### -- Creating stat_bag()
+
+  - This all works fine in the class console. 
+  - But locally I get the most vague error possible. 
+  
+```{r}
+
+# StatLoop, StatBag and StatOut are available
+
+# Combine ggproto objects in layers to build stat_bag()
+stat_bag <- function(mapping = NULL, data = NULL, geom = polygon,
+                     position = "identity", na.rm = FALSE, show.legend = NA,
+                     inherit.aes = TRUE, loop = FALSE, ...) {
+  list(
+    # StatLoop layer
+    layer(
+      stat = StatLoop, data = data, mapping = mapping, geom = geom, 
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(na.rm = na.rm, alpha = 0.35, col = NA, ...)
+    ),
+    # StatBag layer
+    layer(
+      stat = StatBag, data = data, mapping = mapping, geom = geom, 
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(na.rm = na.rm, alpha = 0.35, col = NA, ...)
+    ),
+    # StatOut layer
+    layer(
+      stat = StatOut, data = data, mapping = mapping, geom = "point", 
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(na.rm = na.rm, alpha = 0.7, col = NA, shape = 21, ...)
+    )
+  )
+}
+
+```
+
+### -- Use stat_bag()
+
+  - The stat_bag function is not working locally
+  - I get a `Error: object of type 'closure' is not subsettable
+    - This is the most vague error. I have no idea what is wrong in the multiple prior steps. 
+  - Maybe I should gind a tutorial on this later when I want to use something like this and hope I can get it working right. 
+  - After reading a bunch of discussions, it looks like some libraries may be out of sync. 
+  
+```{r, error=T}
+
+# hull.loop, hull.bag and pxy.outlier are available
+# stat_bag, ch5_test_data and ch5_test_data2 are available
+
+# Previous method
+ggplot(ch5_test_data, aes(x = x,  y = y)) +
+  geom_polygon(data = hull.loop, fill = "green") +
+  geom_polygon(data = hull.bag, fill = "orange") +
+  geom_point(data = pxy.outlier, col = "purple", pch = 16, cex = 1.5)
+
+# stat_bag
+ggplot(data = ch5_test_data, aes(x = x, y = y)) +
+  stat_bag(ch5_test_data, fill = 'black')
+
+# stat_bag on test_data2
+ggplot(ch5_test_data2, aes(x = x, y = y, fill = treatment)) +
+  stat_bag()
+
+```
+
+## Case Study II - Weather (Part 1)
+
+### -- Step 1: Read in data and examine
+
+```{r eval=F}
+
+# Import weather data
+weather_data_urls <- c(
+  'https://assets.datacamp.com/production/course_862/datasets/NYNEWYOR.txt',
+  'https://assets.datacamp.com/production/course_862/datasets/FRPARIS.txt',
+  'https://assets.datacamp.com/production/course_862/datasets/ILREYKJV.txt',
+  'https://assets.datacamp.com/production/course_862/datasets/UKLONDON.txt'
+)
+weather_data_files <- c("data/NYNEWYOR.txt","data/FRPARIS.txt", "data/ILREYKJV.txt", "data/UKLONDON.txt")
+
+download.file(weather_data_urls, weather_data_files)  
+
+```
+
+
+
+```{r}
+# Check out the NY weather data
+weather <- read.fwf('data/NYNEWYOR.txt',
+                    header = F,
+                    col.names = c("month", "day", "year", "temp"),
+                    widths = c(14, 14, 13, 4))
+
+# Check structure of weather
+str(weather)
+
+# Create past with two filter() calls
+past <- weather %>%
+  filter(!(month == 2 & day == 29)) %>%
+  filter(year != 2016)
+  
+# Check structure of past
+str(past)
+```
+
+### -- Step 2: Summarize history
+
+```{r}
+
+# Create new version of past
+past_summ <- past %>%
+  group_by(year) %>%
+  mutate(yearday = 1:length(day)) %>%
+  ungroup() %>%
+  filter(temp != -99) %>%
+  group_by(yearday) %>%
+  mutate(max = max(temp),
+         min = min(temp),
+         avg = mean(temp),
+         CI_lower = Hmisc::smean.cl.normal(temp)[2],
+         CI_upper = Hmisc::smean.cl.normal(temp)[3]) %>%
+  ungroup()
+
+# Structure of past_summ
+str(past_summ)
+head(past_summ)
+
+Hmisc::smean.cl.normal(past$temp)[2]
+table(past$temp)
+table(past_summ$temp)
+
+```
+
+### -- Step 3: Plot history
+
+```{r}
+
+# Adapt historical plot
+ggplot(past_summ, aes(x = yearday, y = temp)) +
+  geom_point(
+    col = "#EED8AE", 
+    alpha = 0.3,
+    shape = 16) +
+  geom_linerange(
+    aes(ymin = CI_lower, ymax = CI_upper), 
+    col = "#8B7E66")
+
+```
+
+### -- Step 4: Plot present
+
+```{r}
+
+# weather and past are available in your workspace
+
+# Create present
+present <- weather %>%
+  filter(!(month == 2 & day == 29)) %>%
+  filter(year == max(year)) %>%
+  group_by(year) %>%
+  mutate(yearday = 1:length(day)) %>%
+  ungroup() %>%
+  filter(temp != -99)
+
+# Add geom_line to ggplot command
+ggplot(past_summ, aes(x = yearday, y = temp)) + 
+  geom_point(
+    col = "#EED8AE", 
+    alpha = 0.3, 
+    shape = 16) +
+  geom_linerange(
+    aes(ymin = CI_lower, ymax = CI_upper), 
+    col = "#8B7E66") + 
+  geom_line(data = present)
+
+```
+
+### -- Step 5: Find new record highs
+
+```{r}
+
+# Create past_highs
+past_highs <- past_summ %>%
+  group_by(yearday) %>%
+  summarise(past_high = max(temp))
+
+# Create record_high
+record_high <- present %>%
+  left_join(past_highs) %>%
+  filter(temp > past_high)
+  
+record_high
+
+# Add record_high information to plot
+ggplot(past_summ, aes(x = yearday, y = temp)) + 
+  geom_point(col = "#EED8AE", alpha = 0.3, shape = 16) +
+  geom_linerange(aes(ymin = CI_lower, ymax = CI_upper), col = "#8B7E66") +
+  geom_line(data = present) +
+  geom_point(data = record_high, col = "#CD2626")
+
+```
+
+### -- Step 6: Efficiently calculate record highs and lows
+
+```{r}
+
+# Create past_extremes
+past_extremes <- past_summ %>%
+  group_by(yearday) %>%
+  summarise(past_low = min(temp),
+            past_high = max(temp))
+
+# Create record_high_low
+record_high_low <- present %>%
+  left_join(past_extremes) %>%
+  mutate(record = ifelse(temp < past_low, 
+                         "#0000CD",
+                         ifelse(temp > past_high, 
+                                "#CD2626", 
+                                "#00000000")))
+
+# Structure of record_high_low
+str(record_high_low)
+head(record_high_low)
+
+# Add point layer of record_high_low
+p <- ggplot(past_summ, aes(x = yearday, y = temp)) + 
+  geom_point(col = "#EED8AE", alpha = 0.3, shape = 16) +
+  geom_linerange(aes(ymin = CI_lower, ymax = CI_upper), col = "#8B7E66") +
+  geom_line(data = present) +
+  geom_point(data = record_high_low, aes(col = record)) +
+  scale_color_identity()
+p
+
+```
+
+### -- Step 7: Custom legend
+
+```{r}
+
+# Finish the function draw_pop_legend
+draw_pop_legend <- function(x = 0.6, y = 0.2, width = 0.2, height = 0.2, fontsize = 10) {
+  
+  # Finish viewport() function
+  pushViewport(viewport(x = x, y = y, width = width, height = height, just = "center"))
+
+  legend_labels <- c("Past record high",
+                     "95% CI range",
+                     "Current year",
+                     "Past years",
+                     "Past record low")
+
+  legend_position <- c(0.9, 0.7, 0.5, 0.2, 0.1)
+  
+  # Finish grid.text() function
+  grid.text(label = legend_labels, x = 0.12, y = legend_position, 
+            just = "left", 
+            gp = gpar(fontsize = fontsize, col = "grey20"))
+  
+  # Position dots, rectangle and line
+  point_position_y <- c(0.1, 0.2, 0.9)
+  point_position_x <- rep(0.06, length(point_position_y))
+  grid.points(x = point_position_x, y = point_position_y, pch = 16,
+              gp = gpar(col = c("#0000CD", "#EED8AE", "#CD2626")))
+  grid.rect(x = 0.06, y = 0.5, width = 0.06, height = 0.4,
+            gp = gpar(col = NA, fill = "#8B7E66"))
+  grid.lines(x = c(0.03, 0.09), y = c(0.5, 0.5),
+             gp = gpar(col = "black", lwd = 3))
+  
+  # Add popViewport() for bookkeeping
+  popViewport()
+}
+
+# Plotting object p, from previous exercise
+p
+
+# Call draw_pop_legend()
+draw_pop_legend()
+
+```
+
+## Case Study II - Weather (Part 2)
+
+### -- Step 1: clean_weather()
+
+```{r}
+
+# Finish the clean_weather function
+clean_weather <- function(file) {
+  weather <- read.fwf(file,
+                      header = FALSE,
+                      col.names = c("month", "day", "year", "temp"),
+                      widths = c(14, 14, 13, 4))
+  weather %>%
+    filter(!(month == 2 & day == 29)) %>%
+    group_by(year) %>%
+    mutate(yearday = 1:length(day)) %>%
+    ungroup() %>%
+    filter(temp != -99)
+}
+
+# Import NYNEWYOR.txt: my_data
+my_data <- clean_weather('data/NYNEWYOR.txt')
+
+```
+
+```{r}
+ny_weather_data_url <- 'https://assets.datacamp.com/production/course_862/datasets/NYNEWYOR.txt'
+download.file(ny_weather_data_url, 'data/NYNEWYOR.txt')
+
+```
+
+### -- Step 2: Historical data
+
+```{r}
+
+# Create the stats object
+StatHistorical <- ggproto("StatHistorical", Stat,
+                    compute_group = function(data, scales, params) {
+                      data <- data %>%
+                        filter(year != max(year)) %>%
+                        group_by(x) %>%
+                        mutate(ymin = Hmisc::smean.cl.normal(y)[3],
+                               ymax = Hmisc::smean.cl.normal(y)[2]) %>%
+                        ungroup()
+                    },
+                    required_aes = c("x", "y", "year"))
+
+# Create the layer
+stat_historical <- function(mapping = NULL, data = NULL, geom = "point",
+                            position = "identity", na.rm = FALSE, show.legend = NA, 
+                            inherit.aes = TRUE, ...) {
+  list(
+    layer(
+      stat = "identity", data = data, mapping = mapping, geom = geom,
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(na.rm = na.rm, col = "#EED8AE", alpha = 0.3, shape = 16, ...)
+    ),
+    layer(
+      stat = StatHistorical, data = data, mapping = mapping, geom = "linerange",
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(na.rm = na.rm, col = "#8B7E66", ...)
+    )
+  )
+}
+
+# Build the plot
+my_data <- clean_weather("data/NYNEWYOR.txt")
+ggplot(my_data, aes(x = yearday, y = temp, year = year)) +
+  stat_historical()
+
+```
+
+### -- Step 3: Present data
+
+```{r}
+
+# Create the stats object
+StatPresent <- ggproto("StatPresent", Stat,
+                       compute_group = function(data, scales, params) {
+                         data <- filter(data, year == max(year))
+                       },
+                       required_aes = c("x", "y", "year"))
+
+# Create the layer
+stat_present <- function(mapping = NULL, data = NULL, geom = "line",
+                       position = "identity", na.rm = FALSE, show.legend = NA, 
+                       inherit.aes = TRUE, ...) {
+  layer(
+    stat = StatPresent, data = data, mapping = mapping, geom = geom,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, ...)
+  )
+}
+
+# Build the plot
+my_data <- clean_weather("data/NYNEWYOR.txt")
+ggplot(my_data, aes(x = yearday, y = temp, year = year)) +
+  stat_historical() +
+  stat_present()
+
+```
+
+### -- Step 4: Extremes
+
+```{r}
+
+# Create the stats object
+StatExtremes <- ggproto("StatExtremes", Stat,
+                        compute_group = function(data, scales, params) {
+                          
+                          present <- data %>%
+                            filter(year == max(year)) 
+                          
+                          past <- data %>%
+                            filter(year != max(year)) 
+                          
+                          past_extremes <- past %>%
+                            group_by(x) %>%
+                            summarise(past_low = min(y),
+                                      past_high = max(y))
+                          
+                          # transform data to contain extremes
+                          data <- present %>%
+                            left_join(past_extremes) %>%
+                            mutate(record = ifelse(y < past_low, 
+                                                   "#0000CD", 
+                                                   ifelse(y > past_high, 
+                                                          "#CD2626", 
+                                                          "#00000000")))
+                        },
+                        required_aes = c("x", "y", "year"))
+
+# Create the layer
+stat_extremes <- function(mapping = NULL, data = NULL, geom = "point",
+                          position = "identity", na.rm = FALSE, show.legend = NA, 
+                          inherit.aes = TRUE, ...) {
+  layer(
+    stat = StatExtremes, data = data, mapping = mapping, geom = geom,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, ...)
+  )
+}
+
+# Build the plot
+my_data <- clean_weather("data/NYNEWYOR.txt")
+ggplot(my_data, aes(x = yearday, y = temp, year = year)) +
+  stat_historical() +
+  stat_present() +
+  stat_extremes(aes(col = ..record..)) +
+  scale_color_identity() # Colour specification
+
+```
+
+### -- Step 5: Re-use plotting style
+
+```{r}
+
+# File paths of all datasets
+my_files <- c("data/NYNEWYOR.txt","data/FRPARIS.txt", "data/ILREYKJV.txt", "data/UKLONDON.txt")
+
+# Build my_data with a for loop
+my_data <- NULL
+for (file in my_files) {
+  temp <- clean_weather(file)
+  temp$id <- sub(".txt", "", file)
+  my_data <- rbind(my_data, temp)
+}
+
+str(my_data)
+
+# Build the final plot, from scratch!
+ggplot(my_data, aes(x = yearday, y = temp, year = year)) +
+  stat_historical() +
+  stat_present() +
+  stat_extremes(aes(col = ..record..)) +
+  scale_color_identity() +  # specify colour here
+  facet_wrap(~ id, ncol = 2)
+
+```

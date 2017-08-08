@@ -17,3 +17,7 @@ My course docs are hosted on [shinyapps.io](http://www.shinyapps.io) and [RPubs]
    - [Section 1,2,3](http://rpubs.com/williamsurles/294962)
    - [Section 4,5](http://rpubs.com/williamsurles/294957)
 - [Data Visualization with ggplot2 (Part 2)](http://rpubs.com/williamsurles/295930)
+- Data Visualization with ggplot2 (Part 3)
+  - [Section 1,2](http://rpubs.com/williamsurles/297111)
+  - [Section 3](http://rpubs.com/williamsurles/297613)
+  - [Section 4,5](http://rpubs.com/williamsurles/297867)
