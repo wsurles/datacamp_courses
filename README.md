@@ -21,3 +21,4 @@ My course docs are hosted on [shinyapps.io](http://www.shinyapps.io) and [RPubs]
   - [Section 1,2](http://rpubs.com/williamsurles/297111)
   - [Section 3](http://rpubs.com/williamsurles/297613)
   - [Section 4,5](http://rpubs.com/williamsurles/297867)
+- [Introduction to Data](http://rpubs.com/williamsurles/298166)
