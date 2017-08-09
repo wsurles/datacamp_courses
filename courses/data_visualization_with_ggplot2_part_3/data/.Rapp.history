@@ -1,0 +1,2 @@
+load("/Users/williamsurles/projects/datacamp_courses/courses/data_visualization_with_ggplot2_part_3/data/mammals.RDS")
+load("/Users/williamsurles/Downloads/mammals.RDS")
