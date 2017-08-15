@@ -23,3 +23,4 @@ My course docs are hosted on [shinyapps.io](http://www.shinyapps.io) and [RPubs]
   - [Section 4,5](http://rpubs.com/williamsurles/297867)
 - [Introduction to Data](http://rpubs.com/williamsurles/298166)
 - [Exploratory Data Analysis](http://rpubs.com/williamsurles/298945)
+- [Exploratory Data Analysis in R: Case Study](http://rpubs.com/williamsurles/299664)
