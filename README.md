@@ -25,3 +25,4 @@ My course docs are hosted on [shinyapps.io](http://www.shinyapps.io) and [RPubs]
 - [Exploratory Data Analysis](http://rpubs.com/williamsurles/298945)
 - [Exploratory Data Analysis in R: Case Study](http://rpubs.com/williamsurles/299664)
 - [Correlation and Regression](http://rpubs.com/williamsurles/305688)
+- [Foundations of Inference](http://rpubs.com/williamsurles/308326)

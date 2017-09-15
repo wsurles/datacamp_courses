@@ -1,0 +1,1057 @@
+---
+title: "Foundations of Inference"
+author: "William Surles"
+date: "2017-09-11"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+  toc: true
+  toc_float: true
+  toc_depth: 3
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+```
+
+# Introduction
+
+  - Course notes from the [Foundations of Inference](https://www.datacamp.com/courses/foundations-of-inference) course on DataCamp
+  
+## Whats Covered
+
+  - Introduction to ideas of inference
+  - Completing a randomization test: gender discrimination
+  - Hypothesis testing errors: opportunity cost
+  - Confidence intervals
+  
+  
+## Additional Resources
+  
+  - [Jake Vanderplas - Statistics for Hackers - PyCon 2016](https://www.youtube.com/watch?v=Iq9DzN6mvYA)
+  - [Jake Vanderplas - Statistics for Hackers - Slidedeck](https://speakerdeck.com/jakevdp/statistics-for-hackers)
+  - [John Rauser keynote: "Statistics Without the Agonizing Pain" -- Strata + Hadoop 2014](https://www.youtube.com/watch?v=5Dnw46eC-0o)
+    - This is where jake copied his shuffling example from. Its a great talk. This is what we do for most of this datacamp class also.
+  - [Julian L Simon - Resampling: A Better Way to Teach (and Do) Statistics](http://www.juliansimon.com/writings/Resampling_Statistics/)
+    - This was recommended by Jake as a further reference for the process of resampling to do statistics
+  - [Cam Davidson-Pilon - Bayesian Methods for Hackers - Online Book](http://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/)
+    - Suggeste by Jake as a way to explore more computational techniques in bayesian statistics
+    - All python. All code is on github. 
+  - [Chris Fonnesbeck - Statistical Thinking for Data Science - SciPy 2015 Presentation | ](https://www.youtube.com/watch?v=TGGGDpb04Yc)
+    - Jake recommends this talk on cautions for and selection bias when sampling data
+
+## Libraries and Data
+
+```{r, cache=F} 
+
+library(dplyr)
+library(ggplot2)
+
+library(NHANES)
+library(oilabs)
+
+source('create_datasets.R')
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# Introduction to ideas of inference
+***  
+
+## Welcome to the course!
+
+  - Statistical inference is the process of making claims about a population based on information from a sample.
+    - The sampl is typically just a small sample from the larger true population
+    - Statistics you calculate about this sample population let you make inferences about the true population
+  - Hypothesis
+    - Null Hyothesis ($H_0$): The claim that is not interesting
+    - Alternative Hypothesis($H_A$): The claim corresponding to the research hypothesis
+    - The goal is to disprove the null hypothesis so that you can claim the alternative hypothesis is true
+
+## Randomized distributions
+
+  - Generating a distribution of the statistic from the null population gives information about whether the observed data are inconsistent with the null hyothesis.
+  - To do this we can randomly shuffle the soda preferences (in this case we are looking as cola vs orange soda prefernce by coast) and then calculate the statistic on this shuffled sample.
+  - We do this many times, like 1000, until we have a distribution that we can compare our sample statistic with. 
+
+### -- Working with the NHANES data
+
+```{r}
+
+# Packages are loaded: NHANES, dplyr, ggplot2
+
+# What are the variables in the NHANES dataset?
+names(NHANES)
+glimpse(NHANES)
+
+# Create bar plot for Home Ownership by Gender
+ggplot(NHANES, aes(x = Gender, fill = HomeOwn)) + 
+  geom_bar(position = "fill") +
+  ylab("Relative frequencies")
+
+# Density for SleepHrsNight colored by SleepTrouble, faceted by HealthGen
+ggplot(NHANES, aes(x = SleepHrsNight, col = SleepTrouble)) + 
+  geom_density(adjust = 2) + 
+  facet_wrap(~ HealthGen)
+
+```
+
+### -- Randomly allocating samples
+
+We will randomly permute the observations and calculate a difference in proportions that could arise from a null distribution
+
+```{r}
+
+# Subset the data: homes
+homes <- NHANES %>%
+  select(Gender, HomeOwn) %>%
+  filter(HomeOwn %in% c("Own", "Rent"))
+
+# Perform one permutation 
+homes %>%
+  mutate(HomeOwn_perm = sample(HomeOwn)) %>%
+  group_by(Gender) %>%
+  summarize(prop_own_perm = mean(HomeOwn_perm == "Own"), 
+            prop_own = mean(HomeOwn == "Own")) %>%
+  summarize(diff_perm = diff(prop_own_perm),
+            diff_orig = diff(prop_own))
+
+```
+
+### -- Randomization dotplot (n = 10)
+
+```{r}
+
+# Perform 10 permutations
+homeown_perm <- homes %>%
+  rep_sample_n(size = dim(homes)[1], reps = 10) %>%
+  mutate(HomeOwn_perm = sample(HomeOwn)) %>%
+  group_by(replicate, Gender) %>%
+  summarize(
+    prop_own_perm = mean(HomeOwn_perm == 'Own'), 
+    prop_own = mean(HomeOwn == 'Own')
+    ) %>%
+  summarize(
+    diff_perm = diff(prop_own_perm),
+    diff_orig = diff(prop_own)
+    ) # male - female
+
+# Print differences to console
+homeown_perm
+
+# Dotplot of 10 permuted differences in proportions
+ggplot(homeown_perm, aes(x = diff_perm)) + 
+  geom_dotplot(binwidth = .001)
+
+```
+
+### -- Randomization dotplot (n = 100)
+
+```{r}
+
+# Perform 100 permutations
+homeown_perm <- homes %>%
+  rep_sample_n(size = dim(homes)[1], reps = 100) %>%
+  mutate(HomeOwn_perm = sample(HomeOwn)) %>%
+  group_by(replicate, Gender) %>%
+  summarize(
+    prop_own_perm = mean(HomeOwn_perm == 'Own'), 
+    prop_own = mean(HomeOwn == 'Own')
+    ) %>% 
+  summarize(
+    diff_perm = diff(prop_own_perm),
+    diff_orig = diff(prop_own)
+    ) # male - female
+
+glimpse(homeown_perm)
+
+# Dotplot of 100 permuted differences in proportions
+ggplot(homeown_perm, aes(x = diff_perm)) + 
+  geom_dotplot(binwidth = .001)
+
+```
+
+### -- Randomization density
+
+Using 1000 permutations
+
+```{r}
+
+# Perform 1000 permutations
+homeown_perm <- homes %>%
+  rep_sample_n(size = dim(homes)[1], reps = 1000) %>%
+  mutate(HomeOwn_perm = sample(HomeOwn)) %>%
+  group_by(replicate, Gender) %>%
+  summarize(
+    prop_own_perm = mean(HomeOwn_perm == 'Own'),
+    prop_own = mean(HomeOwn == 'Own')
+    ) %>%
+  summarize(
+    diff_perm = diff(prop_own_perm),
+    diff_orig = diff(prop_own)
+    )
+
+glimpse(homeown_perm)
+
+# Density plot of 1000 permuted differences in proportions
+ggplot(homeown_perm, aes(x = diff_perm)) +
+  geom_dotplot(binwidth = .000824, alpha = .6) + 
+  geom_density(color = "blue")
+  
+ 
+
+```
+
+I could not quite figure out how to get the dots and the density to line up perfectly, but this is close enough and shows the density fits the distribution of the resampled statistic. 
+
+## Using the randomization distribution
+
+  - Now that we have created the null distribution, how do we use it?
+  - The goal is to show that the observed statistic is not consistent with the null statistics generated and shown in the null distribution. 
+
+### -- Do the data come from the population?
+
+  - We can show how our observed statistics fits in with the null distribution
+
+```{r}
+
+glimpse(homeown_perm)
+
+# Plot permuted differences
+ggplot(homeown_perm, aes(x = diff_perm)) + 
+  geom_dotplot(binwidth = 0.0008) + 
+  geom_density(col = "lightblue", size = 2) + 
+  geom_vline(aes(xintercept = diff_orig),
+          col = 'red')
+
+# Compare permuted differences to observed difference
+homeown_perm %>%
+  summarize(sum(diff_orig >= diff_perm))
+
+```
+
+### -- What can you conclude?
+
+- In this case it looks like it could have easily been a sample from the null distribition so we really aren't confident that our there is a real difference in our observation. In other words there is no difference in home onwership across gender based on our sample. 
+
+## Study conclusions
+
+  - No evidence that the data are inconsistent with the null hypothesis
+    - In other words, if gender played NO role in homeowner ship we would be likely to get data similar to that which we actually observerd in our study
+  - This process only allows us to reject a null claim, but it does not allow us to have certainty that the null claim is true. 
+  - In other words, we can't say that gender DOES NOT play a role. We can only say that we could not show that it does play a role from our sample.
+  - There is no claim that can be generalized to the larger population. 
+    
+&nbsp; &nbsp;
+
+***  
+# Completing a randomization test: gender discrimination
+***  
+
+## Example: gender discrimination
+
+  - Now we will do a full hypothesis test
+  - The data used here comes from a paper that examines gender discriminiation in bank manager promotions. 
+    - They ran an experiment with resumes that only had a name difference. Everything else was the same. 
+    - Fewer females were promoted. But is this random chance or discrimintion?
+  - Shuffling breaks the relationship between gender and promotion so we know that all statistics generated with the re-shuffled samples are due to randome chance. 
+  - our goal is to see how much this statistic can vary just by random chance and then to see if our observed statistic fits within this distribution or if it is outside the range that is reasonably due to random chance. 
+
+### -- Gender discrimination hypotheses
+
+  - $H_0$: gender and promotion are unrelated variables.
+  - $H_A$: men are more likely to be promoted
+  
+### -- Summarizing gender discrimination
+
+Here we want proportion of women who were promoted, as opposed to the proportion of promoted individuals who were women. 
+
+The data loaded here is slightly different that that used in the class. It just has a larger sample. We just had 24 of each gender in the class. The variability of the sample distribution will be tighter in this notebook. 
+
+```{r}
+
+# disc has been created
+
+# Create a contingency table summarizing the data
+table(disc)
+glimpse(disc)
+
+# Find proportion of each sex who were promoted
+disc %>%
+  group_by(sex) %>%
+  summarize(promoted_prop = mean(promote == 'promoted'))
+
+```
+
+### -- Step-by-step through the permutation
+
+```{r}
+
+# Sample the entire data frame 5 times
+disc %>%
+  rep_sample_n(size = nrow(disc), reps = 5) 
+
+# Shuffle the promote variable within replicate
+disc %>%
+  rep_sample_n(size = nrow(disc), reps = 5) %>%
+  mutate(prom_perm = sample(promote)) 
+
+# Find the proportion of promoted in each replicate and sex
+disc %>%
+  rep_sample_n(size = nrow(disc), reps = 5) %>%
+  mutate(prom_perm = sample(promote)) %>%
+  group_by(replicate, sex) %>%
+  summarize(
+    prop_prom_perm = mean(prom_perm == 'promoted'),
+    prop_prom = mean(promote == 'promoted')) 
+
+# Difference in proportion of promoted across sex grouped by gender
+disc %>%
+  rep_sample_n(size = nrow(disc), reps = 5) %>%
+  mutate(prom_perm = sample(promote)) %>%
+  group_by(replicate, sex) %>%
+  summarize(
+    prop_prom_perm = mean(prom_perm == 'promoted'),
+    prop_prom = mean(promote == 'promoted')) %>%
+  summarize(
+    diff_perm = diff(prop_prom_perm),
+    diff_orig = diff(prop_prom))  # male - female
+
+```
+
+### -- Randomizing gender discrimination
+
+```{r}
+
+# Create a data frame of differences in promotion rates
+glimpse(disc)
+disc_perm <- disc %>%
+  rep_sample_n(size = nrow(disc), reps = 1000) %>%
+  mutate(prom_perm = sample(promote)) %>%
+  group_by(replicate, sex) %>%
+  summarize(prop_prom_perm = mean(prom_perm == "promoted"),
+            prop_prom = mean(promote == "promoted")) %>%
+  summarize(diff_perm = diff(prop_prom_perm),
+            diff_orig = diff(prop_prom))  # male - female
+
+glimpse(disc_perm)
+
+# Histogram of permuted differences
+ggplot(disc_perm, aes(x = diff_perm)) + 
+  geom_histogram(binwidth = 0.01) +
+  geom_vline(aes(xintercept = diff_orig), col = 'red')
+
+```
+
+## Distribution of statistics
+
+  - Here we use differnce in proportions $\widehat{p} - p$
+  - we could also have used the ratio of proportions $\frac{\widehat{p}}{p}$
+  - Either can be used.
+
+### -- Reflecting on analysis
+
+  - In the population there is evidence that women are promoted at a different rate,
+  but we cannot tell whether the difference is due to discrimination or something else. 
+
+### -- Critical region
+
+  - We can use quantiles to see the statistic value at different levels of confidence
+  
+```{r}
+
+# Find the 0.90, 0.95, and 0.99 quantiles of diff_perm
+disc_perm %>% 
+  summarize(
+    q.90 = quantile(diff_perm, p = 0.90),
+    q.95 = quantile(diff_perm, p = 0.95),
+    q.99 = quantile(diff_perm, p = 0.99))
+
+```
+
+### -- Two-sided critical region
+
+  - If you are testing for a difference, without directionality, than you consider both sides of the distribution
+    - So basically you just say the statistic needs to be past 2.5% or 97.5% values to be considered significant at the 5% level. Half on each side. 
+    
+```{r}
+
+# Find the 0.01, 0.05, and 0.10 quantiles of diff_perm
+disc_perm %>% 
+  summarize(
+    q.01 = quantile(diff_perm, p = 0.01),
+    q.05 = quantile(diff_perm, p = 0.05),
+    q.10 = quantile(diff_perm, p = 0.10))
+
+```
+
+## Why 0.05?
+
+> ... It is common practice to judge a result significant, if it is of such a magnitude that it would have been produced by chance no more frequently than once in twenty trials. This is an arbitrary, but convenient, level of significance for the practical investigator, but it does not mean that he allows himself to be deceived once in every twenty experiments. The test of significance only tells him what to ignore, namely all experiments in which significant results are not obtained. He should only claim that a phenomenon is experimentally demonstrable when he knows how to design an experiment so that it will rarely fail to give a significant result. Consequently, isolated significant results which he does not know how to reproduce are left in suspense pending further investigation. - RA Fisher (1929)
+
+  - 0.05 is personal and subjective, but not meaningless
+  - Cutoff of 0.01 instead of 0.05 is more skeptical of observed results. This can be used when you want to be more sure there is a difference 
+  - In general 0.05 aligns with where most people start a result like a coin's fairness... Is the coin unfair?
+    - 1 heads in a row? nope. $P(H) = 1/2$
+    - 2? probably not. $P(HH) = (1/2)^2 = 1/4 = .025$
+    - 3? still probably not. $P(HHH) = (1/3)^2 = 1/8 = .125$
+    - 4? getting close. $P(HHHH) = (1/4)^2 = 1/16 = .0625$
+    - 5? yeah probably. $P(HHHHH) = (1/5)^2 = 1/32 = .03125$
+  - 4 or 5 heads in a row is right around .05. This is where most people start to doubt the odds. 
+  - Some people may be more skeptical that the coin is unfair and need 6 or 7 heads in a row to think it is likely to be unfair. Its a subjective cutoff. 
+
+### -- How does sample size affect results?
+
+  - If the sample was ten times larger but the sample statistic was exactly the same (0.2917), how would the distribution of permuted differences change?
+    - The statistic of 0.2917 would be much farther to the right of the permuted differences 
+    
+### -- Sample size in randomization distribution
+
+```{r}
+
+disc_small <- readRDS('data/disc_small.rds')
+disc_big <- readRDS('data/disc_big.rds')
+
+# Tabulate the small and big data frames
+disc_small %>% 
+  select(sex, promote) %>%
+  table()
+
+disc_big %>% 
+  select(sex, promote) %>%
+  table()
+
+disc_small_perm <- disc_small %>%
+  rep_sample_n(size = nrow(disc_small), reps = 1000) %>%
+  mutate(prom_perm = sample(promote)) %>%
+  group_by(replicate, sex) %>%
+  summarize(prop_prom_perm = mean(prom_perm == "promoted"),
+            prop_prom = mean(promote == "promoted")) %>%
+  summarize(diff_perm = diff(prop_prom_perm),
+            diff_orig = diff(prop_prom))  # male - female
+
+disc_big_perm <- disc_big %>%
+  rep_sample_n(size = nrow(disc_big), reps = 1000) %>%
+  mutate(prom_perm = sample(promote)) %>%
+  group_by(replicate, sex) %>%
+  summarize(prop_prom_perm = mean(prom_perm == "promoted"),
+            prop_prom = mean(promote == "promoted")) %>%
+  summarize(diff_perm = diff(prop_prom_perm),
+            diff_orig = diff(prop_prom))  # male - female
+
+glimpse(disc_small_perm)
+glimpse(disc_big_perm)
+
+# Plot the distributions of permuted differences
+ggplot(disc_small_perm, aes(x = diff_perm)) + 
+  geom_histogram(binwidth = 0.01) +
+  geom_vline(aes(xintercept = diff_orig), col = 'red')
+
+ggplot(disc_big_perm, aes(x = diff_perm)) + 
+  geom_histogram(binwidth = 0.01) +
+  geom_vline(aes(xintercept = diff_orig), col = 'red')
+
+```
+
+### -- Sample size for critical region
+
+```{r}
+
+# Recall the quantiles associated with the original dataset
+disc_perm %>% 
+  summarize(q.90 = quantile(diff_perm, p = 0.90),
+            q.95 = quantile(diff_perm, p = 0.95),
+            q.99 = quantile(diff_perm, p = 0.99))
+
+# Calculate the quantiles associated with the small dataset
+disc_small_perm %>% 
+  summarize(q.90 = quantile(diff_perm, p = 0.90),
+            q.95 = quantile(diff_perm, p = 0.95),
+            q.99 = quantile(diff_perm, p = 0.99))
+
+# Calculate the quantiles associated with the big dataset
+disc_big_perm %>% 
+  summarize(q.90 = quantile(diff_perm, p = 0.90),
+            q.95 = quantile(diff_perm, p = 0.95),
+            q.99 = quantile(diff_perm, p = 0.99))
+
+```
+
+## What is a p-value?
+
+  - Definition of p-value
+    - A p-value is the probability of observing data as or more extreme than what we actually got, given the null hypothesis is true
+    - the null hypothesis is that promotion rates do not vary across gender. 
+  - Gender discrimination p-value
+    - The probability of observing a difference of 0.2917 or greater when promotion rates do not vary across gender is 0.03, or 3 times out of 100.
+    - You can use this value to regect the null hypothesis or not based on your degree of skepticism. 
+    - If you used 0.05 as your cutoff than you would reject the null hypothesis. If you used 0.01 as your cutoff than you would fail to reject the null hypothesis. 
+  
+### -- Calculating the p-values
+
+```{r}
+
+# Calculate the p-value for the original dataset
+disc_perm %>%
+  summarize(mean(diff_orig <= diff_perm))
+
+# Calculate the p-value for the small dataset
+disc_small_perm %>%
+  summarize(mean(diff_orig <= diff_perm))
+
+# Calculate the p-value for the big dataset
+disc_big_perm %>%
+  summarize(mean(diff_orig <= diff_perm))
+
+```
+
+### -- Practice calculating p-values
+  
+  - In the new dataset 75% of the men are promoted and 70.8% of the women are promoted
+  - We will see that the diffence in promotion rates is no longer statistically significant. Its could easily, and is likely to have, come form random chance. 
+
+```{r}
+
+disc_new <- readRDS('data/disc_new.rds')
+
+# Recall the original data
+disc %>% 
+  select(sex, promote) %>%
+  table()
+
+# Tabulate the new data
+disc_new %>% 
+  select(sex, promote) %>%
+  table()
+
+disc_new_perm <- disc_new %>%
+  rep_sample_n(size = nrow(disc_new), reps = 1000) %>%
+  mutate(prom_perm = sample(promote)) %>%
+  group_by(replicate, sex) %>%
+  summarize(prop_prom_perm = mean(prom_perm == "promoted"),
+            prop_prom = mean(promote == "promoted")) %>%
+  summarize(diff_perm = diff(prop_prom_perm),
+            diff_orig = diff(prop_prom))  # male - female
+
+glimpse(disc_new_perm)
+
+# Plot the distribution of the original permuted differences
+ggplot(disc_perm, aes(x = diff_perm)) + 
+  geom_histogram() +
+  geom_vline(aes(xintercept = diff_orig), col = 'red')
+
+# Plot the distribution of the new permuted differences
+ggplot(disc_new_perm, aes(x = diff_perm)) + 
+  geom_histogram() +
+  geom_vline(aes(xintercept = diff_orig), col = 'red')
+
+# Find the p-value from the original data
+disc_perm %>%
+  summarize(mean(diff_orig <= diff_perm))
+
+# Find the p-value from the new data
+disc_new_perm %>%
+  summarize(mean(diff_orig <= diff_perm))
+
+```
+
+### -- Calculating two-sided p-values
+
+  - Again, here we are simply changing the question to be focused on if *any* difference in promotoion rates exist, not simply focused on if men are higher than women. 
+  
+```{r}
+
+# Calculate the two-sided p-value
+glimpse(disc_perm)
+disc_perm %>%
+  summarize(mean(diff_orig <= diff_perm)*2)
+
+```
+
+## Summary of gender discrimination
+
+  - 0.03 is not much differnet thatn 0.05 so we shold be careful to make strong claims. 
+    - If anything this is an invitation to repeat the study and look into the mater further. See if it can be replicated. 
+  - What about causation?
+    - the study was randomized well, and ther is nothing systematically different other than the names on the resume. If the women resume were handed out first to the first arriving managers there may be some possible factors interfering with the data, but that was not the case. 
+    - Any differnece in promotion rates, in this case, can be said to be due to the gender of the applicant. If the study was not well randomized are implemented than causation would not be possible. 
+  - Generalization
+    - The 35 individuals in sample were not randomly sampled from all managers. They were all at a management training session.
+    - We can't generalize this to the entire population of bank managers, or managers in general. 
+
+&nbsp; &nbsp;
+
+***  
+# Hypothesis testing errors: opportunity cost
+***  
+
+## Example: opportunity cost
+
+The study
+
+  - Control group (75 students) presented with 2 options:
+    - (A) Buy this entertaining video
+    - (B) Not buy this entertaining video
+  - Treatment group (75 students) presented with slightly modified option (B):
+    - (A) Buy this entertaining video
+    - (B) Not buy this entertaining video. Keep the $14.99 for other purchases
+
+Hypotheses
+
+  - $H_0$: Reminding students will have no impact on their spending decisions
+  - $H_A$: Reminding students will reduce the chance they continue with a purchase
+    
+### -- Summarizing opportunity cost (1)
+
+```{r}
+
+glimpse(opportunity)
+
+# Tabulate the data
+opportunity %>%
+  select(decision, group) %>%
+  table()
+
+# Find the proportion who bought the DVD in each group
+opportunity %>%
+  group_by(group) %>%
+  summarize(buy_prop = mean(decision == 'buyDVD'))
+
+```
+
+### -- Plotting opportunity cost
+
+```{r}
+
+# Create a barplot
+ggplot(opportunity, aes(x = group, fill = decision)) + 
+  geom_bar(position = "fill")
+
+```
+
+### -- Randomizing opportunity cost
+
+```{r}
+
+# Data frame of differences in purchase rates after permuting
+opp_perm <- opportunity %>%
+  rep_sample_n(size = nrow(opportunity), reps = 1000) %>%
+  mutate(dec_perm = sample(decision)) %>%
+  group_by(replicate, group) %>%
+  summarize(
+    prop_buy_perm = mean(dec_perm == "buyDVD"),
+    prop_buy = mean(decision == "buyDVD")
+    ) %>%
+  summarize(
+    diff_perm = diff(prop_buy_perm),
+    diff_orig = diff(prop_buy))  # treatment - control
+
+glimpse(opp_perm)
+
+# Histogram of permuted differences
+ggplot(opp_perm, aes(x = diff_perm)) + 
+  geom_histogram(binwidth = .005) +
+  geom_vline(aes(xintercept = diff_orig), col = 'red')
+
+```
+
+### -- Summarizing opportunity cost (2)
+
+```{r}
+
+glimpse(opp_perm)
+
+# Calculate the p-value
+opp_perm %>%
+  summarize(mean(diff_perm <= diff_orig))
+
+```
+
+### -- Opportunity cost conclusion
+
+  - Based on a result of .008, we can conclude that reminding the students causes them to be less likely to buy the DVD. 
+
+## Errors and their consequences
+
+But what if we are wrong...
+
+![](images/errors.png)
+
+There are some cases where you really don't want to be wrong in one of the ways, so you are extra careful to not get that error.  Here is a good comparison to the jusicial system. 
+
+![](images/jury.png)
+
+### -- p-value for two-sided hypotheses: opportunity costs
+
+  - The p-value measures the likelihood of data as or more extreme than the observed data, given the null hypothesis is true. 
+  - Therefore, the appropriate p-value for a two-sided alternative hypothesis is a two-sided p-value.
+  - To find a two-sided p-value, you simply double the one sided p-value.
+  
+  
+```{r}
+
+glimpse(opp_perm)
+
+# Calculate the two-sided p-value
+opp_perm %>%
+  summarize(mean(diff_perm <= diff_orig)*2)
+
+```
+
+## Summary of opportunity costs
+
+  - not random variablilty that led the students to save
+  - good randomized study so the difference is due to the reminder
+  - 150 students do not generalize to the adult population
+  - would need more info about the students in the study to generalize to others.  
+
+&nbsp; &nbsp;
+
+***  
+# Confidence intervals
+***  
+
+## Parameters and confidence intervals
+
+  - When trying to estimate a value you use confidence intervals to give a range that you think the true population value is within. 
+  - the parameter is a numerical value from the population
+    - e.g. the true average amount all dieters will lose on a particular program
+  - the confidence interval is a range of numbers that (hopefully) captures the true parameter
+    - e.g. "we are 95% confident that between 12% and 34% of the entire population recommends Subarus"
+  
+## Bootstrapping
+
+  - With hypotesis testing we shuffle the labels to find the variability in the null model
+  - In bootstrapping there is not null model, we resample (with replacement) to find the variability in the sample
+  
+  ![](images/bootstrapping.png)
+
+  - it turns out (and we will show this in a second) that the varibility of this sample distribution matches the variability of sampling many times from the tru population
+  - So we can use this variability, or standard error, to know how the statistic varies around the parameter. In other words, what range are we confident that the true parmater lies within around the sample statistic. These are the confidence intervals. 
+
+
+### -- Resampling from a sample
+
+To investigate how much estimates of a population proportion change from sample to sample, you will set up two sampling experiments.
+
+In the first experiment, you will simulate repeated samples from a population. In the second, you will choose a single sample from the first experiment and repeatedly resample from that sample—a method called bootstrapping. More specifically:
+
+  - Experiment 1: Assume the true proportion of people who will vote for Candidate X is 0.6. Repeatedly sample 30 people from the population and measure the variability of $\widehat{p}$ (the sample proportion).
+  - Experiment 2: Take one sample of size 30 from the same population. Repeatedly sample 30 people (with replacement!) from the original sample and measure the variability of $\widehat{p}^∗$ (the resample proportion).
+
+It's important to realize that the first experiment relies on knowing the population and is typically impossible in practice. The second relies only on the sample of data and is therefore easy to implement for any statistic. Fortunately, as you will see, the variability in $\widehat{p}$, or the proportion of "successes" in a sample, is approximately the same whether we sample from the population or resample from a sample.
+  
+```{r}
+
+load('data/all_polls.RData')
+glimpse(all_polls)
+
+# Select one poll from which to resample: one_poll
+one_poll <- all_polls %>%
+  filter(poll == 1) %>%
+  select(vote)
+
+glimpse(one_poll)
+
+# Generate 1000 resamples of one_poll: one_poll_boot_30
+one_poll_boot_30 <- one_poll %>%
+  rep_sample_n(size = 30, replace = T, reps = 1000)
+
+glimpse(one_poll_boot_30)
+
+# Compute p-hat for each poll: ex1_props
+ex1_props <- all_polls %>% 
+  group_by(poll) %>% 
+  summarize(prop_yes = mean(vote))
+
+glimpse(ex1_props)
+
+# Compute p-hat* for each resampled poll: ex2_props
+ex2_props <- one_poll_boot_30 %>%
+  summarize(prop_yes = mean(vote))
+
+glimpse(ex2_props)
+
+# Compare variability of p-hat and p-hat*
+ex1_props %>% summarize(sd(prop_yes))
+ex2_props %>% summarize(sd(prop_yes))
+
+```
+
+### -- Resampling from a sample (2)
+
+In the previous exercise, the resamples (with replacement) were the same size as the original dataset. You originally polled 30 people, then you repeatedly resampled 30 votes from the original dataset (with replacement).
+
+What if the original dataset was 30 observations, but you chose to resample only 3 individuals with replacement? Alternatively, what if you chose to resample 300 individuals with replacement? Let's call these Experiment 3 and Experiment 4, respectively.
+
+Would the variability in these resampled $\widehat{p}^∗$ values still be a good proxy for the variability of the sampled $\widehat{p}$ values taken from repeated samples from the population?
+
+```{r}
+
+# Resample from one_poll with n = 3: one_poll_boot_3
+one_poll_boot_3 <- one_poll %>%
+  rep_sample_n(3, replace = T, reps = 1000)
+
+# Resample from one_poll with n = 300: one_poll_boot_300
+one_poll_boot_300 <- one_poll %>%
+  rep_sample_n(300, replace = T, reps = 1000)
+  
+# Compute p-hat* for each resampled poll: ex3_props
+ex3_props <- one_poll_boot_3 %>% 
+  summarize(prop_yes = mean(vote))
+  
+# Compute p-hat* for each resampled poll: ex4_props
+ex4_props <- one_poll_boot_300 %>% 
+  summarize(prop_yes = mean(vote))
+
+# Compare variability of p-hat* for n = 3 vs. n = 300
+ex3_props %>% summarize(sd(prop_yes))
+ex4_props %>% summarize(sd(prop_yes))
+
+```
+
+These standard deviations are way off from the original example of 0.0868. These are not good estimates of the variablity. 
+
+### -- Visualizing the variability of p-hat
+
+In order to compare the variability of the sampled p̂ p^ and p̂ ∗p^∗ values in the previous exercises, it is valuable to visualize their distributions. To recall, the exercises walked through four different experiments for investigating the variability of p̂ p^ and p̂ ∗p^∗:
+
+  - Experiment 1: Sample (n=30) repeatedly from an extremely large population (gold standard, but unrealistic)
+  - Experiment 2: Resample (n=30) repeatedly with replacement from a single sample of size 30
+  - Experiment 3: Resample (n=3) repeatedly with replacement from a single sample of size 30
+  - Experiment 4: Resample (n=300) repeatedly with replacement from a single sample of size 30
+
+```{r}
+
+# Recall the variability of sample proportions
+ex1_props %>% summarize(sd(prop_yes))
+ex2_props %>% summarize(sd(prop_yes))
+ex3_props %>% summarize(sd(prop_yes))
+ex4_props %>% summarize(sd(prop_yes))
+
+# Create smoothed density curves for all four experiments
+ggplot() + 
+  geom_density(data = ex1_props, aes(x = prop_yes), col = "black", bw = .1) +
+  geom_density(data = ex2_props, aes(x = prop_yes), col = "green", bw = .1) +
+  geom_density(data = ex3_props, aes(x = prop_yes), col = "red", bw = .1) +
+  geom_density(data = ex4_props, aes(x = prop_yes), col = "blue", bw = .1)
+
+```
+
+## Variability in p-hat
+
+  - Remember the whole goal of creating confidence intervals is to find a range a values that will encompasss the true population statistic. 
+  - The problem is that we really don't know how far our statistic from the one experiment is from the true population parameter. Was it just off a little, or one of the cases that are much further apart?
+  - The emperical rule says that approximately 95% of samples will produce p-hats that are within 2SE of the center. The empirical rule deals with bell curves. 
+    - Its also called 3 sigma or 68-95-99.7 rule. Using the mean and standard deviation you can know that 68% of the values are within one std dev, and 95% is within 2 std devs. 
+    - These are called t intervals
+
+### -- Empirical Rule
+
+One nice property is that if the variability of the sample proportion (called the standard error, or SE) is known, then approximately 95% of $\widehat{p}$ values (from different samples) will be within 2SE2SE of the true population proportion.
+
+To check whether that holds in the situation at hand, let's go back to the polls generated by taking many samples from the same population.
+
+```{r}
+
+# Compute proportion of votes for Candidate X: props
+props <- all_polls %>%
+  group_by(poll) %>% 
+  summarize(prop_yes = mean(vote))
+
+glimpse(props)
+
+# Proportion of polls within 2SE
+props %>%
+  mutate(lower = mean(prop_yes) - 2 * sd(prop_yes),
+         upper = mean(prop_yes) + 2 * sd(prop_yes),
+         in_CI = prop_yes > lower & prop_yes < upper) %>%
+  summarize(mean(in_CI))
+
+```
+
+Yep, here 97% of the $widehat{p}$ values are within 2SE of the true population parameter
+
+### -- Bootstrap t-confidence interval
+
+The previous exercises told you two things:
+
+  - You can measure the variability associated with $\widehat{p}$ by resampling from the original sample.
+  - Once you know the variability of $\widehat{p}$, you can use it as a way to measure how far away the true proportion is from our sample statistic.
+
+Note that the rate of closeness (here 95%) refers to how often a sample is chosen so that it is close to the population parameter. You won't ever know if a particular dataset is close to the parameter or far from it, but you do know that over your lifetime, 95% of the samples you collect should give you estimates that are within 2SE of the true population parameter.
+
+```{r}
+
+# Again, set the one sample that was collected
+one_poll <- all_polls %>%
+  filter(poll == 1) %>%
+  select(vote)
+  
+# Compute p-hat from one_poll: p_hat
+p_hat <- mean(one_poll$vote)
+
+# Bootstrap to find the SE of p-hat: one_poll_boot
+one_poll_boot <- one_poll %>%
+  rep_sample_n(30, replace = TRUE, reps = 1000) %>%
+  summarize(prop_yes_boot = mean(vote))
+
+glimpse(one_poll_boot)
+
+# Create an interval of plausible values
+one_poll_boot %>%
+  summarize(lower = p_hat - 2 * sd(prop_yes_boot),
+            upper = p_hat + 2 * sd(prop_yes_boot))
+
+```
+
+This does contain the population parameter of 0.6. Nice. 
+
+### -- Bootstrap percentile interval
+
+The main idea in the previous exercise was that the distance between the original sample $\widehat{p}$ and the resampled (or bootstrapped) $\widehat{p}^*$ values gives a measure for how far the original $\widehat{p}$ is from the true population proportion.
+
+The same variability can be measured through a different mechanism. As before, if $\widehat{p}$ is sufficiently close to the true parameter, then the resampled (bootstrapped) $\widehat{p}^*$ values will vary in such a way that they overlap with the true parameter.
+
+Instead of using ±2SE as a way to measure the middle 95% of the sampled $\widehat{p}$ values, you can find the middle of the resampled $\widehat{p}^*$ values by removing the upper and lower 2.5%. Note that this second method of constructing bootstrap intervals also gives an intuitive way for making 90% or 99% confidence intervals.
+
+```{r}
+
+glimpse(one_poll_boot)
+
+# Find the 2.5% and 97.5% of the p-hat values
+one_poll_boot %>% 
+  summarize(q025_prop = quantile(prop_yes_boot, p = .025),
+            q975_prop = quantile(prop_yes_boot, p = .975))
+
+p_hat
+
+# Bootstrap t-confidence interval for comparison
+one_poll_boot %>%
+  summarize(lower = p_hat - 2 * sd(prop_yes_boot),
+            upper = p_hat + 2 * sd(prop_yes_boot))
+
+```
+
+This also contains the .6 parameter of the true population. And this gives us much more flexibility to create confidence intervals at any level. 
+
+## Interpreting CIs and technical conditions
+
+We used two different ways to find the bootstrap variability in the sample data
+  - Empirical rule
+  - Using the natural variabilty of the resampled $\widehat{p}^* values
+These two methods give slightly differnt data but they are consistent because they are based on the same bootstrapped sample distribution
+
+We don't really know how far our sample statistic (the percentage of people voting for candidate X) is from the the real statistic on the true population. 
+We do however know the variability of the sample distribution that we bootstrapped and we have shown that the variability in the samle distribution is similar to that of performing multiple polls on the true population. So we know that the true statistic is likely withing that distance from the sample statistic. So we can say...
+
+> We are 95% confident that the true proportion of people planning to vote for candidate X is between 0.536 and 0.864 (or 0.533 and 0.833)
+
+Both of these methods should work given the following techincal conditions are true:
+
+  - Sampling distribution of the statistic is reasonably symmetric and bell-shaped
+  - Sample size is resonably large
+  
+Both of the methods used here will be used in later courses as well as more advanced methods to find other parameter intevals
+
+  
+### -- Sample size effects on bootstrap CIs
+
+  - As with the hypothesis testing, in bootstrapping using the wrong sample size leads to an incorrect standard error that gives us an unuseful interval
+  
+```{r}
+
+# Recall the bootstrap t-confidence interval
+p_hat <- mean(one_poll$vote)
+one_poll_boot %>%
+  summarize(lower = p_hat - 2 * sd(prop_yes_boot),
+            upper = p_hat + 2 * sd(prop_yes_boot))
+
+# Collect a sample of 30 observations from the population
+one_poll <- as.tbl(data.frame(vote = rbinom(30, 1, .6)))
+
+# Resample the data using samples of size 300 (an incorrect strategy!)
+one_poll_boot_300 <- one_poll %>%
+  rep_sample_n(300, replace = TRUE, reps = 1000) %>%
+  summarize(prop_yes_boot = mean(vote))
+
+# Find the endpoints of the bootstrap t-confidence interval
+one_poll_boot_300 %>%
+  summarize(lower = p_hat - 2 * sd(prop_yes_boot),
+            upper = p_hat + 2 * sd(prop_yes_boot))
+
+# Resample the data using samples of size 3 (an incorrect strategy!)
+one_poll_boot_3 <- one_poll %>%
+  rep_sample_n(3, replace = TRUE, reps = 1000) %>%
+  summarize(prop_yes_boot = mean(vote)) 
+
+# Find the endpoints of the the bootstrap t-confidence interval 
+one_poll_boot_3 %>%
+  summarize(lower = p_hat - 2 * sd(prop_yes_boot),
+            upper = p_hat + 2 * sd(prop_yes_boot))
+
+```
+
+### -- Sample proportion value effects on bootstrap CIs
+
+One additional element that changes the width of the confidence interval is the true parameter value.
+
+When the true parameter is close to 0.5, the standard error of p̂ p^ is larger than when the true parameter is closer to 0 or 1. When calculating a bootstrap t-confidence interval, the standard error controls the width of the CI, and here the width will be narrower.
+
+```{r}
+
+# Collect 30 observations from a population with true proportion of 0.8
+one_poll <- as.tbl(data.frame(vote = rbinom(n = 30, size = 1, prob = 0.8)))
+
+# Compute p-hat of new sample: p_hat
+p_hat <- mean(one_poll$vote)
+
+# Resample the 30 observations (with replacement)
+one_poll_boot <- one_poll %>%
+  rep_sample_n(30, replace = T, reps = 1000) %>%
+  summarize(prop_yes_boot = mean(vote)) 
+
+# Calculate the bootstrap t-confidence interval
+one_poll_boot %>%
+  summarize(lower = p_hat - 2 * sd(prop_yes_boot),
+            upper = p_hat + 2 * sd(prop_yes_boot))
+
+```
+
+### -- Percentile effects on bootstrap CIs
+
+  - There are studies that warrant either stricter or more lenient confidence intervals. 
+  - They can be easily calculated with the quantile function. 
+  
+```{r}
+
+# Calculate a 95% bootstrap percentile interval
+one_poll_boot %>% 
+  summarize(q025_prop = quantile(prop_yes_boot, p = .025),
+            q975_prop = quantile(prop_yes_boot, p = .975))
+
+# Calculate a 99% bootstrap percentile interval
+one_poll_boot %>% 
+  summarize(q005_prop = quantile(prop_yes_boot, p = .005),
+            q995_prop = quantile(prop_yes_boot, p = .995))
+
+# Calculate a 90% bootstrap percentile interval
+one_poll_boot %>% 
+  summarize(q05_prop = quantile(prop_yes_boot, p = .05),
+            q95_prop = quantile(prop_yes_boot, p = .95))
+
+```
+
+# Conclusion
+
+  - I love this course. It hits on two of the main parts of the statistics for hackers presentation by Jake. 
+  - I like that it uses the simultion method of statistics to calculate the null distribution and to find the varibility around a statistic rather than the equations from the classic method. 
+  - I remember the equations from the classic method being confusing and it being hard to remember which one to use at different times. There were so many. 
+  - Simulation is much more intuative and with computers it makes since to do it this way. Especially as we move into machine learning where there often is no statistical equation to calcluate a statistic for you. 
+  - I'd love to keep learning more about these methods. This was the first time I ever found statistics to be fun. 
