@@ -1,0 +1,526 @@
+---
+title: "Unsupervised Learning in R"
+author: "William Surles"
+date: "2017-09-21"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+  toc: true
+  toc_float: true
+  toc_depth: 3
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+```
+
+***  
+# Introduction
+***  
+
+  - Course notes from the [Unsupervised Learning in R](https://www.datacamp.com/courses/unsupervised-learning-in-r) course on DataCamp
+    - Taught by Hank Roark, senior data scientist at Boeing
+    
+  
+## Whats Covered
+
+  - Unsupervised learning in R
+  - Hierarchical clustering
+  - Dimensionality reduction with PCA
+  - Putting it all together with a case study
+  
+## Additional Resources
+  - 
+  
+## Libraries and Data
+
+```{r, cache=F} 
+
+source('create_datasets.R')
+
+library(readr)
+library(dplyr)
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# Unsupervised Learning in R
+***  
+
+## Welcome to the course!
+
+3 main types of machine learning:
+
+  - unsupervised learning
+    - goal is to find structure in unlabeld data
+    - unlabeled data is data with no targets
+  - supervised learning
+    - regression or classification
+    - goal is to predict the amount or the label
+  - reinforcement learning
+    - a computer learns by feedback from operating in a real or synthetic environment
+    
+Two major goals:
+
+  - find homogenous subgroups within a population
+    - this is called clusters
+    - example: segmenting a market of consumers based on demographic features and purchasing history
+    - example: find similar movies based on features of each movie and reviews of the movies
+  - find patterns in the features of the data
+    - dimensionality reduction - a method to decrease the number of features to describe an onservation while maintining the maximum information content under the constraints of lower dimensionality
+
+dimensionality reduction
+  
+  - find patterns in the fetures of the data
+  - visualization of high dimensional data
+    - its hard to produce good visualizations past 3 or 4 dimensions and also to consume
+  - pre-processing step for supervised learning
+
+## Introduction to k-means clustering
+
+  - an algorithm used to find homogeneous subgroups in a population 
+  - kmeans comes in base R
+    - need the data
+    - number of centers or groups
+    - number of runs. its start by randomly assigning points to groups and you can find local minimums so running it multiple times helps you find the global min. 
+  - you can run kmeans many times to estimate the number od subgroups when it is not known a priori
+  
+### -- k-means clustering
+
+```{r}
+
+str(x)
+head(x)
+
+# Create the k-means model: km.out
+km.out <- kmeans(x, centers = 3, nstart = 20)
+
+# Inspect the result
+summary(km.out)
+
+```
+
+### -- Results of kmeans()
+
+```{r}
+
+# Print the cluster membership component of the model
+km.out$cluster
+
+# Print the km.out object
+km.out
+
+```
+
+### -- Visualizing and interpreting results of kmeans()
+
+```{r}
+
+# Scatter plot of x
+plot(x, 
+  col = km.out$cluster,
+  main = "k-means with 3 clusters",
+  xlab = "",
+  ylab = "")
+
+```
+
+## How kmeans() works and practical matters
+
+Process of k-means:
+
+  - randomly assign all points to a cluster
+  - calculate center of each cluster
+  - convert points to cluster of nearest center
+  - if no points changed, done, otherwise repeat
+  - calculate new center based new points
+  - convert points to cluster of nearest center
+  - and so on
+  
+model selection:
+  
+  - best outcome is based on total within cluster sum of squares
+  - run many times to get global optimum
+  - R will automaitcally take the run with the lowest total withinss
+  
+determining number of cluster
+
+  - scree plot
+  - look for the elbow
+  - find where addition on new cluster does not change best withinss much
+  
+### -- Handling random algorithms
+
+```{r}
+
+# Set up 2 x 3 plotting grid
+par(mfrow = c(2, 3))
+
+# Set seed
+set.seed(1)
+
+for(i in 1:6) {
+  # Run kmeans() on x with three clusters and one start
+  km.out <- kmeans(x, centers = 3, nstart = 1)
+  
+  # Plot clusters
+  plot(x, col = km.out$cluster, 
+       main = km.out$tot.withinss, 
+       xlab = "", ylab = "")
+}
+
+```
+
+### -- Selecting number of clusters
+
+```{r}
+
+# Initialize total within sum of squares error: wss
+wss <- 0
+
+# For 1 to 15 cluster centers
+for (i in 1:15) {
+  km.out <- kmeans(x, centers = i, nstart = 20)
+  # Save total within sum of squares to wss variable
+  wss[i] <- km.out$tot.withinss
+}
+
+# Plot total within sum of squares vs. number of clusters
+plot(1:15, wss, type = "b", 
+     xlab = "Number of Clusters", 
+     ylab = "Within groups sum of squares")
+
+# Set k equal to the number of clusters corresponding to the elbow location
+k <- 2
+
+```
+
+## Introduction to the Pokemon data
+
+  - Data hosted on kaggle [here](https://www.kaggle.com/abcsds/pokemon)
+  - More pokemon info [here](http://pokemondb.net/pokedex)
+  
+  
+Data challenges:
+
+  - selecting the variable to cluster upon
+  - scaling the data (we will cover this)
+  - determining the true number of cluster
+    - in real world data a nice clean elbow in the scree plot does not usually exist
+  - visualizing the results for interpretation
+  
+  
+### -- Practical matters: working with real data
+
+```{r}
+
+pokemon_raw <- read_csv('data/Pokemon.csv')
+head(pokemon_raw)
+
+pokemon <- pokemon_raw %>% select(6:11)
+head(pokemon)
+
+# Initialize total within sum of squares error: wss
+wss <- 0
+
+# Look over 1 to 15 possible clusters
+for (i in 1:15) {
+  # Fit the model: km.out
+  km.out <- kmeans(pokemon, centers = i, nstart = 20, iter.max = 50)
+  # Save the within cluster sum of squares
+  wss[i] <- km.out$tot.withinss
+}
+
+# Produce a scree plot
+plot(1:15, wss, type = "b", 
+     xlab = "Number of Clusters", 
+     ylab = "Within groups sum of squares")
+
+# Select number of clusters
+k <- 4
+
+# Build model with k clusters: km.out
+km.pokemon <- kmeans(pokemon, centers = k, nstart = 20, iter.max = 50)
+
+# View the resulting model
+km.pokemon
+
+# Plot of Defense vs. Speed by cluster membership
+plot(pokemon[, c("Defense", "Speed")],
+     col = km.pokemon$cluster,
+     main = paste("k-means clustering of Pokemon with", k, "clusters"),
+     xlab = "Defense", ylab = "Speed")
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# Hierarchical clustering
+***  
+
+## Introduction to hierarchical clustering
+
+  - Typically used when the number of clusters in not known a head of time
+  - Two approaches. bottum up and top down. we will focus on bottum up
+  - process
+    - assign each point to its own cluster
+    - joing the two closesest custers/points into a new cluster
+    - keep going until there is one cluster
+    - they way you calculate the distance between clusters is a paramater and will be covered later
+  - we have to first calculate the euclidean distance between all points (makes a big matriz) using the `dist()` function
+    - this is passed into the `hclust()` function
+  
+### -- Hierarchical clustering with results
+
+```{r}
+
+head(x)
+
+# Create hierarchical clustering model: hclust.out
+hclust.out <- hclust(dist(x))
+
+# Inspect the result
+summary(hclust.out)
+
+```
+
+## Selecting number of clusters
+
+  - you can build a dendrogram of the distances between points
+  - then you either pick the number of clusters or the height (aka distance) that you want to split the cluster. 
+    - think of this as drawing a horizontal line across the dendrogram
+  - the `cutree()` function in R lets you split the hierarchical clusters into set clusters by number or by distance (height)
+  
+### -- Cutting the tree
+
+```{r}
+
+plot(hclust.out)
+abline(h = 7, col = "red")
+
+# Cut by height
+cutree(hclust.out, h = 7)
+
+# Cut by number of clusters
+cutree(hclust.out, k = 3)
+```
+
+## Clustering linkage and practical matters
+
+  - 4 methods to measure distance between clusters
+    - `complete`: pairwise similarty between all observations in cluster 1 and 2, uses largest of similarities
+    - `single`: same as above but uses the smallest of similarities
+    - `average`: same as above but uses average of similarities
+    - `centroid`: finds centroid of cluster 1 and 2, uses similarity between tow centroids
+  - rule of thumb
+    - `complete` and average produce more balanced treess and are more commonly used
+    - `single` fuses observations in one at a time and produces more unblanced trees
+    - `centroid` can create inversion where clusters are put below single values. its not used often
+  - practical matters
+    - data needs to be scaled so that features have the same mean and standard deviation
+    - normalized features have a mean of zero and a sd of one
+  
+### -- Linkage methods
+
+```{r}
+
+# Cluster using complete linkage: hclust.complete
+hclust.complete <- hclust(dist(x), method = "complete")
+
+# Cluster using average linkage: hclust.average
+hclust.average <- hclust(dist(x), method = "average")
+
+# Cluster using single linkage: hclust.single
+hclust.single <- hclust(dist(x), method = "single")
+
+# Plot dendrogram of hclust.complete
+plot(hclust.complete, main = "Complete")
+
+# Plot dendrogram of hclust.average
+plot(hclust.average, main = "Average")
+
+# Plot dendrogram of hclust.single
+plot(hclust.single, main = "Single")
+
+```
+
+### -- Practical matters: scaling
+
+```{r}
+
+# View column means
+colMeans(pokemon)
+
+# View column standard deviations
+apply(pokemon, 2, sd)
+
+# Scale the data
+pokemon.scaled <- scale(pokemon)
+
+# Create hierarchical clustering model: hclust.pokemon
+hclust.pokemon <- hclust(dist(pokemon.scaled), method = "complete")
+```
+
+### -- Comparing kmeans() and hclust()
+
+```{r}
+
+# Apply cutree() to hclust.pokemon: cut.pokemon
+cut.pokemon <- cutree(hclust.pokemon, k = 3)
+
+# Compare methods
+table(km.pokemon$cluster, cut.pokemon)
+
+```
+
+## Review of hierarchical clustering
+
+
+&nbsp; &nbsp;
+
+***  
+# Dimensionality reduction with PCA
+***  
+
+## Introduction to PCA
+
+### -- PCA using prcomp()
+
+```{r}
+
+```
+
+### -- Results of PCA
+
+```{r}
+
+```
+
+### -- Additional results of PCA
+
+```{r}
+
+```
+
+## Visualizing and interpreting PCA results
+
+### -- Interpreting biplots (1)
+
+```{r}
+
+```
+
+### -- Interpreting biplots (2)
+
+```{r}
+
+```
+
+### -- Variance explained
+
+```{r}
+
+```
+
+### -- Visualize variance explained
+
+```{r}
+
+```
+
+## Practical issues with PCA
+
+### -- Practical issues: scaling
+
+```{r}
+
+```
+
+## Additional uses of PCA and wrap-up
+
+
+&nbsp; &nbsp;
+
+***  
+# Putting it all together with a case sudy
+***  
+
+## Introduction to the case study
+
+### -- Preparing the data
+
+```{r}
+
+```
+
+### -- Exploratory data analysis
+
+```{r}
+
+```
+
+### -- Performing PCA
+
+```{r}
+
+```
+
+### -- Interpreting PCA results
+
+```{r}
+
+```
+
+### -- Variance explained
+
+```{r}
+
+```
+
+### -- Communicating PCA results
+
+```{r}
+
+```
+
+## PCA review and next steps
+
+### -- Hierarchical clustering of case data
+
+```{r}
+
+```
+
+### -- Results of hierarchical clustering
+
+```{r}
+
+```
+
+### -- Selecting number of clusters
+
+```{r}
+
+```
+
+### -- k-means clustering and comparing results
+
+```{r}
+
+```
+
+### -- Clustering on PCA results
+
+```{r}
+
+```
+
+## Wrap-up and review
