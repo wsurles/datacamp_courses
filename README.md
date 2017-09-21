@@ -1,6 +1,8 @@
-My datacamp courses
+My DataCamp courses
 
 My course docs are hosted on [shinyapps.io](http://www.shinyapps.io) and [RPubs](http://rpubs.com/)
+
+Data Science Career Track for R:
 
  - [Introduction to R](https://surlyanalytics.shinyapps.io/introduction_to_r/)
  - [Intermediate R](https://surlyanalytics.shinyapps.io/intermediate_r/)
@@ -26,3 +28,4 @@ My course docs are hosted on [shinyapps.io](http://www.shinyapps.io) and [RPubs]
 - [Exploratory Data Analysis in R: Case Study](http://rpubs.com/williamsurles/299664)
 - [Correlation and Regression](http://rpubs.com/williamsurles/305688)
 - [Foundations of Inference](http://rpubs.com/williamsurles/308326)
+- [Machine Learning Toolbox](http://rpubs.com/williamsurles/310197)

@@ -1,0 +1,1567 @@
+---
+title: "Machine Learning Toolbox"
+author: "William Surles"
+date: "2017-09-15"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  highlight: tango
+  toc: true
+  toc_float: true
+  toc_depth: 3
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+```
+
+***  
+# Introduction
+***  
+
+  - Course notes from the [Machine Learning Toolbox](https://www.datacamp.com/courses/machine-learning-toolbox) course on DataCamp
+    - Taught by Max Kuhn, author of the caret package. Has been working on it over a decade
+    - And Zachary Deane-Mayer, contribbutor to caret and working data scientist at data robot. 
+    
+  
+## Whats Covered
+
+  - Regression models: fitting them and evaluating their performance
+  - Classification models: fitting them and evaluating their performance
+  - Tuning model parameters to improve performance
+  - Preprocessing your data
+  - Selecting models: a case study in churn prediction
+  
+  
+## Additional Resources
+  - [`caret` package documentation on github](http://topepo.github.io/caret/index.html)
+  - [Zach on kaggle](https://www.kaggle.com/zachmayer/competitions)
+    - who, he has been in the top 10 in multiple competitions
+  - [A brief introduction to caretEnsemble](https://cran.r-project.org/web/packages/caretEnsemble/vignettes/caretEnsemble-intro.html) by Zach Mayer
+  - [caret Models for train function](https://topepo.github.io/caret/train-models-by-tag.html)
+  
+  
+## Libraries and Data
+
+```{r, cache=F} 
+
+library(caretEnsemble)
+
+library(dplyr)
+library(ggplot2)
+library(mlbench) # sonar data
+library(caret)
+library(caTools)
+
+source('create_datasets.R')
+
+```
+
+
+&nbsp; &nbsp;
+
+***  
+# Regression models: fitting them and evaluating their performance
+***  
+
+## Welcome to the course
+
+  - We will use the `caret` package in the course
+  - Supervised learning is machine learning when you have a target variable (aka predictive modeling)
+    - Classic example is picking what species an iris belongs to based on its pedal measurements, or predicting which customers will churn
+  - Two types of predictive models
+    - Classification - Qualitative (species of iris, churn yes or no)
+    - Regression - Quantitative (price of a diamond)
+  - Need to use a metric to evaluate the models
+    - This lets say how well the model fits the data in a quantifiable nad objective way
+    - Root Mean Squarred Error (RMSE) is the most common metric for regression models
+    - RMSE is what is minimized in the `lm` funciton in R
+  - Evaluating model performance
+    - Its common to calculate in-sample RMSE. 
+    - However, in-sample error is too optimistic and leads to overfitting
+    - Its much better to cacluate out-of-sample error
+    - This simulates real world model usage and helps avoid overfitting
+    
+In-sample error example:
+
+```{r}
+
+# Fit a model to the mtcars data
+data(mtcars)
+model <- lm(mpg ~ hp, mtcars[1:20, ])
+model
+
+# Predict in-sample
+predicted <- predict(model, mtcars[1:20, ], type = "response")
+
+# Calculate RMSE
+actual <- mtcars[1:20,"mpg"]
+
+as.numeric(predicted)
+actual
+sqrt(mean((predicted - actual)^2))
+
+```
+
+### -- In-sample RMSE for linear regression on diamonds
+
+  - errors = predicted − actual
+  
+```{r}
+
+data(diamonds)
+glimpse(diamonds)
+
+# Fit lm model: model
+model <- lm(price ~ ., diamonds)
+
+# Predict on full data: p
+p <- predict(model, diamonds)
+
+# Compute errors: error
+error <- p - diamonds$price
+
+# Calculate RMSE
+sqrt(mean(error^2))
+
+```
+
+## Introducing out-of-sample error measures
+
+  - We want models that don't overfit and generalize well
+  - We need to make sure the models perform well on new data
+  - We will test our models on new data (or test data) to simulate this real world usage.
+  - This is a key insight of machine learning. Its how we stay honest as a modeler. 
+  - Using in-sample validation (testing on your training data) will give better model fits but it essentially garuntees that you overfit. 
+  - The goal of the `caret` package and this course: don't overfit.
+  
+Example of out-of-sample RMSE:
+
+  - Here we manually split the data
+  - in `caret` we can use `createResamples()` or `createFolds()` functions
+  
+```{r}
+
+# Fit model to the mtcars data (first 20 rows)
+model <- lm(mpg ~ hp, mtcars[1:20, ])
+
+# Predict out-of-sample
+predicted <- predict(model, mtcars[21:32, ], type = "response")
+
+# Evaluate error
+actual <- mtcars[21:32, "mpg"]
+sqrt(mean((predicted - actual)^2))
+
+```
+
+  - RMSE has the same units as the test set so our model is off by 5-6 mpg on average.
+  - The in-sample was just 3.7 mpg off but its fooling us into thinking our model is better than it really is. 
+  - With new data our model will work like the out-of-sample prediction
+  
+### -- Randomly order the data frame
+
+  - We set a seed so that our work is reproducible
+  - We randomly shuffle the rows so sorting does not affect our model, like being sorted by price. 
+  
+```{r}
+
+# Set seed
+set.seed(42)
+
+# Shuffle row indices: rows
+rows <- sample(nrow(diamonds))
+head(rows)
+
+# Randomly order data
+diamonds <- diamonds[rows, ]
+
+```
+
+### -- Try an 80/20 split
+
+```{r}
+
+# Determine row to split on: split
+split <- round(nrow(diamonds) * .80)
+split
+
+# Create train
+train <- diamonds[1:split,]
+
+# Create test
+test <- diamonds[(split + 1):nrow(diamonds),]
+
+dim(diamonds)
+dim(train)
+dim(test)
+
+```
+
+### -- Predict on test set
+
+  - the new data set in the predict model must have all the columns from the training data
+  - but they can be in a different order with different values
+  
+```{r}
+
+# Fit lm model on train: model
+model <- lm(price ~ ., train)
+model
+
+# Predict on test: p
+p <- predict(model, test)
+
+```
+
+### -- Calculate test set RMSE by hand
+
+```{r}
+
+# Compute errors: error
+error <- p - test$price
+
+# Calculate RMSE
+sqrt(mean(error^2))
+
+```
+
+  - This is just a little bit higher than the 1129.8 when training and test on the full dataset, but its less overfit. 
+
+## Cross-validation
+
+  - In our last example we only used one split and train test cycle to get our expected RMSE
+    - This is a little fragile as one outlier can really skew the fit
+    - Its better to do this multiple times and average the out-of-sample error
+  - Cross validation is a common way to test our data multiple times
+    - We create 10 folds (10 is common)
+    - Each point in the data set occurs in exactly 1 of the folds and is assigned randomly
+    - Only used to estimated out-of-sample error
+    - After doing cross validation you throw away all of the re-sampled models and fit the final model on the full dataset
+    - This takes 11 times longer than just doing one train test cycle. Its pretty expensive.
+    - You can do this in the caret package or a very similar method of bootstrapping. 
+    
+Cross Validation Example:
+
+  - the `train` function formula interface is exactly like the `lm` function in R 
+    - But it supports 100s of models in the method argument. 
+    - Here we use 'lm' but we could just as easily use 'rf' for random forest. 
+    - this is the second most useful feature of the `caret` package behind the cross validation of models. 
+  - the `trControl` arugment controls the parameters used for cross validation
+    - we will usually use 10 folds in the `number` argument
+    - we use `verboseIter` so we can see the progress of each model and know if we have time to get coffee. 
+  
+```{r}
+
+# the caret library is loaded
+set.seed(42)
+
+# Fit linear regression model using caret
+model <- train(mpg ~ hp, mtcars,
+               method = "lm",
+               trControl = trainControl(
+                 method = "cv",
+                 number = 10,
+                 verboseIter = T
+               ))
+model
+```
+
+### -- 10-fold cross-validation
+
+```{r}
+
+# Fit lm model using 10-fold CV: model
+model <- train(
+  price ~ ., diamonds,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = TRUE
+  )
+)
+
+# Print model to console
+model
+
+```
+
+### -- 5-fold cross-validation
+
+```{r}
+
+# Fit lm model using 5-fold CV: model
+model <- train(
+  medv ~ . , Boston,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 5,
+    verboseIter = TRUE
+  )
+)
+
+# Print model to console
+model
+
+```
+
+### -- 5 x 5-fold cross-validation
+
+```{r}
+
+# Fit lm model using 5 x 5-fold CV: model
+model <- train(
+  medv ~ ., Boston,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", 
+    number = 5,
+    repeats = 5, 
+    verboseIter = TRUE
+  )
+)
+
+# Print model to console
+model
+
+```
+
+### -- Making predictions on new data
+
+```{r}
+
+# Predict on full Boston dataset
+p <- predict(model, Boston)
+head(p)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+# Classification models: fitting them and evaluating their performance
+***  
+
+## Logistic regression on sonar
+
+### -- Try a 60/40 split
+
+  - The 60/40 split gives us a little more reliable test set since the dataset is small
+  - It would be even better to do a k-fold split as we did before
+
+```{r}
+
+data(Sonar)
+
+# Shuffle row indices: rows
+rows <- sample(nrow(Sonar))
+
+# Randomly order data: Sonar
+Sonar <- Sonar[rows,]
+
+# Identify row to split on: split
+split <- round(nrow(Sonar) * .60)
+
+# Create train
+train <- Sonar[1:split,]
+
+# Create test
+test <- Sonar[(split + 1):nrow(Sonar), ]
+
+nrow(train)/nrow(Sonar)
+
+```
+
+### -- Fit a logistic regression model
+
+  - Don't worry about warnings like:
+    - `glm.fit: algorithm did not converge` or 
+    - `glm.fit: fitted probabilities numerically 0 or 1 occurred` 
+  - These are common on smaller datasets and usually don't cause any issues. They typically mean your dataset is perfectly seperable, which can cause problems for the math behind the model, but R's glm() function is almost always robust enough to handle this case with no problems.
+    - I think this means that we can perfectly figure out the Class based on the vairbles. Its probably becasue we have lots of data to use in the model and not many observations to predict. 
+
+```{r}
+
+glimpse(Sonar)
+
+# Fit glm model: model
+model <- glm(Class ~ ., family = "binomial", train)
+model
+
+# Predict on test: p
+p <- predict(model, test, type = "response")
+
+```
+
+## Confusion matrix
+
+![](images/confusion_matrix.png)
+
+### -- Calculate a confusion matrix
+
+  - Using the `confusionMatix` function from `caret` gives you the contigency table as well as important statistics
+    - install.packages('caret', dependencies = TRUE) or you will get a error about needing package e1071
+    - No information rate = what you would get if you always predicted yes
+    - Sensitivity = True positive rate
+    - Specificity = True negative rate
+    
+```{r}
+
+# Calculate class probabilities: p_class
+p_class <- ifelse(p > .50, "M", "R")
+
+# Create confusion matrix
+confusionMatrix(p_class, test$Class)
+
+```
+
+  - The accuracy is 0.337
+    - this is less than the no info rate of .5181. 
+    - so we would have done better just guessing yes to every rock being a mine
+  - Our sensitivity is .395 and our specificity is .275
+  
+## Class probabilities and class predictions
+
+  - Different thresholds
+    - We don't have to use 50% as the threshold
+    - We could set it to .10 and we would get more mines but have less certainty we have a mine
+    - Or we could set it to .90 and we would get less mines but be more certian what we have are mines
+  - Choosing a threshold is an exercise in balanceing the true positive and false positive rate
+    - Which way you lean depends on the cost benefit of the problem
+
+### -- Try another threshold
+
+```{r}
+
+# Apply threshold of 0.9: p_class
+p_class <- ifelse(p > .9, "M", "R")
+
+# Create confusion matrix
+confusionMatrix(p_class, test[["Class"]])
+
+```
+
+### -- From probabilites to confusion matrix
+
+```{r}
+
+# Apply threshold of 0.10: p_class
+p_class <- ifelse(p > .10, "M", "R")
+
+# Create confusion matrix
+confusionMatrix(p_class, test[["Class"]])
+
+```
+
+## Introducing the ROC curve
+
+  - Doing this by hand is cumbersome
+  - We can simply use a computer to calcualte the true/false positive rate at every possible threshold
+  - Then plot the tradeoffs between the two extremes (100% true positive vs 0% false positive rate)
+  - This is called a receiver operating characteric (ROC) curve
+    - It was developed during world war II to analyze radar signals. No one remembers the acronym. 
+  
+### -- Plot an ROC curve
+
+  - This is a nice tool for summarizing the performance of a classifier over all possible thresholds.
+  - The teacher likes the `caTools` package and `colAUC` function.
+    - It can actually calculate ROC curves for multple predictors at once
+  
+```{r}
+
+# the caTools library is loaded
+
+# Predict on test: p
+p <- predict(model, test, type = "response")
+
+# Make ROC curve
+colAUC(p, test$Class, plotROC = T)
+
+```
+
+## Area under the curve
+
+
+  - AUC (area under curve) is a single number summary of the model performance across all classification thresholds
+    - a completely random model will create a diagonal line with an AUC of .5
+    - a perfect separation models creates a box with an AUC of 1
+  - The AUG lets us compare models easily
+    - 1 = model always right
+    - 0.5 random guessing
+    - think of it as a letter grade with .9 = 'A' and .8 = 'B' and so on
+  - this is much more useful than simple ranking models by their accuracy at a set threshold
+  
+### -- Customizing trainControl
+
+  - You can use the `trainControl()` function in `caret` to use AUC (instead of accuracy) to tune the parameters of your models. 
+  - `twoClassSummary()` convience function lets us do this easily
+    - always include `classprobs = TRUE` or the model will throw an error
+    - you have to have the probbilities, not just the predictions of the model
+    - put this in place of `defaultSummary` for the `summaryFunction` argument
+  
+```{r}
+
+myControl <- trainControl(
+  method = "cv",
+  number = 10,
+  summaryFunction = twoClassSummary,
+  classProbs = T, # IMPORTANT!
+  verboseIter = TRUE
+)
+
+```
+
+### -- Using custom trainControl
+
+```{r}
+
+# Train glm with custom trainControl: model
+model <- train(Class ~., Sonar,
+  method = "glm",
+  trControl = myControl)
+
+
+# Print model to console
+model
+
+```
+
+&nbsp; &nbsp;
+
+***  
+# Tuning model parameters to improve performance
+***  
+
+## Random forests and wine
+
+  - Very popular type of machine learning model
+  - Good for beginners becuse robust to overfitting
+  - Yield very accurate, non linear models with little extra work on the part of the data scientist
+  - Draw back is that they have hyperparameters which require manual specification
+    - The default values are usually fine but occasionally need adjustment. 
+    
+  - A decision tree is fast but not necesarrily very accurate
+  - Random forest improves on this by running many decision trees on bootstrap samples of the data
+    - This is called bootstrap aggregation or bagging
+    - Random forest go a step further by randomling sampling the columns at each split (whatever that means)
+
+Quick random forest example:
+
+```{r}
+
+data(Sonar)
+set.seed(42)
+model <- train(Class~., data = Sonar, method = "ranger")
+plot(model)
+
+```
+I'll learn what this plot means later I think. 
+
+### -- Random forests vs. linear models
+
+  - All of these are true but the third one is technically the correct answer. : ) 
+  - What is the primary advantage of random forests over linear models?
+    - They make you sound cooler during job interviews
+    - You can't understand what's going on inside of a random forest model, so you don't have to explain it to anyone.
+    - A random forest is a more flexible model than a linear model, but just as easy to fit. 
+
+### -- Fit a random forest
+
+  - So random forest are apparently much more flexible than linear models. Makes sense as linear models are pretty straight forward. ; )
+  - They can model complicated nonlinear effects as well as autoatically capture interactions between variables. 
+  - They tend to give good results on real world data. 
+    - This set of data on wine quality is a good example. The goal is to predict human-evaluated quality of a batch of wine. Not a very linear thing, I imagine. 
+  - the 'ranger' method is pretty much the same as th classic `randomForest` method in R but much faster. It is strongly suggest by the instructors to use this.
+    
+```{r}
+
+glimpse(wine)
+
+# Fit random forest: model
+model <- train(
+  quality ~ .,
+  data = wine,
+  method = "ranger",
+  tuneLength = 1,
+  trControl = trainControl(
+    method = "cv", 
+    number = 5, 
+    verboseIter = TRUE
+    )
+)
+
+# Print model to console
+model
+```
+
+## Explore a wider model space
+
+  - You have to prune, I mean tune, your forest. 
+  - There are **hyperparameters** that control how the model is fit. 
+  - these have to be picked by hand before fitting the model
+    - the `mtry` parameter is one of the key ones
+    - Its is the number of randomly selected variables used at each split
+    - it could be 2 (more random) or 100 (less random)
+    - you really just have to try these out to see how the model works with that parameter
+    - caret automates this process in something called grid search
+    - grid search is a process of selecting hyperparameters based on out-of-sample error
+
+### -- Try a longer tune length
+
+  - A longer `tunelength` allows us to explore more potential models and can potentially find a better model
+    - But it does take longer
+    
+```{r}
+
+# Fit random forest: model
+model <- train(
+  quality ~ .,
+  tuneLength = 3,
+  data = wine, 
+  method = "ranger",
+  trControl = trainControl(
+    method = "cv", 
+    number = 5, 
+    verboseIter = TRUE)
+)
+
+# Print model to console
+model
+
+# Plot model
+plot(model)
+
+```
+
+## Custom tuning grids
+
+  - We can pass our own df to the tuneGrid argument
+    - This helps us be more flexible fitting caret models and gives us control over how the model is fit
+    - But it requires some knowledge of the model and can dramatically increase run time. 
+ 
+```{r}
+# Define a custome tuning grid
+myGrid <- data.frame(mtry = c(2,3,4,5,10,20,30,40),
+                     splitrule = rep("extratrees",8))
+
+# fit a model with a custom tuning grid
+set.seed(42)
+model <- train(Class ~ ., 
+               data = Sonar, 
+               method = "ranger", 
+               tuneGrid = myGrid)
+
+plot(model)
+                     
+```
+
+
+### -- Fit a random forest with custom tuning
+
+  - There is so much here I don't know. Don't fool myslef. 
+  - For some reason I have to pyt the splitrule into the tuneGrid. In the class this is not needed. hmmmm
+
+```{r}
+
+# Fit random forest: model
+model <- train(
+  quality ~ .,
+  tuneGrid = data.frame(mtry = c(2,3,7,2,3,7),
+                        splitrule = c("variance","variance","variance","extratrees","extratrees","extratrees")),
+  data = wine, 
+  method = "ranger",
+  trControl = trainControl(
+    method = "cv", 
+    number = 5, 
+    verboseIter = TRUE)
+)
+
+# Print model to console
+model
+
+# Plot model
+plot(model)
+
+```
+
+## Introducing glmnet
+
+  - Instructors favorite type of model
+  - Extension of glm models (generalized linear models) with built in variable selection
+  - Helps deal with collinearity (or correlation among predictors in a model) and helps prevent them from being over confident with small sample sizes
+  - two primary forms
+    - lasso regression - penelizes number of non-zero coefficients
+    - ridge regression - penalizes absolute magnitude of coefficients
+  - attemps to find a parsimonious (i.e. simple) model
+  - this pairs well ith random forest modles as it tends to yield different results
+  - glmnet models are a combination of lasso and ridge regression models
+  - they have a lot of parameters to tune
+    - alpha [0,1]: pure lasso to pure ridge
+    - lambda [0,infinity]:size of penalty. Higher values yeild simpler models, high enough will just predict the mean of resonse variable in training data
+
+Example: "don't overfit" first kaggle competition the instructor competed in
+
+  - This dataset has about as many columns as observations. 
+  
+```{r}
+
+# load data
+overfit <- read.csv("http://s3.amazonaws.com/assets.datacamp.com/production/course_1048/datasets/overfit.csv")
+glimpse(overfit)
+
+# Make a custom trainControl
+myControl <- trainControl(
+  method = "cv", 
+  number = 10,
+  summaryFunction = twoClassSummary,
+  classProbs = T,
+  verboseIter = T
+)
+
+# We will start with a simple model that uses default auc and tuning grid (3 alpha, 3 lambda)
+# fit a model
+set.seed(42)
+model <- train(y ~ ., overfit, 
+               method = "glmnet",
+               trControl = myControl)
+plot(model)
+```
+  - My plot results always look a lot different than the class example. 
+  - They had the highest point as the middle dot on the the top line. 
+  - and it was a much lower value, around .40. 
+  - Clearly there is a lot of randomness built into these ML models
+  
+### -- Advantage of glmnet
+
+  - Basically just that they place constraints on your coefficents to help prevent overfitting compared to simple glm models. 
+
+### -- Make a custom trainControl
+
+  - Classification problems are a little more complicated than regression problems because you have to provide a custom `summaryFunction` to the `train()` function to use the AUC metric to rank your models. 
+  - Be sure to set `classProbs = TRUE`, otherwise the `twoClassSummary` for `summaryFunction` will break.
+  - Also don't quote `twoClassSummary`. I made that mistake at first. 
+
+```{r}
+
+# Create custom trainControl: myControl
+myControl <- trainControl(
+  method = "cv", 
+  number = 10,
+  summaryFunction = twoClassSummary,
+  classProbs = T, # IMPORTANT!
+  verboseIter = TRUE
+)
+
+```
+
+### -- Fit glmnet with custom trainControl
+
+  - Recall from the video that glmnet is an extention of the generalized linear regression model (or glm) that places constraints on the magnitude of the coefficients to prevent overfitting. 
+  - This is more commonly known as "penalized" regression modeling and is a very useful technique on datasets with many predictors and few values.
+  
+```{r}
+
+# Fit glmnet model: model
+model <- train(
+  y ~ ., overfit,
+  method = "glmnet",
+  trControl = myControl
+)
+
+# Print model to console
+model
+
+# Print maximum ROC statistic
+max(model$results$ROC)
+
+```
+
+## glmnet with custom tuning grid
+  
+  - randome forest modles are pretty easy to tune as mtry is the main parameter
+  - glmnet have two key parmeters, alpha and lambda
+  - but you can fit all lambda values simultaneosuly at each level of alpha
+  - you can use this trick to get faster grid searches
+  - the iunstructor usually uses alpha 0 and 1 with 10 levels of lambda form 0 to 0.1
+  
+```{r}
+
+# Make a custom tuning grid
+myGrid <- expand.grid(
+  alpha = 0:1,
+  lambda = seq(0.0001, 0.1, length = 10)
+)
+
+# Fit a model
+set.seed(42)
+model <- train(
+  y ~ ., overfit,
+  method = "glmnet",
+  tuneGrid = myGrid, 
+  trControl = myControl)
+
+plot(model)
+```
+
+  - For some reason my model is much more fin tuned on the regularization parameter than his. 
+    - I see data from 0 to .1, where as his goes to 1. and all values are .5 after the first 0 value
+    - I see a value just above .04 being by far the best. 
+  - He says that ridge regression typically outperforms lasso but its worth the time to try both. 
+    - It definitely is better here
+
+The regularization path 
+
+  - Full regularization path for all models with alpha = 0
+  - this plot is specific to glmnet models
+  - on the left is the high intercept only model, with high values of lambda
+  - on the right is the full model with no penalty, low values of lambda
+  - this shows how the coefficients are decreased and complexity of the model decreased as lamda (and the coefficient penalty is increased)
+    
+```{r}
+
+# Full regularization path
+plot(model$finalModel)
+
+```
+  
+### -- Why a custom tuning grid?
+
+  - the default tuning grid is very small and there are many more potential glmnet models you want to explore
+
+### -- glmnet with custom trainControl and tuning
+
+  - As you saw in the video, the glmnet model actually fits many models at once (one of the great things about the package). 
+  - You can exploit this by passing a large number of lambda values, which control the amount of penalization in the model. 
+  - train() is smart enough to only fit one model per alpha value and pass all of the lambda values at once for simultaneous fitting.
+
+My favorite tuning grid for glmnet models is:
+
+```{r}
+
+expand.grid(alpha = 0:1,
+  lambda = seq(0.0001, 1, length = 100))
+
+```
+
+  - You also look at the two forms of penalized models with this tuneGrid: ridge regression and lasso regression. 
+  - alpha = 0 is pure ridge regression, and alpha = 1 is pure lasso regression. 
+  - You can fit a mixture of the two models (i.e. an elastic net) using an alpha between 0 and 1. 
+    - For example, alpha = .05 would be 95% ridge regression and 5% lasso regression.
+  - I am adding alpha 0.05 just to see how it does. 
+
+```{r}
+
+# Train glmnet with custom trainControl and tuning: model
+model <- train(
+  y ~ ., overfit,
+  tuneGrid = expand.grid(
+    alpha = c(0,.05,1), 
+    lambda = seq(0.0001, 1, length = 100)),
+  method = "glmnet",
+  trControl = myControl
+)
+
+# Print model to console
+model
+
+# Print maximum ROC statistic
+max(model$results$ROC)
+
+plot(model)
+```
+
+  - Apparently the lasso regression is better for this overfit dataset. At low values
+  - But I can get better with an elastic net and high regularization parameters. hmmmm. 
+    - I wonder what this mean?
+
+&nbsp; &nbsp;
+
+***  
+# Preprocessing your data
+***  
+
+## Median imputation
+
+  - Real world data is going to have missing values
+    - Just throwing out rows with missing data is not the best idea
+    - You can create unintended bias in your data
+    - In extreme cases you will have no data left or very little of the originial data
+  - Using median imputation is a good way to deal with missing data
+    - this mean replacing the missing values with the mean of the non missing data
+    - this works well if the data is missing at random (MAR)
+
+Example of missing data: 
+
+```{r, error=T}
+# generate some data with missing values
+set.seed(42)
+mtcars[sample(1:nrow(mtcars), 10), "hp"] <- NA
+
+# split target for predictors
+Y <- mtcars$mpg
+X <- mtcars[, 2:4]
+
+# Try to fit a caret model
+# Notice carets non formula interace
+model <- train(X,Y)
+```
+  - This creates an error
+  - This missing data create NA in the summary and it propogates into the model and breaks things. At some point its trying to divide by NA maybe. 
+  
+```{r}
+
+# Using median imputation fixes this issue
+model <- train(X,Y, preProcess = "medianImpute")
+print(model)
+
+```
+
+  - caret does the imputation inside each fold of the cross validation, so you get an hosest assement of the entire modleing process
+  - The random forest model is calculated after the imputation. 
+  
+### -- Apply median imputation
+
+```{r}
+
+load('data/BreastCancer.RData')
+
+glimpse(breast_cancer_x)
+glimpse(breast_cancer_y)
+
+# Apply median imputation: model
+model1 <- train(
+  x = breast_cancer_x, y = breast_cancer_y,
+  method = "glm",
+  trControl = myControl,
+  preProcess = 'medianImpute'
+)
+
+# Print model to console
+model1
+
+```
+
+## KNN imputation
+
+  - There are some problems with median imputation
+    - It is fast, but if data is not missing at random than it can cause problems
+    - K-nearest neighbors is a good strategy for filling missing values with other similar observations
+  - e.g. say you are missing hp data from a bunch of the smaller cars in the mtcars dataset
+    using cars size and cylider data to fill hp with similar values to other smaller cars
+    - if you just used median imputation you would get much larger hp from the medium and large cars skewing the data
+  - this is a little bit slower but worth it to get the best model 
+
+Example - Median vs KNN imputation:
+
+```{r}
+
+data(mtcars)
+# Generate data with missing values
+mtcars[mtcars$disp < 140, "hp"] <- NA
+Y <- mtcars$mpg
+X <- mtcars[, 2:4]
+
+# Use median imputation
+set.seed(42)
+model <- train(X,Y,
+               method = "glm",
+               preProcess = "medianImpute")
+print(model)
+
+# using KNN imputation
+set.seed(42)
+model <- train(X,Y,
+               method = "glm",
+               preProcess = "knnImpute")
+print(model)
+
+```
+
+
+### -- Use KNN imputation
+
+```{r}
+
+# Apply KNN imputation: model2
+model2 <- train(
+  x = breast_cancer_x, y = breast_cancer_y,
+  method = "glm",
+  trControl = myControl,
+  preProcess = "knnImpute"
+)
+
+# Print model to console
+model2
+
+```
+
+  - Interestingly, this did not work quite as well as the median impute used on the same data set. hmmmm
+  
+### -- Compare KNN and median imputation
+
+  - There is a method to resample the models and see how they do if run many times but it works fast
+  - Interestingly in this case, we do see the median modle perform a little better than the knn_model on average but they are pretty much the same given the error bars here. 
+  
+```{r}
+resamples <- resamples(x = list(median_model = model1, knn_model = model2))
+dotplot(resamples, metric = "ROC")
+
+```
+
+## Multiple preprocessing methods
+
+  - The preprocess argument can do a lot more, including chaining multiple steps
+  - `median imputation -> center -> scale -> fit glm` is a commonn 'recipe' for linear models (order matters)
+
+Example - preprocessing mtcrs:
+
+```{r}
+
+# Generate some data with missing values
+data(mtcars)
+set.seed(42)
+mtcars[sample(1:nrow(mtcars), 10), "hp"] <- NA
+Y <- mtcars$mpg
+X <- mtcars[, 2:4]
+
+# Use linear model "recipe"
+set.seed(42)
+model <- train(
+  X,Y, method = "glm",
+  preProcess = c("medianImpute", "center", "scale"))
+print(min(model$results$RMSE))
+
+# use pca also. just add it to the "recipe"
+set.seed(42)
+model <- train(
+  X,Y, method = "glm",
+  preProcess = c("medianImpute", "center", "scale", "pca"))
+print(min(model$results$RMSE))
+```
+    - using "spacialSign" project the data onto a sphere
+    - it is a good way to preprocess data with lots of outliers or high dimensionality
+    
+Preprocessing cheat sheet
+  - always start with median imputation
+    - also try knn imputation if data missing not at random
+  - For linear models... 
+    - alwasy center and scale (you just get better results)
+    - try pca and spatial sign. sometimes you will get better results
+  - tree-based models and randome forest typically don't need much preprocessing. 
+    - You can usually get away with just median imputation
+
+### -- Combining preprocessing methods
+
+  - Full list of processing methods for `preProcess`: 
+    - "BoxCox", "YeoJohnson", "expoTrans", "center", "scale", "range", "knnImpute", "bagImpute", "medianImpute", "pca", "ica", "spatialSign", "corr", "zv", "nzv", and "conditionalX"
+  - I have no idea what all these do but probably should! This seems important
+  - Centering and scaling (a.k.a standardization) is common
+    - this is particularly useful for fitting regression models
+    - You first center by subtracting the mean of each column from each value in that column, 
+    - then you scale by dividing by the standard deviation.
+    - Standardization transforms your data such that for each column, the mean is 0 and the standard deviation is 1. 
+    - This makes it easier for regression models to find a good solution.
+    
+```{r}
+
+set.seed(42)
+load('data/BreastCancer.RData')
+
+# Fit glm with median imputation: model1
+model1 <- train(
+  x = breast_cancer_x, y = breast_cancer_y,
+  method = "glm",
+  trControl = myControl,
+  preProcess = c('medianImpute')
+)
+
+# Print model1
+model1
+
+# Fit glm with median imputation and standardization: model2
+model2 <- train(
+  x = breast_cancer_x, y = breast_cancer_y,
+  method = "glm",
+  trControl = myControl,
+  preProcess = c('medianImpute', 'center', 'scale')
+)
+
+# Print model2
+model2
+
+```
+
+  - In this case it does not actually give better results
+  - I wonder if the breast cancer data set they put online is different than the one they use in the class
+    - It seems to be the same. Is my seed just different or what?
+    - This seems like something I should know about since its makeing the models quite different
+  
+## Handling low-information predictors
+
+  - data is often pretty messy
+  - some variables don't contain much info
+    - constant (i.e. no variance)
+    - nearly constant( i.e. low variance)
+  - with nearly constant data, its easy for one fold of CV to end up with constant column
+    - this will cause problems as you can't divide by 0 variance
+    - they also don't contain much info and tend to have little impact on the model
+    - the instructor usually removes nearly contant columns from the data to reduce bugs, and speed up the modeling
+    
+Example: constan column in mtcars
+  
+  - You can't scale a column by dividing by a sd of 0, so everything breaks
+
+```{r, error=T}
+
+# Reproduce dataset from last video
+data(mtcars)
+set.seed(42)
+mtcars[sample(1:nrow(mtcars), 10), "hp"] <- NA
+Y <- mtcars$mpg
+X <- mtcars[, 2:4]
+
+# Add a constant-values column to mtcars
+X$bad <- 1
+
+# Try to fit a model with pca + glm
+model <- train(
+  X,Y, method = "glm",
+  preProcess = c("medianImpute", "center", "scale", "pca"))
+
+
+```
+
+  - "zv" removes constant columns
+  - "nzv" removes nearly constant columns
+  
+```{r}
+
+# Have caret remove those columns during modeling
+set.seed(42)
+
+model <- train(
+  X,Y, method = "glm",
+  preProcess = c("zv", "medianImpute", "center", "scale","pca"))
+min(model$results$RMSE)
+
+```
+
+### -- Remove near zero variance predictors
+
+  - `nearZeroVar()` takes in data x, then looks at the ratio of the most common value to the second most common value, freqCut, 
+  - and the percentage of distinct values out of the number of total samples, uniqueCut. 
+  - By default, caret uses freqCut = 19 and uniqueCut = 10, which is fairly conservative. 
+  - the instructor likes to be a little more aggressive and use freqCut = 2 and uniqueCut = 20 when calling `nearZeroVar()`.
+  
+```{r}
+
+load('data/BloodBrain.RData')
+glimpse(bloodbrain_x)
+glimpse(bloodbrain_y)
+
+# Identify near zero variance predictors: remove_cols
+remove_cols <- nearZeroVar(bloodbrain_x, names = TRUE, 
+                           freqCut = 2, uniqueCut = 20)
+
+# Get all column names from bloodbrain_x: all_cols
+all_cols <- names(bloodbrain_x)
+
+# Remove from data: bloodbrain_x_small
+bloodbrain_x_small <- bloodbrain_x[ , setdiff(all_cols, remove_cols)]
+
+```
+
+### -- Fit model on reduced blood-brain data
+
+```{r}
+
+# Fit model on reduced data: model
+model <- train(x = bloodbrain_x_small, y = bloodbrain_y, method = "glm")
+
+# Print model to console
+model
+
+```
+
+## Principle components analysis (PCA)
+
+  - PCA combines the low-variance and correlated variables in your data set into a single set of high-variance, perpendicular predictors.
+    - low variance are probamatic for CV but they can contain useful information
+    - its always better to find a systematic way to use that information rather than throw it away
+    - perpendicular predictors are useful because they are perfectly uncorrelated
+    - linear model tend to have trouble with correlation between variables (also known as colinearity) and pca elegantly removes this issue
+  - PCA searches for high-variance linear combinations of the input data that are perpendicular to each other
+    - the first component of pca is the highest variance component
+    - the second component has the second highest variance and so on
+    - given an x and y variable that are correlated, the first component reflects the similarity between x and y, while the second component reflects the difference
+    - this idea makes sense in two dimension, but it extens to multiple dimension
+
+Example: blood-brain data
+
+```{r}
+
+# Basic model
+set.seed(42)
+data(BloodBrain)
+
+model <- train(
+  bbbDescr, logBBB, method = "glm"
+)
+model
+
+# Adding preprocesing steps including "zv"
+model2 <- train(
+  bbbDescr, logBBB, method = "glm",
+  trControl = trainControl(method = "cv", number = 10, verbose = F),
+  preProcess = c("zv", "center", "scale")
+)
+model2
+
+# change "zv" to "nzv"
+model3 <- train(
+  bbbDescr, logBBB, method = "glm",
+  trControl = trainControl(method = "cv", number = 10, verbose = F),
+  preProcess = c("nzv", "center", "scale")
+)
+model3
+
+# now keep the low variance predictors in the model but use pca
+model4 <- train(
+  bbbDescr, logBBB, method = "glm",
+  trControl = trainControl(method = "cv", number = 10, verbose = F),
+  preProcess = c("zv", "center", "scale", "pca")
+)
+model4
+```
+  - keeping the low variance predictors and using pca gives, by far, the best results
+  
+### -- Using PCA as an alternative to nearZeroVar()
+
+  - its often better to use pca with low variance predictors
+  - sometimes multiple low variance preditors end up combining into one high variance PCA variable which has a good impact on the model
+  - this is a good trick for linear models especially
+  - apparently using "pca" as a preprocess will also center and scale your model
+
+```{r}
+
+# Fit glm model using PCA: model
+model <- train(
+  x = bloodbrain_x, y = bloodbrain_y,
+  method = "glm", preProcess = c("pca")
+)
+
+# Print model to console
+model
+
+```
+
+  - This is a lot better results than the previous bloodbrain model where we used `nearZeroVar()` first to remove data.
+
+&nbsp; &nbsp;
+
+***  
+# Selecting models: a case study in churn prediction
+***  
+
+## Reusing a trainControl
+
+  - Lets use a raelistic dataset now, customer churn at a telecom company
+  - In order to do an apples to apples comparison between models, we need to ensure that each model using the exact same folds for training/test splits.
+  - We can do this by prespecifying a `trainControl` object which specifies which rows you use for model building and which are used as holdouts
+    - This object can be used across multiple models
+
+Example: customer churn data
+
+  - We make train/test set CV indicies using `caret`'s `createFolds` function
+  - Notice that it conserves the class distribution of 14% churn
+  
+```{r}
+
+library(C50)
+data(churn)
+table(churnTrain$churn) / nrow(churnTrain)
+
+# Create train/test indexes
+set.seed(42)
+myFolds <- createFolds(churnTrain$churn, k = 5)
+
+# Compare class distribution
+i <- myFolds$Fold1
+table(churnTrain$churn[i]) / length(i)
+
+```
+  - We use these fold to create a `trainControl` object which we can then use to create multiple models
+  - notice the the myControl object has information about the training as well as the fold indices. 
+  - This lets us compare models farily
+  
+```{r}
+
+myControl <- trainControl(
+  summaryFunction = twoClassSummary, 
+  classProbs = T,
+  verboseIter = T,
+  savePredictions = T,
+  index = myFolds
+)
+
+myControl
+```
+
+### -- Why reuse a trainControl?
+
+  - So you can use the same `summaryFunction` and tuning parameters for multiple models
+  - So you don't have to repeat code when fiting multiple models
+  - So you can compare models on the exact same training and test data
+
+### -- Make custom train/test indices
+
+  - In the class we use a slightly preprocessed and paired down dataset
+    - there are less observations
+    - factor variables have been split into booleans and things are more cleaned up for fitting a model
+    
+```{r}
+
+glimpse(churn_x)
+glimpse(churn_y)
+
+# Create custom indices: myFolds
+myFolds <- createFolds(churn_y, k = 5)
+
+# Create reusable trainControl object: myControl
+myControl <- trainControl(
+  summaryFunction = twoClassSummary,
+  classProbs = TRUE, # IMPORTANT!
+  verboseIter = TRUE,
+  savePredictions = TRUE,
+  index = myFolds
+)
+
+```
+
+## Reintroduce glmnet
+
+  - the glmnet is linear model with built-in variable selection
+  - it is a great baseline model for any prediction problem
+  - its alsmost alwasy the instructors first model
+  - advantages (simple, fast, interpretable)
+    - its fast
+    - uses variable selection to avoid noisy variables
+    - it provides interpretable coefficents so you can understand patterns in your data
+    - its just as interprtable as models from `lm` or `glm` functions
+    - in this case it will let a business analyst actualy understand the drivers of churn. Its also good to use for predictions.
+    
+Example: glmnet on churn data
+
+```{r}
+
+set.seed(42)
+
+model_glmnet <- train(
+  churn ~ ., churnTrain, 
+  metric = "ROC",
+  method = "glmnet",
+  tuneGrid = expand.grid(
+    alpha = 0:1, 
+    lambda = 0:10/10
+  ),
+  trControl = myControl
+)
+
+# Plot the results
+plot(model_glmnet)
+plot(model_glmnet$finalModel)
+
+```
+
+  - `caret` automatically chooses the best values for lambda so we don't need to do anything after looking at this plot
+
+### -- Fit the baseline model
+
+```{r}
+
+# Fit glmnet model: model_glmnet
+model_glmnet <- train(
+  x = churn_x, y = churn_y,
+  metric = "ROC",
+  method = "glmnet",
+  trControl = myControl
+)
+
+```
+
+## Reintroduce random forest
+
+  - random forest is always the second model the instructor tries (after glm_net)
+  - they are slower then glmnet and less interpretable (kinda like a black box), but they are often (not always) more accurate than glmnet and they are easier to tune. 
+  - They also require little preprocessing, and handle missing data well. 
+  - They also capture threshold effects and variable interactions well. Both of these cases occur often in real world data. 
+
+Eample: random forest on churn data
+  
+  - The default caret tuning values work great so we don't need to make a custom tuning grid
+  - caret will sutomatically shoose the best results for mtry and splitrule
+  
+```{r}
+
+set.seed(42)
+churnTrain$churn <- factor(churnTrain$churn, levels = c("no", "yes"))
+model_rf <- train(
+  churn ~ ., churnTrain, 
+  metric = "ROC",
+  method = "ranger",
+  trControl = myControl
+)
+
+plot(model_rf)
+```
+  
+### -- Random forest with custom trainControl
+
+```{r}
+
+# Fit random forest: model_rf
+model_rf <- train(
+  x = churn_x, y = churn_y,
+  metric = "ROC",
+  method = "ranger",
+  trControl = myControl
+)
+
+```
+
+## Comparing models
+
+  - Now we need to decide which model makes the best predictions on new data
+  - We want the model with the highes average AUC across all the folds as well as the lowest standard deviation in AUC
+  - the `caret` package provides the `resamples()` function which is very useful for collecting the results from multiple models
+
+```{r}
+
+# make a model list
+model_list <-list(
+  glmnet = model_glmnet, 
+  rf = model_rf)
+
+# collect resamples from the CV folds
+resamps <- resamples(model_list)
+
+# summarize the results
+summary(resamps)
+```
+
+
+### -- Create a resamples object
+
+  - You can compare models in caret using the `resamples()` function, provided they have the same training data and use the same trainControl object with preset cross-validation folds. 
+  - `resamples()` takes as input a list of models and can be used to compare dozens of models at once (though in this case you are only comparing two models).
+  
+
+```{r}
+
+# Create model_list
+model_list <- list(item1 = model_glmnet, 
+                   item2 = model_rf)
+
+# Pass model_list to resamples(): resamples
+resamples <- resamples(model_list)
+
+# Summarize the results
+summary(resamples)
+dotplot(resamples, metric = "ROC")
+
+```
+
+## More on resamples
+
+  - resamples also provide a bunch of charting functions to see the best model
+  - This inspired Zach to create the `caretEnsemble` package
+  - box and wisker plot `bwplot` is a good way to find the best model visually
+  - dot plot `dotplot` is a visually simpler way to view the data and works well when there are many models
+  - density plot `densityplot` shows the full distibution of AUC scores and is a good way to find outlier folds
+  - scatter plot `xyplot` can directly compare the AUC on each fold
+
+```{r}
+
+bwplot(resamps, metric = "ROC")
+dotplot(resamps, metric = "ROC")
+densityplot(resamps, metric = "ROC")
+xyplot(resamps, metric = "ROC")
+
+```
+  - rf, gbm, svm, glmnet, rpart are all models we could use here. I'd like to try doing all of these and comparing with the `dotplot` chart
+  - 
+  
+### -- Create a box-and-whisker plot
+  
+  - caret provides a variety of methods to use for comparing models. All of these methods are based on the resamples() function. 
+  - The instructors favorite is the box-and-whisker plot, which allows you to compare the distribution of predictive accuracy (in this case AUC) for the two models.
+    - In general, you want the model with the higher median AUC, as well as a smaller range between min and max AUC.
+  - You can make this plot using the `bwplot()` function, which makes a box and whisker plot of the model's out of sample scores. 
+  - If you do not specify a metric to plot, bwplot() will automatically plot 3 of them.
+
+```{r}
+
+# Create bwplot
+bwplot(resamples)
+bwplot(resamples, metric = "ROC")
+
+```
+
+### -- Create a scatterplot
+
+  - Another useful plot for comparing models is the scatterplot, also known as the xy-plot. 
+  - This plot shows you how similar the two models' performances are on different folds.
+  - It's particularly useful for identifying if one model is consistently better than the other across all folds, or if there are situations when the inferior model produces better predictions on a particular subset of the data.
+  
+```{r}
+
+# Create xyplot
+xyplot(resamples, metric = "ROC")
+
+```
+
+### -- Ensembling models
+
+  - I had to look up a little tutorial on `caretEnsemble` to get this working
+  - I need to have a model_list that is a caretList
+```{r}
+
+model_list <- caretList(
+  churn ~ ., churnTrain,
+  trControl = myControl,
+  methodList = c("glm", "rpart", "rf", "gbm", "glmnet")
+  )
+
+# Create ensemble model: stack
+stack <- caretStack(
+  model_list, 
+  method = "glm", 
+  metric = "ROC",
+  trControl=trainControl(
+    method="boot",
+    number=10,
+    savePredictions="final",
+    classProbs=TRUE,
+    summaryFunction=twoClassSummary
+  ))
+
+# Look at summary
+summary(stack)
+
+dotplot(resamples(model_list), metric = "ROC")
+
+```
+
+
+***  
+# Conclusion
+***  
+
+  - Wow, I am finally starting to learn these things. 
+  - This class was a great high level overview of how to do things and how to interpret and compare results
+  - Now, I just need to figure out what the heck I am actually doing. : ) 
+  - Maybe I can start reading up on kaggle and see if I can learn more about these methods and their power for prediction on real world data sets and problems
+  
+  
+  
