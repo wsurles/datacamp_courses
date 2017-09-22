@@ -33,7 +33,9 @@ knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
   - Putting it all together with a case study
   
 ## Additional Resources
-  - 
+  - [Making nicer biplots with ggplot2](https://stackoverflow.com/questions/6578355/plotting-pca-biplot-with-ggplot2)
+  - [Top 10 data mining algorithms in plain english](https://hackerbits.com/data/top-10-data-mining-algorithms-in-plain-english/)
+    - nice article that talks about k-means and other algorithms in plain english
   
 ## Libraries and Data
 
@@ -43,6 +45,8 @@ source('create_datasets.R')
 
 library(readr)
 library(dplyr)
+library(ggplot2)
+library(stringr)
 
 ```
 
@@ -149,11 +153,12 @@ model selection:
   - run many times to get global optimum
   - R will automaitcally take the run with the lowest total withinss
   
-determining number of cluster
+determining number of clusters
 
   - scree plot
   - look for the elbow
   - find where addition on new cluster does not change best withinss much
+  - there ususally is no clear elbow in real world data
   
 ### -- Handling random algorithms
 
@@ -259,7 +264,10 @@ plot(pokemon[, c("Defense", "Speed")],
 
 ```
 
-
+   - I don't know of a good way to plot these clusters in 6 dimensional space. 
+   - Here there is a lot of overlap, but if we could see a third dimension the clusters may look a little more distinct. 
+   - It would be good for me to learn how to viusalize cluster analysis in a more complelling way.
+   
 &nbsp; &nbsp;
 
 ***  
@@ -381,8 +389,10 @@ table(km.pokemon$cluster, cut.pokemon)
 
 ```
 
-## Review of hierarchical clustering
-
+  - the scaled heirarchical cluster pretty much puts all observations in cluster 1
+    - not sure how I feel about that
+  - the instructor says we can't really say one of these is better. 
+  - this was a confusing example thought. I would naturally expect more spread out clusters as with the k-means clusters
 
 &nbsp; &nbsp;
 
@@ -392,60 +402,242 @@ table(km.pokemon$cluster, cut.pokemon)
 
 ## Introduction to PCA
 
+  - Two main goals of dimensionality reduciton
+    - find structure in features
+    - aid in visualization
+  - PCA has 3 goals
+    - find a linear combintion of variables to create principle components
+    - maintain as much variance in the data as possible
+    - principal components are uncorrelated (i.e. orthogonoal to each other)
+  - intuition
+    - with an x y correlation scatter plot, the best 1 dimension to explain the variance in the data is the linear regression line
+    - this is the first prinipal component
+    - then the distance of the points from the line is the component score (I don't really understand this part, but I get how the line is simple way to explain the two dimensional data and explains most of the variation in the data.)
+    
+Example: Principle components with iris dataset
+
+  - center and scale - for each point, subtract the mean and divide by the sd
+  - the summary of the model shows you the proportion of variance explained by each principal component
+  - I think the rotation is the distance of the point from each principal component or something like that. 
+  
+```{r}
+
+summary(iris)
+pr.iris <- prcomp(x = iris[-5], scale = F, center = T)
+summary(pr.iris)
+pr.iris
+
+```
+
 ### -- PCA using prcomp()
+
+  - we are just using 4 variables from the pokemon dataset here
 
 ```{r}
 
+pokemon_pr <- pokemon %>% select(HP, Attack, Defense, Speed)
+glimpse(pokemon_pr)
+
+summary(pokemon_pr)
+
+pr.pokemon <- prcomp(x = pokemon_pr, scale = T, center = T)
+summary(pr.pokemon)
+pr.pokemon
+
 ```
+
+  - Looking at the cumiltive proportion, it takes 3 components to describe at least 75% of the variance in the data  
 
 ### -- Results of PCA
 
+The PCA models produce additional diagnostic and output components:
+
+  - `center` - the column means used to center the data
+  - `scale` - the column sd used to scale the data
+  - `rotation` - the direction of the prin comp vetors in terms of the original features/variables. This information *somehow* allows you to define new data in terms of the originial principal components.
+  - `x` - the value of each observation in the original dataset projected to the principal components
+  
 ```{r}
 
-```
-
-### -- Additional results of PCA
-
-```{r}
+pr.pokemon$center
+pr.pokemon$scale
+pr.pokemon$rotation
+head(pr.pokemon$x,10)
 
 ```
 
 ## Visualizing and interpreting PCA results
 
-### -- Interpreting biplots (1)
+  - biplot
+    - shows all of the original observations as points plotted by the first 2 principal components
+    - it also shows the original features as vectors mapped onto the first 2 principal components
+    - with the iris data notice how the pedal width and lenght are pointing in the same direction
+    - this means the variables are correlated. one explains the about all the variance of the other. 
+    - I found a nicer biplot function `PCbiplot()` on stack overflow, made with ggplot2 and modified this to work a little better. I use this in most cases because its much clearer.
+  - scree plot
+    - either shows the proportion of variance explained by each principal component or the cummulative variance explained by successive components
+    - all of the variance is explained when the number of components matches the number of original features/variables
+    - a couple steps are required to get the variance from the sd for each component for the plot
+    
+    
+```{r, echo=F}
 
+# this function will make a nice biplot with ggplot2
+# credit: I got this from crayola from Stack overflow. Had to fix it and change some parameters
+# https://stackoverflow.com/questions/6578355/plotting-pca-biplot-with-ggplot2
+
+PCbiplot <- function(PC, x="PC1", y="PC2") {
+    
+    
+    names <- if (is.null(rownames(PC$x))) {
+        1:nrow(PC$x)
+      } else {
+        rownames(PC$x)
+      }
+    
+    # PC being a prcomp object
+    data <- data.frame(obsnames = names, PC$x)
+    
+    datapc <- data.frame(varnames=rownames(PC$rotation), PC$rotation)
+    
+    mult <- min(
+        (max(data[,y]) - min(data[,y])/(max(datapc[,y])-min(datapc[,y]))),
+        (max(data[,x]) - min(data[,x])/(max(datapc[,x])-min(datapc[,x])))
+        )
+    
+    datapc <- transform(datapc,
+            v1 = .7 * mult * (get(x)),
+            v2 = .7 * mult * (get(y))
+            )
+    
+    plot <- ggplot(data, aes_string(x=x, y=y)) + 
+      geom_text(alpha = .4, size = 3, aes(label = names)) + 
+      geom_hline(yintercept = 0, size=.2) + 
+      geom_vline(xintercept = 0, size=.2) + 
+      coord_equal() + 
+      geom_text(data = datapc, aes(x = v1, y = v2, label = varnames), 
+                size = 5, vjust = 1, color = "blue", alpha = .75) + 
+      geom_segment(data = datapc, aes(x = 0, y = 0, xend = v1, yend = v2), 
+                   arrow = arrow(length = unit(0.2,"cm")), alpha=0.75, color="blue")
+    plot
+}
+
+```
+  
 ```{r}
+
+# creating a biplot
+# this does not look as nice as the one he had in the video
+biplot(pr.iris)
+PCbiplot(pr.iris)
+
+# Getting proportion of variance for a scree plot
+pr.var <- pr.iris$sdev^2
+pve <- pr.var / sum(pr.var)
+
+# Plot variance explained for each principal component
+plot(pve, 
+     xlab = "Principal Component",
+     ylab = "Proportion of Variance Explained",
+     ylim = c(0,1), 
+     type = "b")
 
 ```
 
-### -- Interpreting biplots (2)
+### -- Interpreting biplots (1)
+
+  - which two original variables have approximately the same loadings in the first two principal components?
+    - Attack and Hit Points (HP)
+  - which two pokemon are the least similar in terms of the second principal component?
+    - 430 and 231 (highest and lowest points)
+    - I can use the ids to look up the name in the original dataset
 
 ```{r}
+
+PCbiplot(pr.pokemon)
 
 ```
 
 ### -- Variance explained
 
 ```{r}
+# Variability of each principal component: pr.var
+pr.var <- pr.pokemon$sdev^2
 
+# Variance explained by each principal component: pve
+pve <- pr.var / sum(pr.var)
+pve
 ```
 
 ### -- Visualize variance explained
 
 ```{r}
 
+# Plot variance explained for each principal component
+plot(pve, xlab = "Principal Component",
+     ylab = "Proportion of Variance Explained",
+     ylim = c(0, 1), type = "b")
+
+# Plot cumulative proportion of variance explained
+plot(cumsum(pve), xlab = "Principal Component",
+     ylab = "Cumulative Proportion of Variance Explained",
+     ylim = c(0, 1), type = "b")
+
 ```
 
 ## Practical issues with PCA
+
+3 things need to be considered for a succesful PCA:
+
+  - scaling the data
+  - missing data
+    - either drop it or impute it
+  - features that are categories
+    - drop it or encode it as numbers
+    - this is not covered in this class (much more pre-processing is needed in real world applicaitons than we are doing here I believe)
+
+Importance of scaling: 
+
+  - the `mtcars` dataset has very different means and sd
+  - look at the results of the biplots with and without scaling
+  - without scaling the disp and hp overwhelm the other features simply because they have much higher variance in their units of measure
+  
+```{r}
+
+data(mtcars)
+head(mtcars)
+
+round(colMeans(mtcars), 2)
+round(apply(mtcars, 2, sd), 2)
+
+pr.mtcars_no_scale <- prcomp(x = mtcars, scale = F, center = F)
+pr.mtcars_scale <- prcomp(x = mtcars, scale = T, center = T)
+
+PCbiplot(pr.mtcars_no_scale)
+PCbiplot(pr.mtcars_scale)
+```
 
 ### -- Practical issues: scaling
 
 ```{r}
 
+# Mean of each variable
+colMeans(pokemon_pr)
+
+# Standard deviation of each variable
+apply(pokemon_pr, 2, sd)
+
+# PCA model with scaling: pr.with.scaling
+pr.with.scaling <- prcomp(pokemon_pr, scale = T, center = T)
+
+# PCA model without scaling: pr.without.scaling
+pr.without.scaling <- prcomp(pokemon_pr, scale = F, center = F)
+
+# Create biplots of both for comparison
+PCbiplot(pr.without.scaling)
+PCbiplot(pr.with.scaling)
+
 ```
-
-## Additional uses of PCA and wrap-up
-
 
 &nbsp; &nbsp;
 
@@ -455,15 +647,61 @@ table(km.pokemon$cluster, cut.pokemon)
 
 ## Introduction to the case study
 
+  - Data from paper by  Bennet and Mangasarian. 
+    - "Robust Linear Programming Discrimination of Two Linearly Inseparable Sets"
+  - Human brest mass that was or was not malignant
+    - 10 features measured of each cell nuclei (I see 30 though)
+    - each features is a summary statistic of the cells in that mass
+    - includes diagnosis (target) - can be used for supervised learning but will not be used during the unsupervised analysis
+  - overall steps
+    - download and prepare data
+    - EDA
+    - perform PCA and interpret results
+    - complete twy tupes of clustering
+    - understnd and compare the two types
+    - combine PCA and clustering
+  
 ### -- Preparing the data
 
 ```{r}
+
+url <- "http://s3.amazonaws.com/assets.datacamp.com/production/course_1903/datasets/WisconsinCancer.csv"
+
+# Download the data: wisc.df
+wisc.df <- read.csv(url)
+str(wisc.df)
+
+# Convert the features of the data: wisc.data
+wisc.data <- as.matrix(wisc.df[, 3:32])
+str(wisc.data)
+head(wisc.data)
+
+# Set the row names of wisc.data
+row.names(wisc.data) <- wisc.df$id
+head(wisc.data)
+
+# Create diagnosis vector
+diagnosis <- as.numeric(wisc.df$diagnosis == "M")
 
 ```
 
 ### -- Exploratory data analysis
 
+  - How many observations are in this dataset?
+    - 569
+  - How many variables/features in the data are suffixed with _mean?
+    - 10
+  - How many of the observations have a malignant diagnosis?
+    - 212
+
 ```{r}
+
+str(wisc.data)
+
+colnames(wisc.data)
+str_match(colnames(wisc.data), "_mean")
+
+table(diagnosis)
 
 ```
 
@@ -471,24 +709,77 @@ table(km.pokemon$cluster, cut.pokemon)
 
 ```{r}
 
+# Check column means and standard deviations
+round(colMeans(wisc.data), 2)
+round(apply(wisc.data, 2, sd), 2)
+
+# Execute PCA, scaling if appropriate: wisc.pr
+wisc.pr <- prcomp(wisc.data, scale = T, center = T)
+
+# Look at summary of results
+summary(wisc.pr)
+
 ```
 
 ### -- Interpreting PCA results
 
 ```{r}
 
+# Create a biplot of wisc.pr
+PCbiplot(wisc.pr)
+
+# Scatter plot observations by components 1 and 2
+plot(wisc.pr$x[, c(1, 2)], col = (diagnosis + 1), 
+     xlab = "PC1", ylab = "PC2")
+
+# Repeat for components 1 and 3
+plot(wisc.pr$x[, c(1, 3)], col = (diagnosis + 1), 
+     xlab = "PC1", ylab = "PC3")
+
+# Do additional data exploration of your choosing below (optional)
+plot(wisc.pr$x[, c(2, 3)], col = (diagnosis + 1), 
+     xlab = "PC2", ylab = "PC3")
+
 ```
 
+  - We can see from the charts that pc1 and pc2 overlap less than pc1 and pc3. 
+    - This is expected as pc1 and pc2 are meant to be orthogonal and explain different variance
+  - pc2 and pc3 overlap more then either of them overlap with pc1
+  
 ### -- Variance explained
 
 ```{r}
+
+# Set up 1 x 2 plotting grid
+par(mfrow = c(1, 2))
+
+# Calculate variability of each component
+pr.var <- wisc.pr$sdev^2
+
+# Variance explained by each principal component: pve
+pve <- pr.var / sum(pr.var)
+
+# Plot variance explained for each principal component
+plot(pve, xlab = "Principal Component", 
+     ylab = "Proportion of Variance Explained", 
+     ylim = c(0, 1), type = "b")
+
+# Plot cumulative proportion of variance explained
+plot(cumsum(pve), xlab = "Principal Component", 
+     ylab = "Cumulative Proportion of Variance Explained", 
+     ylim = c(0, 1), type = "b")
 
 ```
 
 ### -- Communicating PCA results
 
+  - For the first principal component, what is the component of the loading vector for the feature `concave.points_mean`? 
+    - -0.26085376
+  - What is the minimum number of principal components required to explain 80% of the variance of the data?
+    - 5
 ```{r}
 
+wisc.pr$rotation[1:10,1:2]
 ```
 
 ## PCA review and next steps
@@ -497,30 +788,106 @@ table(km.pokemon$cluster, cut.pokemon)
 
 ```{r}
 
+# Scale the wisc.data data: data.scaled
+head(wisc.data)
+data.scaled <- scale(wisc.data)
+head(data.scaled)
+
+# Calculate the (Euclidean) distances: data.dist
+data.dist <- dist(data.scaled)
+
+# Create a hierarchical clustering model: wisc.hclust
+wisc.hclust <- hclust(data.dist, method = "complete")
+
 ```
 
 ### -- Results of hierarchical clustering
 
+  - cutting the height at 20 will give 4 clusters
+  
 ```{r}
+
+plot(wisc.hclust)
 
 ```
 
+  - I can kinda see why we could cut at 4. that gives us the to main clusers and then we have a couple tiny ones on the left. 
+  - It would be cool if we could color the lines by diagnosis somehow that helps us see where we should split. 
+    
 ### -- Selecting number of clusters
 
 ```{r}
 
+# Cut tree so that it has 4 clusters: wisc.hclust.clusters
+wisc.hclust.clusters <- cutree(wisc.hclust, k = 4)
+
+# Compare cluster membership to actual diagnoses
+table(wisc.hclust.clusters, diagnosis)
+
+# count out of place observations based on cluster 
+# basically just summing the row mins here
+sum(apply(table(wisc.hclust.clusters, diagnosis), 1, min))
+
 ```
 
+  - Looks like 54 tumors that are not clear with the diagnosis based on the general cluster
+  
 ### -- k-means clustering and comparing results
 
 ```{r}
+
+# Create a k-means model on wisc.data: wisc.km
+head(wisc.data)
+wisc.km <- kmeans(scale(wisc.data), centers = 2, nstart = 20)
+
+# Compare k-means to actual diagnoses
+table(wisc.km$cluster, diagnosis)
+sum(apply(table(wisc.km$cluster, diagnosis), 1, min))
+
+# Compare k-means to hierarchical clustering
+table(wisc.hclust.clusters, wisc.km$cluster)
+sum(apply(table(wisc.hclust.clusters, wisc.km$cluster), 1, min))
 
 ```
 
 ### -- Clustering on PCA results
 
+  - Recall from earlier exercises that the PCA model required significantly fewer features to describe 80% and 95% of the variability of the data. 
+  - In addition to normalizing data and potentially avoiding overfitting, PCA also uncorrelates the variables, sometimes improving the performance of other modeling techniques.
+  
 ```{r}
+
+# Create a hierarchical clustering model: wisc.pr.hclust
+summary(wisc.pr)
+wisc.pr.hclust <- hclust(dist(wisc.pr$x[, 1:7]), method = "complete")
+
+# Cut model into 4 clusters: wisc.pr.hclust.clusters
+wisc.pr.hclust.clusters <- cutree(wisc.pr.hclust, k = 4)
+
+# Compare to actual diagnoses
+t <- table(wisc.pr.hclust.clusters, diagnosis)
+t
+sum(apply(t, 1, min))
+
+# Compare to k-means and hierarchical
+t <- table(wisc.hclust.clusters, diagnosis)
+t
+sum(apply(t, 1, min))
+
+t <- table(wisc.km$cluster, diagnosis)
+t
+sum(apply(t, 1, min))
 
 ```
 
-## Wrap-up and review
+  - It looks like the 2 cluster k-means does the best job
+  - The whole purpose of this is to see if the results of clustering could be useful in a supervised learning process. 
+    - I think it might be worth adding the k-means clusters to a model. Maybe. I guess I could just try it with and with out and see whic is best at predicting now that I know how to do that. : ) 
+  
+## Conclusion
+
+  - This was a VERY high level overview on the topics of hierarcial and k-means clustering and PCA
+  - I think it covers some good concepts like variable models selection, interpretation, and scaling data
+  - I did get a little intuition on how the algorithms work
+  - I don't feel like I know these topics well or that I am ready to base business decisions on my knowledge of these model techniques. 
+  - It was a good way to get started though and I am now definitly ready to dig into these techniques more. 

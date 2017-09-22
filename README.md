@@ -29,3 +29,4 @@ Data Science Career Track for R:
 - [Correlation and Regression](http://rpubs.com/williamsurles/305688)
 - [Foundations of Inference](http://rpubs.com/williamsurles/308326)
 - [Machine Learning Toolbox](http://rpubs.com/williamsurles/310197)
+- [Unsupervised Learning in R](http://rpubs.com/williamsurles/310847)
