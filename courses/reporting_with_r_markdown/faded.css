@@ -1,0 +1,28 @@
+
+h1{
+  color: white;
+  padding: 10px;
+  background-color: #6633ff
+}
+
+h2{
+  color: white;
+  padding: 10px;
+  background-color: #3399ff
+}
+
+h3{
+  color: white;
+  padding: 10px;
+  background-color: #33ff99
+}
+
+
+ul {
+  list-style-type: square;
+}
+
+.MathJax_Display {
+  padding: 0.5em;
+  background-color: #eaeff3
+}bullets

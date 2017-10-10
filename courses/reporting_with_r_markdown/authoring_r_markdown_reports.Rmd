@@ -1,0 +1,470 @@
+---
+title: "Reporting with R Markdown"
+author: "William Surles"
+date: "2017-10-10"
+output: 
+ html_document:
+  self_contained: yes
+  theme: flatly
+  css: faded.css
+  highlight: tango
+  toc: true
+  toc_float: true
+  toc_depth: 3
+runtime: shiny
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+```
+
+***  
+# Introduction
+***  
+
+  - Course notes from the [Reporting with R Markdown](https://www.datacamp.com/courses/intro-to-text-mining-bag-of-words) course on DataCamp
+    - Taught by Garrett Grolemund
+    
+## Whats Covered
+
+  - Authouring R markdown Reports
+  - Embedding Code
+  - Compiling Reports
+  - Configuring R Markdown (optional)
+  
+## Additional Resources
+  - [R markdown cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+  - [rmarkdown reference guide](http://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
+    - This has a full list of yaml options and markdown examples
+  - [color wheel picker](https://www.sessions.edu/color-calculator/)
+    - I use this to pick colors that go together well for the header backgrounds
+  
+## Libraries and Data
+
+```{r, cache=F} 
+
+library(nasaweather)
+library(dplyr)
+library(ggvis)
+library(codetools)
+
+```
+
+&nbsp; &nbsp;
+
+***  
+# Authoring R Markdown Reports
+***  
+
+## Section 1 - Introduction
+
+  - Supplement R code with narration
+  - There are many output formats that can be created
+  - You can add code chunks from many languages
+  - You can use shiny to create interactive output in your html doc or slideshow
+    - `runtime: shiny`
+  
+### -- The R Markdown Exercise interface
+
+  - This section shows an example of many formatting techniques in R markdown
+    - Its pretty much the same as markdown
+    - There are bold words, links, bullets, math jax equations, and inline code scripting
+  - Also, there is a custom css file loaded in the yaml header that sets the format for the h1 headers, equations, and bullets
+    - This affects the entire document though. 
+    - Also I used a [color wheel picker](https://www.sessions.edu/color-calculator/) to choose complimentarty colors for the header backgrounds
+
+***  
+
+The `atmos` data set resides in the `nasaweather` package of the *R* programming language. It contains a collection of atmospheric variables measured between 1995 and 2000 on a grid of 576 coordinates in the western hemisphere. The data set comes from the [2006 ASA Data Expo](http://stat-computing.org/dataexpo/2006/).
+
+Some of the variables in the `atmos` data set are:
+
+* **temp** - The mean monthly air temperature near the surface of the Earth (measured in degrees kelvin (*K*))
+
+* **pressure** - The mean monthly air pressure at the surface of the Earth (measured in millibars (*mb*))
+
+* **ozone** - The mean monthly abundance of atmospheric ozone (measured in Dobson units (*DU*))
+
+You can convert the temperature unit from Kelvin to Celsius with the formula
+
+$$ celsius = kelvin - 273.15 $$
+
+And you can convert the result to Fahrenheit with the formula
+
+$$ fahrenheit = celsius \times \frac{9}{5} + 32 $$
+
+```{r, echo = FALSE, results = 'hide'}
+example_kelvin <- 282.15
+```
+
+For example, `r example_kelvin` degrees Kelvin corresponds to `r example_kelvin - 273.15` degrees Celsius.
+
+### -- Explore R Markdown
+
+
+This is my first R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(mtcars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(mtcars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Section 2 - R code for your report
+
+### -- Prepare the workspace for preliminary analysis
+  
+  - libraries are all set to load in the `libraries and data` section above
+
+### -- Prepare your data
+
+```{r}
+
+# The 'nasaweather' and 'dplyr' packages are available in the workspace
+
+# Set the 'year' variable to 1995
+year <- 1995
+
+means <- atmos %>% 
+  filter(year == year) %>%
+  group_by(long, lat) %>%
+  summarize(temp = mean(temp, na.rm = TRUE), 
+         pressure = mean(pressure, na.rm = TRUE),
+         ozone = mean(ozone, na.rm = TRUE),
+         cloudlow = mean(cloudlow, na.rm = TRUE),
+         cloudmid = mean(cloudmid, na.rm = TRUE),
+         cloudhigh = mean(cloudhigh, na.rm = TRUE)) %>%
+  ungroup()
+
+# Inspect the means variable
+means
+
+```
+
+### -- Experiment with plot generation
+
+```{r}
+
+# The 'nasaweather', dplyr' and 'ggvis' packages are loaded in the workspace.
+
+# Code for the previous exercise - do not change this
+means <- atmos %>% 
+  filter(year == 1995) %>%
+  group_by(long, lat) %>%
+  summarize(temp = mean(temp, na.rm = TRUE), 
+         pressure = mean(pressure, na.rm = TRUE),
+         ozone = mean(ozone, na.rm = TRUE),
+         cloudlow = mean(cloudlow, na.rm = TRUE),
+         cloudmid = mean(cloudmid, na.rm = TRUE),
+         cloudhigh = mean(cloudhigh, na.rm = TRUE)) %>%
+  ungroup()
+
+# Change the code to plot the 'temp' variable vs the 'ozone' variable
+means %>% 
+  ggvis(x = ~temp, y = ~ozone) %>%
+  layer_points()
+
+```
+
+### -- Prepare a model component
+
+```{r}
+
+# The 'nasaweather' and dplyr' packages are already at your disposal
+means <- atmos %>% 
+  filter(year == 1995) %>%
+  group_by(long, lat) %>%
+  summarize(temp = mean(temp, na.rm = TRUE), 
+         pressure = mean(pressure, na.rm = TRUE),
+         ozone = mean(ozone, na.rm = TRUE),
+         cloudlow = mean(cloudlow, na.rm = TRUE),
+         cloudmid = mean(cloudmid, na.rm = TRUE),
+         cloudhigh = mean(cloudhigh, na.rm = TRUE)) %>%
+  ungroup()
+
+# Change the model: base prediction only on 'temp'
+mod <- lm(ozone ~ temp, data = means)
+
+# Generate a model summary and interpret the results
+summary(mod)
+
+```
+
+## Section 3 - Markdown
+
+  - This is rebuilding what we have above in the first section example. 
+
+### -- Styling narrative sections
+
+The `atmos` data set resides in the `nasaweather` package of the *R* programming language. It contains a collection of atmospheric variables measured between 1995 and 2000 on a grid of 576 coordinates in the western hemisphere. The data set comes from the [2006 ASA Data Expo](http://stat-computing.org/dataexpo/2006/)
+
+### -- Lists in R Markdown
+
+Some of the variables in the `atmos` data set are:
+
+* **temp** - The mean monthly air temperature near the surface of the Earth (measured in degrees kelvin (*K*))
+
+* **pressure** - The mean monthly air pressure at the surface of the Earth (measured in millibars (*mb*))
+
+* **ozone** - The mean monthly abundance of atmospheric ozone (measured in Dobson units (*DU*))
+
+### -- LaTeX equations
+
+You can convert the temperature unit from Kelvin to Celsius with the formula
+
+$$ celsius = kelvin - 273.15 $$
+
+And you can convert the result to Fahrenheit with the formula
+
+$$ fahrenheit = celsius \times \frac{9}{5} + 32 $$
+
+
+&nbsp; &nbsp;
+
+***  
+# Embedding Code
+***  
+
+## Section 4 - Knitr
+
+### -- R code chunks
+
+For the remainder of the report, we will look only at data from the year 1995. We aggregate our data by location, using the *R* code below.
+
+ 
+```{r}
+
+
+library(nasaweather)
+library(dplyr)
+
+year <- 1995
+
+means <- atmos %>%
+  filter(year == year) %>%
+  group_by(long, lat) %>%
+  summarize(temp = mean(temp, na.rm = TRUE),
+         pressure = mean(pressure, na.rm = TRUE),
+         ozone = mean(ozone, na.rm = TRUE),
+         cloudlow = mean(cloudlow, na.rm = TRUE),
+         cloudmid = mean(cloudmid, na.rm = TRUE),
+         cloudhigh = mean(cloudhigh, na.rm = TRUE)) %>%
+  ungroup()
+
+
+```
+
+### -- Customize R code chunks
+
+  - Use `warning = FALSE`, `error = FALSE` to prevent R from printing out warnings and errors from a code chunk
+  - I ususally set this in the optoins at the beginning of a document
+
+### -- Popular chunk options
+
+  - If `echo = FALSE`, R Markdown will not display the code in the final document (but it will still run the code and display its results unless told otherwise).
+  - If `eval = FALSE`, R Markdown will not run the code or include its results, (but it will still display the code unless told otherwise).
+  - If `results = 'hide'`, R Markdown will not display the results of the code (but it will still run the code and display the code itself unless told otherwise).
+  - `fig.height = 4` and `fig.width = 5` can be used to control the size of a plot
+
+### -- Inline R code
+
+  - use **\` r year \`** to access the year vaiable in the markdown
+  
+```{r}
+year <- 2000
+```
+
+For the remainder of the report, we will look only at data from the year **`r year`**. We aggregate our data by location, using the *R* code below.
+
+### -- Labeling and reusing code chunks
+
+  - This code chunk will run code but not show the results
+  
+```{r simple_sum, results = 'hide'}
+2 + 2
+```
+
+  - This chunk refers to the chunk above. It will not show in the code but will run the code and show the output
+  
+```{r ref.label='simple_sum', echo = FALSE}
+```
+
+Another example where we put some text just above a plot
+
+```{r chained, results = 'hide'}
+mtcars %>%
+  group_by(factor(cyl)) %>%
+  ggvis(~mpg, ~wt, fill = ~cyl) %>%
+  layer_points()
+```
+
+The `ggvis` plot gives us a nice visualization of the `mtcars` data set:
+```{r ref.label='chained', echo=F}
+```
+
+&nbsp; &nbsp;
+
+***  
+# Compiling Reports
+***  
+
+## Section 5 - Pandoc
+
+  - yaml header lets you control the document output more precisely. here are some options:
+    - html_document
+    - pdf_document
+    - word_document
+    - beamer_presentation - a pdf slides document
+    - slidy_presentation - html slides
+    - ioslides_presentation - html slides
+  - the rendered file is saved in the output directory
+  - you can use `render()` funciton from `rmarkdown` library to render from the command line
+    - `render("doc.rmd")` will render from the command line
+    - `render("doc.rmd", "html_document")` will override doc type as an html
+    - `render("doc.rmd", c("html_document", "pdf_document"))` will render both types of docs
+  
+  
+
+### -- Alternative output formats
+
+  - Note:
+    - ggivs creates html charts and will not render correctly in a pdf document. 
+    - We need to use ggplot2 when working with pdf outputs.   
+
+### -- Create slideshows
+
+  - `***` is used to separate slides
+  - Slides will also separate on headers
+
+### -- Specify knitr and pandoc options
+
+  - you can set the code theme with `highlight: zenburn`
+  - you can set the over all theme with `theme: spacelab`
+    - I often use `theme: flatly` and `highlight: tango` because I think it looks the best
+  - `self_contained: true` makes the doc much easier to share, but a little larger in size
+  - table of contents options I use:
+    - `toc: true`
+    - `toc_float: true`
+    - `toc_depth: 3`
+  - `number_sections: true` is another common option
+  
+Check out the [rmarkdown reference guide](http://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf) for more options
+
+### -- Brand your reports with style sheets
+
+  - use `css: styles.css` with the `style.css` file in the working directory to add your own custom style
+    - This is being done with this doc as mentioned above
+    
+## Section 6 - Shiny
+
+  - just add `runtime: shiny`
+    - output needs to be an html based output format
+  - the r session will be used just like when running an shiny app
+  - this doc will need to be hosted on shiny server to run in the wild
+    - Rstudio lets me connect to my shinyapps.io account so I can easily publish this doc there
+    - Its a really smooth deployment
+  
+### -- Shiny to make your reports interactive
+
+This R Markdown document is made interactive using Shiny. Unlike the more traditional workflow of creating static reports, you can now create documents that allow your readers to change the assumptions underlying your analysis and see the results immediately.
+
+To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+
+#### Inputs and Outputs
+
+You can embed Shiny inputs and outputs in your document. Outputs are automatically updated whenever inputs change.  This demonstrates how a standard R plot can be made interactive by wrapping it in the Shiny `renderPlot` function. The `selectInput` and `sliderInput` functions create the input widgets used to drive the plot.
+
+```{r, echo=FALSE, cache=F}
+inputPanel(
+  selectInput("n_breaks", label = "Number of bins:",
+              choices = c(10, 20, 35, 50), selected = 20),
+
+  sliderInput("bw_adjust", label = "Bandwidth adjustment:",
+              min = 0.2, max = 2, value = 1, step = 0.2)
+)
+
+renderPlot({
+  hist(faithful$eruptions, probability = TRUE, breaks = as.numeric(input$n_breaks),
+       xlab = "Duration (minutes)", main = "Geyser eruption duration")
+
+  dens <- density(faithful$eruptions, adjust = input$bw_adjust)
+  lines(dens, col = "blue")
+})
+```
+
+#### Embedded Application
+
+It is also possible to embed an entire Shiny application within an R Markdown document using the `shinyAppDir` function. This example embeds a Shiny application located in another directory:
+
+```{r, echo=FALSE, cache=F}
+shinyAppDir(
+  system.file("examples/06_tabsets", package = "shiny"),
+  options = list(
+    width = "100%", height = 600
+  )
+)
+```
+
+Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
+
+You can also use the `shinyApp` function to define an application inline rather then in an external directory.
+
+In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
+
+### -- Interactive ggvis graphics
+
+ggvis provides a number of ways to enhance plots with interacticity. For example, the density plot below allows users to set the kernel and bandwidth of the plot.
+
+```{r echo = FALSE, message = FALSE, cache=F}
+library(ggvis)
+
+mtcars %>% ggvis(x = ~wt) %>%
+    layer_densities(
+      adjust = input_slider(.1, 2, value = 1, step = .1, label = "Bandwidth adjustment"),
+      kernel = input_select(
+        c("Gaussian" = "gaussian",
+          "Epanechnikov" = "epanechnikov",
+          "Rectangular" = "rectangular",
+          "Triangular" = "triangular",
+          "Biweight" = "biweight",
+          "Cosine" = "cosine",
+          "Optcosine" = "optcosine"),
+        label = "Kernel")
+    )
+```
+
+### -- Interview with Yihui Xie
+
+  - PhD from Iowa State university
+  - Now works for Rstudio
+  - Also worked on animation package
+    - Great for watching a process or how an algorithm works
+  - And worked on many other packages
+  - Rmarkdown version 2 is based on pandoc which is vary powerful and lets you convert to all the different types of html docs and slides
+  - vignettes are a very convient way to show documentation for packages
+
+&nbsp; &nbsp;
+
+***  
+# Configuring R Markdown (optional)
+***  
+
+## Section 7 - Set up
+
+Things needed to run rmarkdown:
+
+  - [R](cran.r-project.org)
+  - [LaTeX](latex-project.org/ftp.html) if you want to create pdfs
+  - [Pandoc](github.com/rstudio/rmarkdown/blob/master/PANDOC.md), `rmarkdown`, and `knitr` all come with Rstudio
+  - `shiny` for interactive documents
+    - install.packages("shiny")
+    
