@@ -12429,9 +12429,65 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>it is a collection of values</li>
+<li>it can contain any data type</li>
+<li>it can contain different data types</li>
+<li>it can even hold other lists</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Create-a-list">Create a list<a class="anchor-link" href="#Create-a-list">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># area variables (in square meters)</span>
+<span class="n">hall</span> <span class="o">=</span> <span class="mf">11.25</span>
+<span class="n">kit</span> <span class="o">=</span> <span class="mf">18.0</span>
+<span class="n">liv</span> <span class="o">=</span> <span class="mf">20.0</span>
+<span class="n">bed</span> <span class="o">=</span> <span class="mf">10.75</span>
+<span class="n">bath</span> <span class="o">=</span> <span class="mf">9.50</span>
+
+<span class="c1"># Create list areas</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="n">hall</span><span class="p">,</span> <span class="n">kit</span><span class="p">,</span> <span class="n">liv</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span> <span class="n">bath</span><span class="p">]</span>
+
+<span class="c1"># Print areas</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[11.25, 18.0, 20.0, 10.75, 9.5]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12440,6 +12496,48 @@ div#notebook {
 <h3 id="Create-list-with-different-types">Create list with different types<a class="anchor-link" href="#Create-list-with-different-types">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># area variables (in square meters)</span>
+<span class="n">hall</span> <span class="o">=</span> <span class="mf">11.25</span>
+<span class="n">kit</span> <span class="o">=</span> <span class="mf">18.0</span>
+<span class="n">liv</span> <span class="o">=</span> <span class="mf">20.0</span>
+<span class="n">bed</span> <span class="o">=</span> <span class="mf">10.75</span>
+<span class="n">bath</span> <span class="o">=</span> <span class="mf">9.50</span>
+
+<span class="c1"># Adapt list areas</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hallway&quot;</span><span class="p">,</span> <span class="n">hall</span><span class="p">,</span> <span class="s2">&quot;kitchen&quot;</span><span class="p">,</span> <span class="n">kit</span><span class="p">,</span> <span class="s2">&quot;living room&quot;</span><span class="p">,</span> <span class="n">liv</span><span class="p">,</span> <span class="s2">&quot;bedroom&quot;</span><span class="p">,</span> <span class="n">bed</span><span class="p">,</span> <span class="s2">&quot;bathroom&quot;</span><span class="p">,</span> <span class="n">bath</span><span class="p">]</span>
+
+<span class="c1"># Print areas</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;hallway&#39;, 11.25, &#39;kitchen&#39;, 18.0, &#39;living room&#39;, 20.0, &#39;bedroom&#39;, 10.75, &#39;bathroom&#39;, 9.5]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12453,9 +12551,74 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>these are all valid lists:</p>
+<ul>
+<li>[1, 3, 4, 2]</li>
+<li>[[1, 2, 3], [4, 5, 7]]</li>
+<li>[1 + 2, "a" * 5, 3]</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="List-of-lists">List of lists<a class="anchor-link" href="#List-of-lists">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># area variables (in square meters)</span>
+<span class="n">hall</span> <span class="o">=</span> <span class="mf">11.25</span>
+<span class="n">kit</span> <span class="o">=</span> <span class="mf">18.0</span>
+<span class="n">liv</span> <span class="o">=</span> <span class="mf">20.0</span>
+<span class="n">bed</span> <span class="o">=</span> <span class="mf">10.75</span>
+<span class="n">bath</span> <span class="o">=</span> <span class="mf">9.50</span>
+
+<span class="c1"># house information as list of lists</span>
+<span class="n">house</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;hallway&quot;</span><span class="p">,</span> <span class="n">hall</span><span class="p">],</span>
+         <span class="p">[</span><span class="s2">&quot;kitchen&quot;</span><span class="p">,</span> <span class="n">kit</span><span class="p">],</span>
+         <span class="p">[</span><span class="s2">&quot;living room&quot;</span><span class="p">,</span> <span class="n">liv</span><span class="p">],</span>
+         <span class="p">[</span><span class="s2">&quot;bedroom&quot;</span><span class="p">,</span> <span class="n">bed</span><span class="p">],</span>
+         <span class="p">[</span><span class="s2">&quot;bathroom&quot;</span><span class="p">,</span> <span class="n">bath</span><span class="p">]</span>
+         <span class="p">]</span>
+
+<span class="c1"># Print out house</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">house</span><span class="p">)</span>
+
+<span class="c1"># Print out the type of house</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">house</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[&#39;hallway&#39;, 11.25], [&#39;kitchen&#39;, 18.0], [&#39;living room&#39;, 20.0], [&#39;bedroom&#39;, 10.75], [&#39;bathroom&#39;, 9.5]]
+&lt;class &#39;list&#39;&gt;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12469,9 +12632,73 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Python is zero indexed</li>
+<li>you can count backwards with a negative index<ul>
+<li>-1 will give you the last element</li>
+<li>-2 will give yoy the second to last element</li>
+</ul>
+</li>
+<li>for some reason the index specified at the end is not included. <ul>
+<li>so fam[3:5] will return the 4th and 5th element only. not the 6th. </li>
+</ul>
+</li>
+<li>if you leave out the start [:3] or end [0:] it will start at the beginning or go to the end respectively. </li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Subset-and-conquer">Subset and conquer<a class="anchor-link" href="#Subset-and-conquer">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create the areas list</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hallway&quot;</span><span class="p">,</span> <span class="mf">11.25</span><span class="p">,</span> <span class="s2">&quot;kitchen&quot;</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="s2">&quot;living room&quot;</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="s2">&quot;bedroom&quot;</span><span class="p">,</span> <span class="mf">10.75</span><span class="p">,</span> <span class="s2">&quot;bathroom&quot;</span><span class="p">,</span> <span class="mf">9.50</span><span class="p">]</span>
+
+<span class="c1"># Print out second element from areas</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Print out last element from areas</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Print out the area of the living room</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>11.25
+9.5
+20.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12481,6 +12708,44 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create the areas list</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hallway&quot;</span><span class="p">,</span> <span class="mf">11.25</span><span class="p">,</span> <span class="s2">&quot;kitchen&quot;</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="s2">&quot;living room&quot;</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="s2">&quot;bedroom&quot;</span><span class="p">,</span> <span class="mf">10.75</span><span class="p">,</span> <span class="s2">&quot;bathroom&quot;</span><span class="p">,</span> <span class="mf">9.50</span><span class="p">]</span>
+
+<span class="c1"># Sum of kitchen and bedroom area: eat_sleep_area</span>
+<span class="n">eat_sleep_area</span> <span class="o">=</span> <span class="n">areas</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">areas</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+
+<span class="c1"># Print the variable eat_sleep_area</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">eat_sleep_area</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>28.75
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12488,6 +12753,49 @@ div#notebook {
 <h3 id="Slicing-and-dicing">Slicing and dicing<a class="anchor-link" href="#Slicing-and-dicing">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create the areas list</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hallway&quot;</span><span class="p">,</span> <span class="mf">11.25</span><span class="p">,</span> <span class="s2">&quot;kitchen&quot;</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="s2">&quot;living room&quot;</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="s2">&quot;bedroom&quot;</span><span class="p">,</span> <span class="mf">10.75</span><span class="p">,</span> <span class="s2">&quot;bathroom&quot;</span><span class="p">,</span> <span class="mf">9.50</span><span class="p">]</span>
+
+<span class="c1"># Use slicing to create downstairs</span>
+<span class="n">downstairs</span> <span class="o">=</span> <span class="n">areas</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span>
+
+<span class="c1"># Use slicing to create upstairs</span>
+<span class="n">upstairs</span> <span class="o">=</span> <span class="n">areas</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span>
+
+<span class="c1"># Print out downstairs and upstairs</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">downstairs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">upstairs</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;hallway&#39;, 11.25, &#39;kitchen&#39;, 18.0, &#39;living room&#39;, 20.0]
+[&#39;bedroom&#39;, 10.75, &#39;bathroom&#39;, 9.5]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12497,6 +12805,26 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create the areas list</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hallway&quot;</span><span class="p">,</span> <span class="mf">11.25</span><span class="p">,</span> <span class="s2">&quot;kitchen&quot;</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="s2">&quot;living room&quot;</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="s2">&quot;bedroom&quot;</span><span class="p">,</span> <span class="mf">10.75</span><span class="p">,</span> <span class="s2">&quot;bathroom&quot;</span><span class="p">,</span> <span class="mf">9.50</span><span class="p">]</span>
+
+<span class="c1"># Alternative slicing to create downstairs</span>
+<span class="n">downstairs</span> <span class="o">=</span> <span class="n">areas</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span>
+
+<span class="c1"># Alternative slicing to create upstairs</span>
+<span class="n">upstairs</span> <span class="o">=</span> <span class="n">areas</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12504,6 +12832,76 @@ div#notebook {
 <h3 id="Subsetting-lists-of-lists">Subsetting lists of lists<a class="anchor-link" href="#Subsetting-lists-of-lists">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">house</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[22]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[[&#39;hallway&#39;, 11.25],
+ [&#39;kitchen&#39;, 18.0],
+ [&#39;living room&#39;, 20.0],
+ [&#39;bedroom&#39;, 10.75],
+ [&#39;bathroom&#39;, 9.5]]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">house</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[23]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>9.5</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12517,9 +12915,73 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>You can update an element by setting that element equal to a new value<ul>
+<li>you can update multiple elements at the same time with <code>fam[0:2] = ["me", 1.79]</code></li>
+</ul>
+</li>
+<li>the <code>+</code> operator will simply paste the contents of two lists into one list.</li>
+<li>use <code>del(fam[2])</code> to delete the second element</li>
+<li>if you set y = x, then update y, it will also update x. <ul>
+<li>they are both just references to the same list stored on the computer. interesting.</li>
+<li>if you don't want this then use <code>y = list(x)</code> or <code>y = x[:]</code> and y will be a new object based on x rather than just a reference to x.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Replace-list-elements">Replace list elements<a class="anchor-link" href="#Replace-list-elements">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create the areas list</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hallway&quot;</span><span class="p">,</span> <span class="mf">11.25</span><span class="p">,</span> <span class="s2">&quot;kitchen&quot;</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="s2">&quot;living room&quot;</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="s2">&quot;bedroom&quot;</span><span class="p">,</span> <span class="mf">10.75</span><span class="p">,</span> <span class="s2">&quot;bathroom&quot;</span><span class="p">,</span> <span class="mf">9.50</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+
+<span class="c1"># Correct the bathroom area</span>
+<span class="n">areas</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">10.5</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+
+<span class="c1"># Change &quot;living room&quot; to &quot;chill zone&quot;</span>
+<span class="n">areas</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;chill zone&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;hallway&#39;, 11.25, &#39;kitchen&#39;, 18.0, &#39;living room&#39;, 20.0, &#39;bedroom&#39;, 10.75, &#39;bathroom&#39;, 9.5]
+[&#39;hallway&#39;, 11.25, &#39;kitchen&#39;, 18.0, &#39;living room&#39;, 20.0, &#39;bedroom&#39;, 10.75, &#39;bathroom&#39;, 10.5]
+[&#39;hallway&#39;, 11.25, &#39;kitchen&#39;, 18.0, &#39;chill zone&#39;, 20.0, &#39;bedroom&#39;, 10.75, &#39;bathroom&#39;, 10.5]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12528,6 +12990,50 @@ div#notebook {
 <h3 id="Extend-a-list">Extend a list<a class="anchor-link" href="#Extend-a-list">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create the areas list and make some changes</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hallway&quot;</span><span class="p">,</span> <span class="mf">11.25</span><span class="p">,</span> <span class="s2">&quot;kitchen&quot;</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="s2">&quot;chill zone&quot;</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span>
+         <span class="s2">&quot;bedroom&quot;</span><span class="p">,</span> <span class="mf">10.75</span><span class="p">,</span> <span class="s2">&quot;bathroom&quot;</span><span class="p">,</span> <span class="mf">10.50</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+
+<span class="c1"># Add poolhouse data to areas, new list is areas_1</span>
+<span class="n">areas_1</span> <span class="o">=</span> <span class="n">areas</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;poolhouse&quot;</span><span class="p">,</span> <span class="mf">24.5</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas_1</span><span class="p">)</span>
+
+<span class="c1"># Add garage data to areas_1, new list is areas_2</span>
+<span class="n">areas_2</span> <span class="o">=</span> <span class="n">areas_1</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;garage&quot;</span><span class="p">,</span> <span class="mf">15.45</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas_2</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;hallway&#39;, 11.25, &#39;kitchen&#39;, 18.0, &#39;chill zone&#39;, 20.0, &#39;bedroom&#39;, 10.75, &#39;bathroom&#39;, 10.5]
+[&#39;hallway&#39;, 11.25, &#39;kitchen&#39;, 18.0, &#39;chill zone&#39;, 20.0, &#39;bedroom&#39;, 10.75, &#39;bathroom&#39;, 10.5, &#39;poolhouse&#39;, 24.5]
+[&#39;hallway&#39;, 11.25, &#39;kitchen&#39;, 18.0, &#39;chill zone&#39;, 20.0, &#39;bedroom&#39;, 10.75, &#39;bathroom&#39;, 10.5, &#39;poolhouse&#39;, 24.5, &#39;garage&#39;, 15.45]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12541,9 +13047,95 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Remove the poolhouse from <code>areas_2</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">areas_2</span><span class="p">)</span>
+<span class="k">del</span><span class="p">(</span><span class="n">areas_2</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas_2</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[&#39;hallway&#39;, 11.25, &#39;kitchen&#39;, 18.0, &#39;chill zone&#39;, 20.0, &#39;bedroom&#39;, 10.75, &#39;bathroom&#39;, 10.5, &#39;poolhouse&#39;, 24.5, &#39;garage&#39;, 15.45]
+[&#39;hallway&#39;, 11.25, &#39;kitchen&#39;, 18.0, &#39;chill zone&#39;, 20.0, &#39;bedroom&#39;, 10.75, &#39;bathroom&#39;, 10.5, &#39;garage&#39;, 15.45]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Inner-workings-of-lists">Inner workings of lists<a class="anchor-link" href="#Inner-workings-of-lists">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create list areas</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">11.25</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">10.75</span><span class="p">,</span> <span class="mf">9.50</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+
+<span class="c1"># Create areas_copy</span>
+<span class="n">areas_copy</span> <span class="o">=</span> <span class="n">areas</span>
+
+<span class="c1"># Change areas_copy</span>
+<span class="n">areas_copy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">5.0</span>
+
+<span class="c1"># Print areas</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[11.25, 18.0, 20.0, 10.75, 9.5]
+[5.0, 18.0, 20.0, 10.75, 9.5]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12569,11 +13161,106 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create variables var1 and var2</span>
+<span class="n">var1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">var2</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># Print out type of var1</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">var1</span><span class="p">))</span>
+
+<span class="c1"># Print out length of var1</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var1</span><span class="p">))</span>
+
+<span class="c1"># Convert var2 to an integer: out2</span>
+<span class="n">out2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">var2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">out2</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;list&#39;&gt;
+4
+1
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Help!">Help!<a class="anchor-link" href="#Help!">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="nb">max</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Help on built-in function max in module builtins:
+
+max(...)
+    max(iterable, *[, default=obj, key=func]) -&gt; value
+    max(arg1, arg2, *args, *[, key=func]) -&gt; value
+    
+    With a single iterable argument, return its biggest item. The
+    default keyword-only argument specifies an object to return if
+    the provided iterable is empty.
+    With two or more arguments, return the largest argument.
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In jupyter you can type <code>?help</code> to get help on a function in pop up.</p>
+
 </div>
 </div>
 </div>
@@ -12589,7 +13276,97 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>sorted takes 3 arguments, iterable, key, and reverse<ul>
+<li><code>iteratble</code> is required</li>
+<li><code>key</code> is optional. it is set to <code>None</code> by default</li>
+<li><code>reverse</code> is optional, it is set to <code>False</code> by default</li>
+<li>You do not need to name <code>iterable</code>. But you need to name the optional arguments.  </li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create lists first and second</span>
+<span class="n">first</span> <span class="o">=</span> <span class="p">[</span><span class="mf">11.25</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]</span>
+<span class="n">second</span> <span class="o">=</span> <span class="p">[</span><span class="mf">10.75</span><span class="p">,</span> <span class="mf">9.50</span><span class="p">]</span>
+
+<span class="c1"># Paste together first and second: full</span>
+<span class="n">full</span> <span class="o">=</span> <span class="n">first</span> <span class="o">+</span> <span class="n">second</span>
+
+<span class="c1"># Sort full in descending order: full_sorted</span>
+<span class="n">full_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">full</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Print out full_sorted</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">full_sorted</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[20.0, 18.0, 11.25, 10.75, 9.5]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Methods">Methods<a class="anchor-link" href="#Methods">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Methods are similar to functions but a little different</li>
+<li>You call them on an object, rather than passing an argument into a function<ul>
+<li>They are functions that work on specific objects</li>
+</ul>
+</li>
+<li>Getting the index of specific element from a list is a good example of a methos<ul>
+<li><code>index</code> is a method </li>
+<li><code>fam.index("mom")</code></li>
+</ul>
+</li>
+<li><code>count</code> is another method. This counts the number of times an element appears in the list<ul>
+<li><code>fam.count(1.73)</code></li>
+</ul>
+</li>
+<li>different objects have specific methods associated with them. <ul>
+<li>i.e. Lists and strings have different methods</li>
+<li>e.g. <code>sister.replace("z", "sa")</code> will work on a sting but not on a list. </li>
+<li>the methods may have the same name but work differently</li>
+<li>index will give you the location of the letters in a string, but the location of an element of a list</li>
+</ul>
+</li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -12601,6 +13378,104 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># string to experiment with: room</span>
+<span class="n">room</span> <span class="o">=</span> <span class="s2">&quot;poolhouse&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">room</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>poolhouse
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Use upper() on room: room_up</span>
+<span class="n">room_up</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">room_up</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>POOLHOUSE
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out the number of o&#39;s in room</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">room</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;o&quot;</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>3
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12609,6 +13484,45 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create list areas</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">11.25</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">10.75</span><span class="p">,</span> <span class="mf">9.50</span><span class="p">]</span>
+
+<span class="c1"># Print out the index of the element 20.0</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mf">20.0</span><span class="p">))</span>
+
+<span class="c1"># Print out how often 14.5 appears in areas</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mf">14.5</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2
+0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12616,6 +13530,80 @@ div#notebook {
 <h3 id="List-Methods-(2)">List Methods (2)<a class="anchor-link" href="#List-Methods-(2)">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create list areas</span>
+<span class="n">areas</span> <span class="o">=</span> <span class="p">[</span><span class="mf">11.25</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">10.75</span><span class="p">,</span> <span class="mf">9.50</span><span class="p">]</span>
+
+<span class="c1"># Use append twice to add poolhouse and garage size</span>
+<span class="n">areas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">24.5</span><span class="p">)</span>
+<span class="n">areas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">15.45</span><span class="p">)</span>
+
+<span class="c1"># Print out areas</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[11.25, 18.0, 20.0, 10.75, 9.5, 24.5, 15.45]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Reverse the orders of the elements in areas</span>
+<span class="n">areas</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+<span class="c1"># Print out areas</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[15.45, 24.5, 9.5, 10.75, 20.0, 18.0, 11.25]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12629,9 +13617,79 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>a directory of python scripts</li>
+<li>there are thousands</li>
+<li>some good data science packages<ul>
+<li>numpy, matplotlib, scikit-learn</li>
+</ul>
+</li>
+<li>You install the packages with pip or conda<ul>
+<li>Then import the package or specific functions from it in your script before calling the funcitons</li>
+</ul>
+</li>
+<li>its common to shorten the packages<ul>
+<li><code>import numpy as np</code></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Import-package">Import package<a class="anchor-link" href="#Import-package">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Definition of radius</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mf">0.43</span>
+
+<span class="c1"># Import the math package</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c1"># Calculate C</span>
+<span class="n">C</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r</span>
+
+<span class="c1"># Calculate A</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="c1"># Build printout</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Circumference: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Area: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">A</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Circumference: 2.701769682087222
+Area: 0.5808804816487527
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12641,11 +13699,71 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Definition of radius</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mi">192500</span>
+
+<span class="c1"># Import radians function of math package</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span>
+
+<span class="c1"># Travel distance of Moon over 12 degrees. Store in dist.</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">radians</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">phi</span>
+
+<span class="c1"># Print out dist</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>40317.10572106901
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Different-ways-of-importing">Different ways of importing<a class="anchor-link" href="#Different-ways-of-importing">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Lets say you want to use the <code>inv()</code> function from <code>linalg</code> subpackage of <code>scipy</code> like this:<ul>
+<li><code>my_inv([[1,2], [3,4]])</code></li>
+</ul>
+</li>
+<li>How would you import it<ul>
+<li><code>from scipy.linalg import inv as my_inv</code></li>
+</ul>
+</li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -12669,9 +13787,268 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Lists vs NumPy</p>
+<ul>
+<li>Lists are powerful<ul>
+<li>you can hold a collection of values, even different values, and change, add or remove these values</li>
+</ul>
+</li>
+<li>But there is something huge missing<ul>
+<li>Python does not know how to perform calculations on list.</li>
+<li>You would have to loop through each element of two list and perform a calculation storing the result in another list.</li>
+<li>This is slow</li>
+</ul>
+</li>
+<li>NumPy lets you perform calculations on lists. <ul>
+<li>you can convert a list into a np array</li>
+</ul>
+</li>
+</ul>
+<p>Types and methods</p>
+<ul>
+<li>A np array can only contain one data type<ul>
+<li>so, if you use <code>np.array</code> on a list with multiple types it will pick one type to fit all, like a string. </li>
+</ul>
+</li>
+<li>The methods will work different on a numpy array than a list<ul>
+<li><code>+</code> on an np array will sum the elements, not concatenate the elements. </li>
+</ul>
+</li>
+</ul>
+<p>Subsetting:</p>
+<ul>
+<li>to index, you can just use square brackets <ul>
+<li><code>bmi[1]</code></li>
+</ul>
+</li>
+<li>you can also use an array of booleans to get multiple values<ul>
+<li><code>bmi[bmi &gt; 23]</code></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># This wont work with lists</span>
+<span class="n">height</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.73</span><span class="p">,</span> <span class="mf">1.68</span><span class="p">,</span> <span class="mf">1.71</span><span class="p">,</span> <span class="mf">1.89</span><span class="p">,</span> <span class="mf">1.79</span><span class="p">]</span>
+<span class="n">weight</span> <span class="o">=</span> <span class="p">[</span><span class="mf">65.4</span><span class="p">,</span> <span class="mf">59.2</span><span class="p">,</span> <span class="mf">63.6</span><span class="p">,</span> <span class="mf">88.4</span><span class="p">,</span> <span class="mf">68.7</span><span class="p">]</span>
+<span class="n">weight</span> <span class="o">/</span> <span class="n">height</span> <span class="o">**</span> <span class="mi">2</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-39-bb53ff13745f&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> height <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">1.73</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">1.68</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">1.71</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">1.89</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">1.79</span><span class="ansi-blue-fg">]</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> weight <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">65.4</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">59.2</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">63.6</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">88.4</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">68.7</span><span class="ansi-blue-fg">]</span>
+<span class="ansi-green-fg">----&gt; 4</span><span class="ansi-red-fg"> </span>weight <span class="ansi-blue-fg">/</span> height <span class="ansi-blue-fg">**</span> <span class="ansi-cyan-fg">2</span>
+
+<span class="ansi-red-fg">TypeError</span>: unsupported operand type(s) for ** or pow(): &#39;list&#39; and &#39;int&#39;</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">np_height</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+<span class="n">np_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">np_height</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_weight</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[ 1.73  1.68  1.71  1.89  1.79]
+[ 65.4  59.2  63.6  88.4  68.7]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bmi</span> <span class="o">=</span> <span class="n">np_weight</span> <span class="o">/</span> <span class="n">np_height</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bmi</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[ 21.85171573  20.97505669  21.75028214  24.7473475   21.44127836]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Your-First-NumPy-Array">Your First NumPy Array<a class="anchor-link" href="#Your-First-NumPy-Array">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create list baseball</span>
+<span class="n">baseball</span> <span class="o">=</span> <span class="p">[</span><span class="mi">180</span><span class="p">,</span> <span class="mi">215</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">188</span><span class="p">,</span> <span class="mi">176</span><span class="p">,</span> <span class="mi">209</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">baseball</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[180, 215, 210, 210, 188, 176, 209, 200]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Import the numpy package as np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Create a Numpy array from baseball: np_baseball</span>
+<span class="n">np_baseball</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">baseball</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[180 215 210 210 188 176 209 200]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out type of np_baseball</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;numpy.ndarray&#39;&gt;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12685,9 +14062,285 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>First, I need to get the baseball data for the class. Maybe this is cheating, but pandas makes it easy to do this. Then I will convert the height and weight from this dataframe into numpy arrays.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">baseball</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://assets.datacamp.com/production/course_735/datasets/baseball.csv&#39;</span><span class="p">)</span>
+<span class="n">baseball</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[45]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>Team</th>
+      <th>Position</th>
+      <th>Height</th>
+      <th>Weight</th>
+      <th>Age</th>
+      <th>PosCategory</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Adam_Donachie</td>
+      <td>BAL</td>
+      <td>Catcher</td>
+      <td>74</td>
+      <td>180</td>
+      <td>22.99</td>
+      <td>Catcher</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Paul_Bako</td>
+      <td>BAL</td>
+      <td>Catcher</td>
+      <td>74</td>
+      <td>215</td>
+      <td>34.69</td>
+      <td>Catcher</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Ramon_Hernandez</td>
+      <td>BAL</td>
+      <td>Catcher</td>
+      <td>72</td>
+      <td>210</td>
+      <td>30.78</td>
+      <td>Catcher</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Kevin_Millar</td>
+      <td>BAL</td>
+      <td>First_Baseman</td>
+      <td>72</td>
+      <td>210</td>
+      <td>35.43</td>
+      <td>Infielder</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Chris_Gomez</td>
+      <td>BAL</td>
+      <td>First_Baseman</td>
+      <td>73</td>
+      <td>188</td>
+      <td>35.71</td>
+      <td>Infielder</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the class they provided a list of values and we call <code>np.array(height)</code> to get the numpy array. But from pandas we just need to pull the values of the Height column and it will be a numpy array.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create a Numpy array from height: np_height</span>
+<span class="n">np_height</span> <span class="o">=</span> <span class="n">baseball</span><span class="p">[</span><span class="s1">&#39;Height&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># Print out np_height</span>
+<span class="n">np_height</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[46]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([74, 74, 72, ..., 75, 75, 73])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Convert np_height to m: np_height_m</span>
+<span class="n">np_height_m</span> <span class="o">=</span> <span class="n">np_height</span> <span class="o">*</span> <span class="mf">0.0254</span>
+
+<span class="c1"># Print np_height_m</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_height_m</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[ 1.8796  1.8796  1.8288 ...,  1.905   1.905   1.8542]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Baseball-player's-BMI">Baseball player's BMI<a class="anchor-link" href="#Baseball-player's-BMI">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create array from weight with correct units: np_weight_kg</span>
+<span class="n">np_weight_kg</span> <span class="o">=</span> <span class="n">baseball</span><span class="p">[</span><span class="s1">&#39;Weight&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="o">.</span><span class="mi">453592</span>
+<span class="n">np_weight_kg</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[48]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([ 81.64656,  97.52228,  95.25432, ...,  92.98636,  86.18248,
+        88.45044])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Calculate the BMI: bmi</span>
+<span class="n">bmi</span> <span class="o">=</span> <span class="n">np_weight_kg</span><span class="o">/</span><span class="n">np_height_m</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="c1"># Print out bmi</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bmi</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[ 23.11037639  27.60406069  28.48080465 ...,  25.62295933  23.74810865
+  25.72686361]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12697,6 +14350,47 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create the light array</span>
+<span class="n">light</span> <span class="o">=</span> <span class="n">bmi</span> <span class="o">&lt;</span> <span class="mi">21</span>
+
+<span class="c1"># Print out light</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">light</span><span class="p">)</span>
+
+<span class="c1"># Print out BMIs of all baseball players whose BMI is below 21</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bmi</span><span class="p">[</span><span class="n">light</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[False False False ..., False False False]
+[ 20.54255679  20.54255679  20.69282047  20.69282047  20.34343189
+  20.34343189  20.69282047  20.15883472  19.4984471   20.69282047
+  20.9205219 ]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12705,6 +14399,39 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[51]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[51]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([4, 5, 2])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12712,6 +14439,84 @@ div#notebook {
 <h3 id="Subsetting-NumPy-Arrays">Subsetting NumPy Arrays<a class="anchor-link" href="#Subsetting-NumPy-Arrays">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[52]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">printnp_height</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-52-b87090f81b03&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>printnp_height
+
+<span class="ansi-red-fg">NameError</span>: name &#39;printnp_height&#39; is not defined</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[53]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">np_height_m</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_weight_kg</span><span class="p">)</span>
+
+<span class="c1"># Print out the weight at index 50</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_weight_kg</span><span class="p">[</span><span class="mi">50</span><span class="p">])</span>
+
+<span class="c1"># Print out sub-array of np_height: index 100 up to and including index 110</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_height_m</span><span class="p">[</span><span class="mi">100</span><span class="p">:</span><span class="mi">111</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[ 1.8796  1.8796  1.8288 ...,  1.905   1.905   1.8542]
+[ 81.64656  97.52228  95.25432 ...,  92.98636  86.18248  88.45044]
+90.7184
+[ 1.8542  1.8796  1.8288  1.8542  1.7526  1.8288  1.8542  1.905   1.905
+  1.8542  1.8288]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12725,9 +14530,83 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>The type of numpy.ndarray stands for numpy n dimensional array</li>
+<li>This is like an improved list of lists</li>
+<li>You can do more advanced subsetting</li>
+<li>You can still only have one data type<ul>
+<li>np_2d[0]</li>
+<li>np_2d[0][2] is same as</li>
+<li>np[0,2]</li>
+<li>np_2d[:, 1:3] will give you height and weight of 2nd and 3rd person</li>
+<li>This seems to work just like a matlab matrix</li>
+<li>except that it is zero indexed and the last value is not included</li>
+<li>man thats going to be hard to get used to!</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Your-First-2D-NumPy-Array">Your First 2D NumPy Array<a class="anchor-link" href="#Your-First-2D-NumPy-Array">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[54]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create baseball, a list of lists</span>
+<span class="n">baseball</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">180</span><span class="p">,</span> <span class="mf">78.4</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">215</span><span class="p">,</span> <span class="mf">102.7</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">210</span><span class="p">,</span> <span class="mf">98.5</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">188</span><span class="p">,</span> <span class="mf">75.2</span><span class="p">]]</span>
+
+<span class="c1"># Create a 2D Numpy array from baseball: np_baseball</span>
+<span class="n">np_baseball</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">baseball</span><span class="p">)</span>
+
+<span class="c1"># Print out the type of np_baseball</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">))</span>
+
+<span class="c1"># Print out the shape of np_baseball</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;numpy.ndarray&#39;&gt;
+(4, 2)
+[[ 180.    78.4]
+ [ 215.   102.7]
+ [ 210.    98.5]
+ [ 188.    75.2]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12741,9 +14620,161 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Hmmm, here I actually need to make a 2d numpy array from the pandas data frame. 
+In the class they give you the height and weight in a list of list and you just need to call <code>np.array()</code> on it</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">baseball</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://assets.datacamp.com/production/course_735/datasets/baseball.csv&#39;</span><span class="p">)</span>
+<span class="n">np_baseball</span> <span class="o">=</span> <span class="n">baseball</span><span class="p">[[</span><span class="s1">&#39;Height&#39;</span><span class="p">,</span><span class="s1">&#39;Weight&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">)</span>
+
+<span class="c1"># Print out the shape of np_baseball</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;numpy.ndarray&#39;&gt;
+[[ 74 180]
+ [ 74 215]
+ [ 72 210]
+ ..., 
+ [ 75 205]
+ [ 75 190]
+ [ 73 195]]
+(1015, 2)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Subsetting-2D-NumPy-Arrays">Subsetting 2D NumPy Arrays<a class="anchor-link" href="#Subsetting-2D-NumPy-Arrays">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[56]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out the 50th row of np_baseball</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">[</span><span class="mi">49</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[ 70 195]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[57]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select the entire second column of np_baseball: np_weight</span>
+<span class="n">np_weight</span> <span class="o">=</span> <span class="n">np_baseball</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_weight</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[180 215 210 ..., 205 190 195]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[58]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out height of 124th player</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">[</span><span class="mi">123</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>75
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12757,7 +14788,566 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>A quick example...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[59]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+                   <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+                   <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_mat</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[1 2]
+ [3 4]
+ [5 6]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[60]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">np_mat</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[ 2  4]
+ [ 6  8]
+ [10 12]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[61]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">np_mat</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[11 12]
+ [13 14]
+ [15 16]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[62]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">np_mat</span> <span class="o">+</span> <span class="n">np_mat</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[ 2  4]
+ [ 6  8]
+ [10 12]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, for the exercise I need to get the <code>updated</code> dataset out of the datacamp class and into my notebook:</p>
+<ul>
+<li>This will print the array with the commas so its easy to build the array in my own script. <ul>
+<li><code>print(repr(updated))</code></li>
+</ul>
+</li>
+<li>I also set the print options to <code>inf</code> so the whole thing would print, but not sure if that matters or not with the <code>repr</code> function<ul>
+<li><code>np.set_printoptions(threshold=np.inf)</code> </li>
+</ul>
+</li>
+<li>Then I copied and pasted into file, wrapped the array in <code>np.array()</code> function and imported numpy at the top of the file. I saved the file as <code>updated.py</code>. It is in the working directory of the notebook.</li>
+<li>In the notebook, below, I run the py script<ul>
+<li><code>run updated.py</code></li>
+</ul>
+</li>
+<li>This seems to work fine</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[63]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">run</span> <span class="n">updated</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I also need to get the height, weight, and age from the baseball array.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[64]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">baseball</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://assets.datacamp.com/production/course_735/datasets/baseball.csv&#39;</span><span class="p">)</span>
+<span class="n">np_baseball</span> <span class="o">=</span> <span class="n">baseball</span><span class="p">[[</span><span class="s1">&#39;Height&#39;</span><span class="p">,</span><span class="s1">&#39;Weight&#39;</span><span class="p">,</span><span class="s1">&#39;Age&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Okay, now <code>np_baseball</code> and <code>updated</code> should match in size...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[65]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">updated</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(1015, 3)
+(1015, 3)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[  74.    180.     22.99]
+ [  74.    215.     34.69]
+ [  72.    210.     30.78]
+ ..., 
+ [  75.    205.     25.19]
+ [  75.    190.     31.01]
+ [  73.    195.     27.92]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[67]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[  1.2303559  -11.162249     1.        ]
+ [  1.02614252  16.0973231    1.        ]
+ [  1.1544228    5.08167641   1.        ]
+ ..., 
+ [  1.09349925   4.23890778   1.        ]
+ [  0.82285669 -17.7820003    1.        ]
+ [  0.99484223   8.14402711   1.        ]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[68]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out addition of np_baseball and updated</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span> <span class="o">+</span> <span class="n">updated</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[  75.2303559   168.837751     23.99      ]
+ [  75.02614252  231.0973231    35.69      ]
+ [  73.1544228   215.08167641   31.78      ]
+ ..., 
+ [  76.09349925  209.23890778   26.19      ]
+ [  75.82285669  172.2179997    32.01      ]
+ [  73.99484223  203.14402711   28.92      ]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[69]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create Numpy array: conversion</span>
+<span class="n">conversion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0254</span><span class="p">,</span> <span class="mf">0.453592</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Print out product of np_baseball and conversion</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np_baseball</span> <span class="o">*</span> <span class="n">conversion</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[[  1.8796   81.64656  22.99   ]
+ [  1.8796   97.52228  34.69   ]
+ [  1.8288   95.25432  30.78   ]
+ ..., 
+ [  1.905    92.98636  25.19   ]
+ [  1.905    86.18248  31.01   ]
+ [  1.8542   88.45044  27.92   ]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="NumPy:-Basic-Statistics">NumPy: Basic Statistics<a class="anchor-link" href="#NumPy:-Basic-Statistics">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[70]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">height</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">1.75</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">60.32</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">np_city</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">height</span><span class="p">,</span> <span class="n">weight</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[71]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np_city</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[71]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>1.7509260000000002</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[72]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">np_city</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[72]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>1.75</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[73]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">np_city</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">np_city</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[73]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[ 1.        , -0.02923143],
+       [-0.02923143,  1.        ]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[74]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">np_city</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[74]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.20093223366100321</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Numpy is much faster than doing this on a list, because it forces single data type. </li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -12773,9 +15363,140 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>A quick example...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[75]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>7.0
+8.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[76]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create np_height from np_baseball</span>
+<span class="n">np_height</span> <span class="o">=</span> <span class="n">np_baseball</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Print out the mean of np_height</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np_height</span><span class="p">))</span>
+
+<span class="c1"># Print out the median of np_height</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">np_height</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>73.6896551724
+74.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Explore-the-baseball-data">Explore the baseball data<a class="anchor-link" href="#Explore-the-baseball-data">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[77]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print mean height (first column)</span>
+<span class="n">avg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Average: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">avg</span><span class="p">))</span>
+
+<span class="c1"># Print median height. Replace &#39;None&#39;</span>
+<span class="n">med</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Median: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">med</span><span class="p">))</span>
+
+<span class="c1"># Print out the standard deviation on height. Replace &#39;None&#39;</span>
+<span class="n">stddev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Standard Deviation: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">stddev</span><span class="p">))</span>
+
+<span class="c1"># Print out correlation between first and second column. Replace &#39;None&#39;</span>
+<span class="n">corr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">np_baseball</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">np_baseball</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Correlation: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">corr</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Average: 73.6896551724
+Median: 74.0
+Standard Deviation: 2.31279188105
+Correlation: [[ 1.          0.53153932]
+ [ 0.53153932  1.        ]]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12784,6 +15505,465 @@ div#notebook {
 <h3 id="Blend-it-all-together">Blend it all together<a class="anchor-link" href="#Blend-it-all-together">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Wow getting the fifa data set was a bit of a mess at first. </li>
+<li>It has leading spaces so the indexing was not working</li>
+<li>I found the <code>list</code> function that shows the header values. </li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[78]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fifa</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://assets.datacamp.com/production/course_735/datasets/fifa.csv&#39;</span><span class="p">)</span>
+<span class="n">fifa</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[78]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>name</th>
+      <th>rating</th>
+      <th>position</th>
+      <th>height</th>
+      <th>foot</th>
+      <th>rare</th>
+      <th>pace</th>
+      <th>shooting</th>
+      <th>passing</th>
+      <th>dribbling</th>
+      <th>defending</th>
+      <th>heading</th>
+      <th>diving</th>
+      <th>handling</th>
+      <th>kicking</th>
+      <th>reflexes</th>
+      <th>speed</th>
+      <th>positioning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001</td>
+      <td>Gábor Király</td>
+      <td>69</td>
+      <td>GK</td>
+      <td>191</td>
+      <td>Right</td>
+      <td>0</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>70</td>
+      <td>66</td>
+      <td>63</td>
+      <td>74</td>
+      <td>35</td>
+      <td>66.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>100143</td>
+      <td>Frederik Boi</td>
+      <td>65</td>
+      <td>M</td>
+      <td>184</td>
+      <td>Right</td>
+      <td>0</td>
+      <td>61</td>
+      <td>65</td>
+      <td>63</td>
+      <td>59</td>
+      <td>62</td>
+      <td>62</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>100264</td>
+      <td>Tomasz Szewczuk</td>
+      <td>57</td>
+      <td>A</td>
+      <td>185</td>
+      <td>Right</td>
+      <td>0</td>
+      <td>65</td>
+      <td>54</td>
+      <td>43</td>
+      <td>53</td>
+      <td>55</td>
+      <td>74</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>100325</td>
+      <td>Steeve Joseph-Reinette</td>
+      <td>63</td>
+      <td>D</td>
+      <td>180</td>
+      <td>Left</td>
+      <td>0</td>
+      <td>68</td>
+      <td>38</td>
+      <td>51</td>
+      <td>46</td>
+      <td>64</td>
+      <td>71</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>100326</td>
+      <td>Kamel Chafni</td>
+      <td>72</td>
+      <td>M</td>
+      <td>181</td>
+      <td>Right</td>
+      <td>0</td>
+      <td>75</td>
+      <td>64</td>
+      <td>67</td>
+      <td>72</td>
+      <td>57</td>
+      <td>66</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[79]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">fifa</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[79]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>pandas.core.frame.DataFrame</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[80]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="n">fifa</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-80-cdd752f375ff&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>np<span class="ansi-blue-fg">.</span>char<span class="ansi-blue-fg">.</span>strip<span class="ansi-blue-fg">(</span>fifa<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/anaconda3/envs/python_datacamp/lib/python3.6/site-packages/numpy/core/defchararray.py</span> in <span class="ansi-cyan-fg">strip</span><span class="ansi-blue-fg">(a, chars)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1424</span>     &#34;&#34;&#34;
+<span class="ansi-green-intense-fg ansi-bold">   1425</span>     a_arr <span class="ansi-blue-fg">=</span> numpy<span class="ansi-blue-fg">.</span>asarray<span class="ansi-blue-fg">(</span>a<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">-&gt; 1426</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">return</span> _vec_string<span class="ansi-blue-fg">(</span>a_arr<span class="ansi-blue-fg">,</span> a_arr<span class="ansi-blue-fg">.</span>dtype<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;strip&#39;</span><span class="ansi-blue-fg">,</span> _clean_args<span class="ansi-blue-fg">(</span>chars<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1427</span> 
+<span class="ansi-green-intense-fg ansi-bold">   1428</span> 
+
+<span class="ansi-red-fg">TypeError</span>: string operation on non-string array</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[81]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">fifa</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[81]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;id&#39;,
+ &#39; name&#39;,
+ &#39; rating&#39;,
+ &#39; position&#39;,
+ &#39; height&#39;,
+ &#39; foot&#39;,
+ &#39; rare&#39;,
+ &#39; pace&#39;,
+ &#39; shooting&#39;,
+ &#39; passing&#39;,
+ &#39; dribbling&#39;,
+ &#39; defending&#39;,
+ &#39; heading&#39;,
+ &#39; diving&#39;,
+ &#39; handling&#39;,
+ &#39; kicking&#39;,
+ &#39; reflexes&#39;,
+ &#39; speed&#39;,
+ &#39; positioning&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[82]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Convert positions and heights to numpy arrays: np_positions, np_heights</span>
+<span class="c1"># Here I use .str.strip to remove the leading whitespace from the position column</span>
+<span class="n">np_positions</span> <span class="o">=</span> <span class="n">fifa</span><span class="p">[</span><span class="s1">&#39; position&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<span class="n">np_heights</span> <span class="o">=</span> <span class="n">fifa</span><span class="p">[</span><span class="s1">&#39; height&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[83]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np_positions</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[83]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0    GK
+1     M
+2     A
+3     D
+4     M
+Name:  position, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[84]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">np_positions</span> <span class="o">==</span> <span class="s1">&#39;GK&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[84]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0     True
+1    False
+2    False
+3    False
+4    False
+Name:  position, dtype: bool</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[85]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Heights of the goalkeepers: gk_heights</span>
+<span class="n">gk_heights</span> <span class="o">=</span> <span class="n">np_heights</span><span class="p">[</span><span class="n">np_positions</span> <span class="o">==</span> <span class="s1">&#39;GK&#39;</span><span class="p">]</span>
+
+<span class="c1"># Heights of the other players: other_heights</span>
+<span class="n">other_heights</span> <span class="o">=</span> <span class="n">np_heights</span><span class="p">[</span><span class="n">np_positions</span> <span class="o">!=</span> <span class="s1">&#39;GK&#39;</span><span class="p">]</span>
+
+<span class="c1"># Print out the median height of goalkeepers. Replace &#39;None&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Median height of goalkeepers: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">gk_heights</span><span class="p">)))</span>
+
+<span class="c1"># Print out the median height of other players. Replace &#39;None&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Median height of other players: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">other_heights</span><span class="p">)))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Median height of goalkeepers: 188.0
+Median height of other players: 181.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
     </div>
   </div>
