@@ -36,4 +36,5 @@ Data Science Career Track for R:
 Data Science Career Trak for Python:
 
  - [Intro to Python for Data Science](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/intro_to_python_for_data_science/intro_to_python_for_data_science.html)
+ - [Intermediate Python for Data Science](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/intermediate_python_for_data_science/intermediate_python_for_data_science.html)
  
