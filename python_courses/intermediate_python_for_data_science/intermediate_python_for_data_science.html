@@ -17202,9 +17202,237 @@ EG             45          Egypt          True
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Row labels are important for indexing in pandas</li>
+<li>You can use double brackets to select columns or single to select a slice of rows<ul>
+<li>But this is all a bit limited. </li>
+</ul>
+</li>
+<li><code>loc</code> and <code>iloc</code> are much more verstile for selecting parts of a dataframe<ul>
+<li><code>loc</code> is the pandas way to select based on labels</li>
+<li><code>iloc</code> is for integer position-based selection</li>
+<li>this is similar to using <code>my_array[rows, columns]</code> indexing with numpy arrays</li>
+<li>still need to use double brackets the have the data in a dataframe or display</li>
+<li>you can select rows and columns at the same time</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Square-Brackets-(1)">Square Brackets (1)<a class="anchor-link" href="#Square-Brackets-(1)">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[102]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cars</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[102]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cars_per_cap</th>
+      <th>country</th>
+      <th>drives_right</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>US</th>
+      <td>809</td>
+      <td>United States</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AUS</th>
+      <td>731</td>
+      <td>Australia</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>JAP</th>
+      <td>588</td>
+      <td>Japan</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>IN</th>
+      <td>18</td>
+      <td>India</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>RU</th>
+      <td>200</td>
+      <td>Russia</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[104]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out country column as Pandas Series</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="s1">&#39;country&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>US     United States
+AUS        Australia
+JAP            Japan
+IN             India
+RU            Russia
+MOR          Morocco
+EG             Egypt
+Name: country, dtype: object
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[105]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out country column as Pandas DataFrame</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">[[</span><span class="s1">&#39;country&#39;</span><span class="p">]])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>           country
+US   United States
+AUS      Australia
+JAP          Japan
+IN           India
+RU          Russia
+MOR        Morocco
+EG           Egypt
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[106]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out DataFrame with country and drives_right columns</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">[[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;drives_right&#39;</span><span class="p">]])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>           country  drives_right
+US   United States          True
+AUS      Australia         False
+JAP          Japan         False
+IN           India         False
+RU          Russia          True
+MOR        Morocco          True
+EG           Egypt          True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -17214,6 +17442,76 @@ EG             45          Egypt          True
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[107]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out first 3 observations</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>     cars_per_cap        country  drives_right
+US            809  United States          True
+AUS           731      Australia         False
+JAP           588          Japan         False
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[108]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out fourth, fifth and sixth observation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>     cars_per_cap  country  drives_right
+IN             18    India         False
+RU            200   Russia          True
+MOR            70  Morocco          True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -17221,6 +17519,75 @@ EG             45          Egypt          True
 <h3 id="loc-and-iloc-(1)">loc and iloc (1)<a class="anchor-link" href="#loc-and-iloc-(1)">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[109]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out observation for Japan</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;JAP&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>cars_per_cap      588
+country         Japan
+drives_right    False
+Name: JAP, dtype: object
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[110]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out observations for Australia and Egypt</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s1">&#39;AUS&#39;</span><span class="p">,</span><span class="s1">&#39;EG&#39;</span><span class="p">]])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>     cars_per_cap    country  drives_right
+AUS           731  Australia         False
+EG             45      Egypt          True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -17230,6 +17597,73 @@ EG             45          Egypt          True
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[111]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out drives_right value of Morocco</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s1">&#39;MOR&#39;</span><span class="p">],[</span><span class="s1">&#39;drives_right&#39;</span><span class="p">]])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>     drives_right
+MOR          True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[112]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print sub-DataFrame</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s1">&#39;RU&#39;</span><span class="p">,</span><span class="s1">&#39;MOR&#39;</span><span class="p">],[</span><span class="s1">&#39;country&#39;</span><span class="p">,</span><span class="s1">&#39;drives_right&#39;</span><span class="p">]])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>     country  drives_right
+RU    Russia          True
+MOR  Morocco          True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -17237,6 +17671,123 @@ EG             45          Egypt          True
 <h3 id="loc-and-iloc-(3)">loc and iloc (3)<a class="anchor-link" href="#loc-and-iloc-(3)">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[113]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out drives_right column as Series</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;drives_right&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>US      True
+AUS    False
+JAP    False
+IN     False
+RU      True
+MOR     True
+EG      True
+Name: drives_right, dtype: bool
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[114]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out drives_right column as DataFrame</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;drives_right&#39;</span><span class="p">]])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>     drives_right
+US           True
+AUS         False
+JAP         False
+IN          False
+RU           True
+MOR          True
+EG           True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[115]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out cars_per_cap and drives_right as DataFrame</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;cars_per_cap&#39;</span><span class="p">,</span><span class="s1">&#39;drives_right&#39;</span><span class="p">]])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>     cars_per_cap  drives_right
+US            809          True
+AUS           731         False
+JAP           588         False
+IN             18         False
+RU            200          True
+MOR            70          True
+EG             45          True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
