@@ -11797,11 +11797,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[119]:</div>
+<div class="prompt input_prompt">In&nbsp;[61]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="n">pp</span> <span class="o">=</span> <span class="n">pprint</span><span class="o">.</span><span class="n">PrettyPrinter</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11811,7 +11814,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[120]:</div>
+<div class="prompt input_prompt">In&nbsp;[62]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">run</span> <span class="n">create_datasets</span><span class="o">.</span><span class="n">py</span>
@@ -11856,7 +11859,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[121]:</div>
+<div class="prompt input_prompt">In&nbsp;[63]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">year_small</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1950</span><span class="p">,</span> <span class="mi">1970</span><span class="p">,</span> <span class="mi">1990</span><span class="p">,</span> <span class="mi">2010</span><span class="p">]</span>
@@ -12034,7 +12037,7 @@ vOjUvBZILndftwFbnI9bXb6Ots5jl0vgBeMsAi8W1+hzTJOTIiIeo8lJERGPUXCLiHiMgltExGMU
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[122]:</div>
+<div class="prompt input_prompt">In&nbsp;[64]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">year_small</span><span class="p">,</span> <span class="n">pop_small</span><span class="p">)</span>
@@ -12148,7 +12151,7 @@ AABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[123]:</div>
+<div class="prompt input_prompt">In&nbsp;[65]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print the last item from year and pop</span>
@@ -12379,7 +12382,7 @@ eIQKXUTEI/4/uT2AVBKaK60AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[124]:</div>
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">gapminder</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://assets.datacamp.com/production/course_799/datasets/gapminder.csv&#39;</span><span class="p">)</span>
@@ -12392,7 +12395,7 @@ eIQKXUTEI/4/uT2AVBKaK60AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[125]:</div>
+<div class="prompt input_prompt">In&nbsp;[67]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">gapminder</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -12408,7 +12411,7 @@ eIQKXUTEI/4/uT2AVBKaK60AAAAASUVORK5CYII=
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[125]:</div>
+<div class="prompt output_prompt">Out[67]:</div>
 
 
 
@@ -12504,7 +12507,7 @@ eIQKXUTEI/4/uT2AVBKaK60AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[126]:</div>
+<div class="prompt input_prompt">In&nbsp;[68]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">life_exp</span> <span class="o">=</span> <span class="n">gapminder</span><span class="p">[</span><span class="s1">&#39;life_exp&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -12519,7 +12522,7 @@ eIQKXUTEI/4/uT2AVBKaK60AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[127]:</div>
+<div class="prompt input_prompt">In&nbsp;[69]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print the last item of gdp_cap and life_exp</span>
@@ -13369,7 +13372,7 @@ TkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[128]:</div>
+<div class="prompt input_prompt">In&nbsp;[70]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Change the line plot below to a scatter plot</span>
@@ -13550,7 +13553,7 @@ m939DPBrwEPAF4B73f3xNscpzdOxMbm0OJeISCSUoYuIREIBXUQkEgroIiKRUEAXEYmEArqISCQU
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[129]:</div>
+<div class="prompt input_prompt">In&nbsp;[71]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Build Scatter plot</span>
@@ -13752,7 +13755,7 @@ Yj4AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[130]:</div>
+<div class="prompt input_prompt">In&nbsp;[72]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create histogram of life_exp data</span>
@@ -13862,7 +13865,7 @@ gy5JjTDoktQIgy5JjTDoktSI/wfRaU5BC7wPsQAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[131]:</div>
+<div class="prompt input_prompt">In&nbsp;[73]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Build histogram with 5 bins</span>
@@ -14087,7 +14090,7 @@ vyQ1xuCXpMYY/JLUGINfkhrzf8BNFPnECxzjAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[132]:</div>
+<div class="prompt input_prompt">In&nbsp;[74]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">gapminder</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
@@ -14103,7 +14106,7 @@ vyQ1xuCXpMYY/JLUGINfkhrzf8BNFPnECxzjAAAAAElFTkSuQmCC
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[132]:</div>
+<div class="prompt output_prompt">Out[74]:</div>
 
 
 
@@ -14120,7 +14123,7 @@ vyQ1xuCXpMYY/JLUGINfkhrzf8BNFPnECxzjAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[133]:</div>
+<div class="prompt input_prompt">In&nbsp;[75]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">gapminder</span><span class="o">.</span><span class="n">shape</span>
@@ -14136,7 +14139,7 @@ vyQ1xuCXpMYY/JLUGINfkhrzf8BNFPnECxzjAAAAAElFTkSuQmCC
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[133]:</div>
+<div class="prompt output_prompt">Out[75]:</div>
 
 
 
@@ -14153,7 +14156,7 @@ vyQ1xuCXpMYY/JLUGINfkhrzf8BNFPnECxzjAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[134]:</div>
+<div class="prompt input_prompt">In&nbsp;[76]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">life_exp1950</span><span class="p">)</span>
@@ -14169,7 +14172,7 @@ vyQ1xuCXpMYY/JLUGINfkhrzf8BNFPnECxzjAAAAAElFTkSuQmCC
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[134]:</div>
+<div class="prompt output_prompt">Out[76]:</div>
 
 
 
@@ -14197,7 +14200,7 @@ vyQ1xuCXpMYY/JLUGINfkhrzf8BNFPnECxzjAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[135]:</div>
+<div class="prompt input_prompt">In&nbsp;[77]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Histogram of life_exp, 15 bins</span>
@@ -14416,7 +14419,7 @@ AElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[136]:</div>
+<div class="prompt input_prompt">In&nbsp;[78]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Basic scatter plot, log scale</span>
@@ -14692,7 +14695,7 @@ AABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[137]:</div>
+<div class="prompt input_prompt">In&nbsp;[79]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Scatter plot</span>
@@ -14969,7 +14972,7 @@ AElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[138]:</div>
+<div class="prompt input_prompt">In&nbsp;[80]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Store pop as a numpy array: np_pop</span>
@@ -15429,7 +15432,7 @@ Y6KyZGGMMSYqSxbGGGOismRhjDEmKksWxhhjovp/yB96cTMHgSUAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[139]:</div>
+<div class="prompt input_prompt">In&nbsp;[81]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Specify c and alpha inside plt.scatter()</span>
@@ -15937,7 +15940,7 @@ MgWSz0JzT6q8lsXwBptZGIZhGFGxmYVhGIYRFVMWhmEYRlRMWRiGYRhRMWVhGIZhRMWUhWEYhhGV
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[140]:</div>
+<div class="prompt input_prompt">In&nbsp;[82]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Scatter plot</span>
@@ -16507,9 +16510,99 @@ GIYREFMWhmEYRkBMWRiGYRgBMWVhGIZhBMSUhWEYhhGQ/w+j5VCHHjyTDAAAAABJRU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>This is the long way using two lists. This is not efficient.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[83]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Definition of countries and capital</span>
+<span class="n">countries</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;spain&#39;</span><span class="p">,</span> <span class="s1">&#39;france&#39;</span><span class="p">,</span> <span class="s1">&#39;germany&#39;</span><span class="p">,</span> <span class="s1">&#39;norway&#39;</span><span class="p">]</span>
+<span class="n">capitals</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;madrid&#39;</span><span class="p">,</span> <span class="s1">&#39;paris&#39;</span><span class="p">,</span> <span class="s1">&#39;berlin&#39;</span><span class="p">,</span> <span class="s1">&#39;oslo&#39;</span><span class="p">]</span>
+
+<span class="c1"># Get index of &#39;germany&#39;: ind_ger</span>
+<span class="n">ind_ger</span> <span class="o">=</span> <span class="n">countries</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;germany&#39;</span><span class="p">)</span>
+
+<span class="c1"># Use ind_ger to print out capital of Germany</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">capitals</span><span class="p">[</span><span class="n">ind_ger</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>berlin
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Create-dictionary">Create dictionary<a class="anchor-link" href="#Create-dictionary">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[84]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Definition of countries and capital</span>
+<span class="n">countries</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;spain&#39;</span><span class="p">,</span> <span class="s1">&#39;france&#39;</span><span class="p">,</span> <span class="s1">&#39;germany&#39;</span><span class="p">,</span> <span class="s1">&#39;norway&#39;</span><span class="p">]</span>
+<span class="n">capitals</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;madrid&#39;</span><span class="p">,</span> <span class="s1">&#39;paris&#39;</span><span class="p">,</span> <span class="s1">&#39;berlin&#39;</span><span class="p">,</span> <span class="s1">&#39;oslo&#39;</span><span class="p">]</span>
+
+<span class="c1"># From string in countries and capitals, create dictionary europe</span>
+<span class="n">europe</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;spain&#39;</span><span class="p">:</span><span class="s1">&#39;madrid&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;france&#39;</span><span class="p">:</span><span class="s1">&#39;paris&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;germany&#39;</span><span class="p">:</span><span class="s1">&#39;berlin&#39;</span><span class="p">,</span> 
+          <span class="s1">&#39;norway&#39;</span><span class="p">:</span><span class="s1">&#39;oslo&#39;</span><span class="p">}</span>
+
+<span class="c1"># Print europe</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">europe</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;spain&#39;: &#39;madrid&#39;, &#39;france&#39;: &#39;paris&#39;, &#39;germany&#39;: &#39;berlin&#39;, &#39;norway&#39;: &#39;oslo&#39;}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -16523,7 +16616,68 @@ GIYREFMWhmEYRkBMWRiGYRgBMWVhGIZhBMSUhWEYhhGQ/w+j5VCHHjyTDAAAAABJRU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Just use the key as the index</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[85]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print out the keys in europe</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">europe</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+<span class="c1"># Print out value that belongs to key &#39;norway&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">europe</span><span class="p">[</span><span class="s1">&#39;norway&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>dict_keys([&#39;spain&#39;, &#39;france&#39;, &#39;germany&#39;, &#39;norway&#39;])
+oslo
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Dictionaries,-Part-2">Dictionaries, Part 2<a class="anchor-link" href="#Dictionaries,-Part-2">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>if you add two of the same keys to a dictionary, only the last one will be kept</li>
+<li>keys must be immutable objects. <ul>
+<li>i.e. the key can't be a list. </li>
+<li>but you can use a string, boolean, or integer</li>
+</ul>
+</li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -16535,6 +16689,53 @@ GIYREFMWhmEYRkBMWRiGYRgBMWVhGIZhBMSUhWEYhhGQ/w+j5VCHHjyTDAAAAABJRU5ErkJggg==
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[86]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Add italy to europe</span>
+<span class="n">europe</span><span class="p">[</span><span class="s1">&#39;italy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;rome&#39;</span>
+
+<span class="c1"># Print out italy in europe</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;italy&#39;</span> <span class="ow">in</span> <span class="n">europe</span><span class="p">)</span>
+
+<span class="c1"># Add poland to europe</span>
+<span class="n">europe</span><span class="p">[</span><span class="s1">&#39;poland&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;warsaw&#39;</span>
+
+<span class="c1"># Print europe</span>
+<span class="n">pp</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">europe</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>True
+{&#39;france&#39;: &#39;paris&#39;,
+ &#39;germany&#39;: &#39;berlin&#39;,
+ &#39;italy&#39;: &#39;rome&#39;,
+ &#39;norway&#39;: &#39;oslo&#39;,
+ &#39;poland&#39;: &#39;warsaw&#39;,
+ &#39;spain&#39;: &#39;madrid&#39;}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -16543,6 +16744,107 @@ GIYREFMWhmEYRkBMWRiGYRgBMWVhGIZhBMSUhWEYhhGQ/w+j5VCHHjyTDAAAAABJRU5ErkJggg==
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[87]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Definition of dictionary</span>
+<span class="n">europe</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;spain&#39;</span><span class="p">:</span><span class="s1">&#39;madrid&#39;</span><span class="p">,</span> <span class="s1">&#39;france&#39;</span><span class="p">:</span><span class="s1">&#39;paris&#39;</span><span class="p">,</span> <span class="s1">&#39;germany&#39;</span><span class="p">:</span><span class="s1">&#39;bonn&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;norway&#39;</span><span class="p">:</span><span class="s1">&#39;oslo&#39;</span><span class="p">,</span> <span class="s1">&#39;italy&#39;</span><span class="p">:</span><span class="s1">&#39;rome&#39;</span><span class="p">,</span> <span class="s1">&#39;poland&#39;</span><span class="p">:</span><span class="s1">&#39;warsaw&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;australia&#39;</span><span class="p">:</span><span class="s1">&#39;vienna&#39;</span> <span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">europe</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;spain&#39;: &#39;madrid&#39;, &#39;france&#39;: &#39;paris&#39;, &#39;germany&#39;: &#39;bonn&#39;, &#39;norway&#39;: &#39;oslo&#39;, &#39;italy&#39;: &#39;rome&#39;, &#39;poland&#39;: &#39;warsaw&#39;, &#39;australia&#39;: &#39;vienna&#39;}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[88]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Update capital of germany</span>
+<span class="n">europe</span><span class="p">[</span><span class="s1">&#39;germany&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;berlin&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">europe</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;spain&#39;: &#39;madrid&#39;, &#39;france&#39;: &#39;paris&#39;, &#39;germany&#39;: &#39;berlin&#39;, &#39;norway&#39;: &#39;oslo&#39;, &#39;italy&#39;: &#39;rome&#39;, &#39;poland&#39;: &#39;warsaw&#39;, &#39;australia&#39;: &#39;vienna&#39;}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[89]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Remove australia</span>
+<span class="k">del</span><span class="p">(</span><span class="n">europe</span><span class="p">[</span><span class="s1">&#39;australia&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">europe</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;spain&#39;: &#39;madrid&#39;, &#39;france&#39;: &#39;paris&#39;, &#39;germany&#39;: &#39;berlin&#39;, &#39;norway&#39;: &#39;oslo&#39;, &#39;italy&#39;: &#39;rome&#39;, &#39;poland&#39;: &#39;warsaw&#39;}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -16550,6 +16852,87 @@ GIYREFMWhmEYRkBMWRiGYRgBMWVhGIZhBMSUhWEYhhGQ/w+j5VCHHjyTDAAAAABJRU5ErkJggg==
 <h3 id="Dictionariception">Dictionariception<a class="anchor-link" href="#Dictionariception">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[90]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Dictionary of dictionaries</span>
+<span class="n">europe</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;spain&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;capital&#39;</span><span class="p">:</span><span class="s1">&#39;madrid&#39;</span><span class="p">,</span> <span class="s1">&#39;population&#39;</span><span class="p">:</span><span class="mf">46.77</span> <span class="p">},</span>
+           <span class="s1">&#39;france&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;capital&#39;</span><span class="p">:</span><span class="s1">&#39;paris&#39;</span><span class="p">,</span> <span class="s1">&#39;population&#39;</span><span class="p">:</span><span class="mf">66.03</span> <span class="p">},</span>
+           <span class="s1">&#39;germany&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;capital&#39;</span><span class="p">:</span><span class="s1">&#39;berlin&#39;</span><span class="p">,</span> <span class="s1">&#39;population&#39;</span><span class="p">:</span><span class="mf">80.62</span> <span class="p">},</span>
+           <span class="s1">&#39;norway&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;capital&#39;</span><span class="p">:</span><span class="s1">&#39;oslo&#39;</span><span class="p">,</span> <span class="s1">&#39;population&#39;</span><span class="p">:</span><span class="mf">5.084</span> <span class="p">}</span> <span class="p">}</span>
+
+
+<span class="c1"># Print out the capital of France</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">europe</span><span class="p">[</span><span class="s1">&#39;france&#39;</span><span class="p">][</span><span class="s1">&#39;capital&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>paris
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[91]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create sub-dictionary data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;capital&#39;</span><span class="p">:</span><span class="s1">&#39;rome&#39;</span><span class="p">,</span><span class="s1">&#39;population&#39;</span><span class="p">:</span><span class="mf">59.83</span><span class="p">}</span>
+
+<span class="c1"># Add data to europe under key &#39;italy&#39;</span>
+<span class="n">europe</span><span class="p">[</span><span class="s1">&#39;italy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+
+<span class="c1"># Print europe</span>
+<span class="n">pp</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">europe</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;france&#39;: {&#39;capital&#39;: &#39;paris&#39;, &#39;population&#39;: 66.03},
+ &#39;germany&#39;: {&#39;capital&#39;: &#39;berlin&#39;, &#39;population&#39;: 80.62},
+ &#39;italy&#39;: {&#39;capital&#39;: &#39;rome&#39;, &#39;population&#39;: 59.83},
+ &#39;norway&#39;: {&#39;capital&#39;: &#39;oslo&#39;, &#39;population&#39;: 5.084},
+ &#39;spain&#39;: {&#39;capital&#39;: &#39;madrid&#39;, &#39;population&#39;: 46.77}}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -16563,9 +16946,81 @@ GIYREFMWhmEYRkBMWRiGYRgBMWVhGIZhBMSUhWEYhhGQ/w+j5VCHHjyTDAAAAABJRU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Its very common to have many variables of different types for an observation<ul>
+<li>i.e. you may have country name, area, population, and true or false for  something</li>
+<li>Here a 2D nupy array is not an option to store all of the data because it can only have data of one type. Its more like a matrix. What we need is a data frame. Hello Pandas. </li>
+</ul>
+</li>
+<li>Pandas is build on numpy</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Dictionary-to-DataFrame-(1)">Dictionary to DataFrame (1)<a class="anchor-link" href="#Dictionary-to-DataFrame-(1)">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[93]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Pre-defined lists</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;United States&#39;</span><span class="p">,</span> <span class="s1">&#39;Australia&#39;</span><span class="p">,</span> <span class="s1">&#39;Japan&#39;</span><span class="p">,</span> <span class="s1">&#39;India&#39;</span><span class="p">,</span> <span class="s1">&#39;Russia&#39;</span><span class="p">,</span> <span class="s1">&#39;Morocco&#39;</span><span class="p">,</span> <span class="s1">&#39;Egypt&#39;</span><span class="p">]</span>
+<span class="n">dr</span> <span class="o">=</span>  <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+<span class="n">cpc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">809</span><span class="p">,</span> <span class="mi">731</span><span class="p">,</span> <span class="mi">588</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">45</span><span class="p">]</span>
+
+<span class="c1"># pandas is already imported</span>
+
+<span class="c1"># Create dictionary my_dict with three key:value pairs: my_dict</span>
+<span class="n">my_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;country&#39;</span><span class="p">:</span> <span class="n">names</span><span class="p">,</span>
+    <span class="s1">&#39;drives_right&#39;</span><span class="p">:</span> <span class="n">dr</span><span class="p">,</span>
+    <span class="s1">&#39;cars_per_cap&#39;</span><span class="p">:</span> <span class="n">cpc</span>
+    <span class="p">}</span>
+
+<span class="c1"># Build a DataFrame cars from my_dict: cars</span>
+<span class="n">cars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span>
+
+<span class="c1"># Print cars</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>   cars_per_cap        country  drives_right
+0           809  United States          True
+1           731      Australia         False
+2           588          Japan         False
+3            18          India         False
+4           200         Russia          True
+5            70        Morocco          True
+6            45          Egypt          True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -16575,6 +17030,70 @@ GIYREFMWhmEYRkBMWRiGYRgBMWVhGIZhBMSUhWEYhhGQ/w+j5VCHHjyTDAAAAABJRU5ErkJggg==
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[95]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Build cars DataFrame</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;United States&#39;</span><span class="p">,</span> <span class="s1">&#39;Australia&#39;</span><span class="p">,</span> <span class="s1">&#39;Japan&#39;</span><span class="p">,</span> <span class="s1">&#39;India&#39;</span><span class="p">,</span> <span class="s1">&#39;Russia&#39;</span><span class="p">,</span> <span class="s1">&#39;Morocco&#39;</span><span class="p">,</span> <span class="s1">&#39;Egypt&#39;</span><span class="p">]</span>
+<span class="n">dr</span> <span class="o">=</span>  <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+<span class="n">cpc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">809</span><span class="p">,</span> <span class="mi">731</span><span class="p">,</span> <span class="mi">588</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">45</span><span class="p">]</span>
+
+<span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;country&#39;</span><span class="p">:</span><span class="n">names</span><span class="p">,</span> <span class="s1">&#39;drives_right&#39;</span><span class="p">:</span><span class="n">dr</span><span class="p">,</span> <span class="s1">&#39;cars_per_cap&#39;</span><span class="p">:</span><span class="n">cpc</span> <span class="p">}</span>
+
+<span class="n">cars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">)</span>
+
+<span class="c1"># Definition of row_labels</span>
+<span class="n">row_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;US&#39;</span><span class="p">,</span> <span class="s1">&#39;AUS&#39;</span><span class="p">,</span> <span class="s1">&#39;JAP&#39;</span><span class="p">,</span> <span class="s1">&#39;IN&#39;</span><span class="p">,</span> <span class="s1">&#39;RU&#39;</span><span class="p">,</span> <span class="s1">&#39;MOR&#39;</span><span class="p">,</span> <span class="s1">&#39;EG&#39;</span><span class="p">]</span>
+
+<span class="c1"># Specify row labels of cars</span>
+<span class="n">cars</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">row_labels</span>
+
+<span class="c1"># Print cars again</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>   cars_per_cap        country  drives_right
+0           809  United States          True
+1           731      Australia         False
+2           588          Japan         False
+3            18          India         False
+4           200         Russia          True
+5            70        Morocco          True
+6            45          Egypt          True
+     cars_per_cap        country  drives_right
+US            809  United States          True
+AUS           731      Australia         False
+JAP           588          Japan         False
+IN             18          India         False
+RU            200         Russia          True
+MOR            70        Morocco          True
+EG             45          Egypt          True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -16583,6 +17102,46 @@ GIYREFMWhmEYRkBMWRiGYRgBMWVhGIZhBMSUhWEYhhGQ/w+j5VCHHjyTDAAAAABJRU5ErkJggg==
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[98]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Import cars from csv</span>
+<span class="n">cars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://assets.datacamp.com/production/course_799/datasets/cars.csv&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  Unnamed: 0  cars_per_cap        country  drives_right
+0         US           809  United States          True
+1        AUS           731      Australia         False
+2        JAP           588          Japan         False
+3         IN            18          India         False
+4         RU           200         Russia          True
+5        MOR            70        Morocco          True
+6         EG            45          Egypt          True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -16590,6 +17149,46 @@ GIYREFMWhmEYRkBMWRiGYRgBMWVhGIZhBMSUhWEYhhGQ/w+j5VCHHjyTDAAAAABJRU5ErkJggg==
 <h3 id="CSV-to-DataFrame-(2)">CSV to DataFrame (2)<a class="anchor-link" href="#CSV-to-DataFrame-(2)">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[99]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Fix import by including index_col</span>
+<span class="n">cars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://assets.datacamp.com/production/course_799/datasets/cars.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cars</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>     cars_per_cap        country  drives_right
+US            809  United States          True
+AUS           731      Australia         False
+JAP           588          Japan         False
+IN             18          India         False
+RU            200         Russia          True
+MOR            70        Morocco          True
+EG             45          Egypt          True
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
