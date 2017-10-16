@@ -12707,9 +12707,77 @@ you!!!
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>There are 3 scopes<ul>
+<li>Global</li>
+<li>local (inside a function)</li>
+<li>built-in (just a built in module called <code>builtins</code>)</li>
+</ul>
+</li>
+<li>If a variable is defined locally (inside a function) then this will be used, even if it is also defined globably.<ul>
+<li>If a variable is not defined locally, the global scope will be used. </li>
+</ul>
+</li>
+<li>If you want to update a global variable inside a function call <code>global variable_name</code> inside the function before updating</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Pop-quiz-on-understanding-scope">Pop quiz on understanding scope<a class="anchor-link" href="#Pop-quiz-on-understanding-scope">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="k">def</span> <span class="nf">func1</span><span class="p">():</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">func2</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">num</span>
+    <span class="n">double_num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">double_num</span><span class="p">)</span>
+    
+<span class="n">func1</span><span class="p">()</span>
+<span class="n">func2</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>3
+10
+6
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12719,6 +12787,58 @@ you!!!
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create a string: team</span>
+<span class="n">team</span> <span class="o">=</span> <span class="s2">&quot;teen titans&quot;</span>
+
+<span class="c1"># Define change_team()</span>
+<span class="k">def</span> <span class="nf">change_team</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Change the value of the global variable team.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Use team in global scope</span>
+    <span class="k">global</span> <span class="n">team</span>
+
+    <span class="c1"># Change the value of team in global: team</span>
+    <span class="n">team</span> <span class="o">=</span> <span class="s2">&quot;justice league&quot;</span>
+    
+<span class="c1"># Print team</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">team</span><span class="p">)</span>
+
+<span class="c1"># Call change_team()</span>
+<span class="n">change_team</span><span class="p">()</span>
+
+<span class="c1"># Print team</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">team</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>teen titans
+justice league
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12726,6 +12846,191 @@ you!!!
 <h3 id="Python's-built-in-scope">Python's built-in scope<a class="anchor-link" href="#Python's-built-in-scope">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">builtins</span>
+<span class="nb">dir</span><span class="p">(</span><span class="n">builtins</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[47]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;ArithmeticError&#39;,
+ &#39;AssertionError&#39;,
+ &#39;AttributeError&#39;,
+ &#39;BaseException&#39;,
+ &#39;BlockingIOError&#39;,
+ &#39;BrokenPipeError&#39;,
+ &#39;BufferError&#39;,
+ &#39;BytesWarning&#39;,
+ &#39;ChildProcessError&#39;,
+ &#39;ConnectionAbortedError&#39;,
+ &#39;ConnectionError&#39;,
+ &#39;ConnectionRefusedError&#39;,
+ &#39;ConnectionResetError&#39;,
+ &#39;DeprecationWarning&#39;,
+ &#39;EOFError&#39;,
+ &#39;Ellipsis&#39;,
+ &#39;EnvironmentError&#39;,
+ &#39;Exception&#39;,
+ &#39;False&#39;,
+ &#39;FileExistsError&#39;,
+ &#39;FileNotFoundError&#39;,
+ &#39;FloatingPointError&#39;,
+ &#39;FutureWarning&#39;,
+ &#39;GeneratorExit&#39;,
+ &#39;IOError&#39;,
+ &#39;ImportError&#39;,
+ &#39;ImportWarning&#39;,
+ &#39;IndentationError&#39;,
+ &#39;IndexError&#39;,
+ &#39;InterruptedError&#39;,
+ &#39;IsADirectoryError&#39;,
+ &#39;KeyError&#39;,
+ &#39;KeyboardInterrupt&#39;,
+ &#39;LookupError&#39;,
+ &#39;MemoryError&#39;,
+ &#39;ModuleNotFoundError&#39;,
+ &#39;NameError&#39;,
+ &#39;None&#39;,
+ &#39;NotADirectoryError&#39;,
+ &#39;NotImplemented&#39;,
+ &#39;NotImplementedError&#39;,
+ &#39;OSError&#39;,
+ &#39;OverflowError&#39;,
+ &#39;PendingDeprecationWarning&#39;,
+ &#39;PermissionError&#39;,
+ &#39;ProcessLookupError&#39;,
+ &#39;RecursionError&#39;,
+ &#39;ReferenceError&#39;,
+ &#39;ResourceWarning&#39;,
+ &#39;RuntimeError&#39;,
+ &#39;RuntimeWarning&#39;,
+ &#39;StopAsyncIteration&#39;,
+ &#39;StopIteration&#39;,
+ &#39;SyntaxError&#39;,
+ &#39;SyntaxWarning&#39;,
+ &#39;SystemError&#39;,
+ &#39;SystemExit&#39;,
+ &#39;TabError&#39;,
+ &#39;TimeoutError&#39;,
+ &#39;True&#39;,
+ &#39;TypeError&#39;,
+ &#39;UnboundLocalError&#39;,
+ &#39;UnicodeDecodeError&#39;,
+ &#39;UnicodeEncodeError&#39;,
+ &#39;UnicodeError&#39;,
+ &#39;UnicodeTranslateError&#39;,
+ &#39;UnicodeWarning&#39;,
+ &#39;UserWarning&#39;,
+ &#39;ValueError&#39;,
+ &#39;Warning&#39;,
+ &#39;ZeroDivisionError&#39;,
+ &#39;__IPYTHON__&#39;,
+ &#39;__build_class__&#39;,
+ &#39;__debug__&#39;,
+ &#39;__doc__&#39;,
+ &#39;__import__&#39;,
+ &#39;__loader__&#39;,
+ &#39;__name__&#39;,
+ &#39;__package__&#39;,
+ &#39;__spec__&#39;,
+ &#39;abs&#39;,
+ &#39;all&#39;,
+ &#39;any&#39;,
+ &#39;ascii&#39;,
+ &#39;bin&#39;,
+ &#39;bool&#39;,
+ &#39;bytearray&#39;,
+ &#39;bytes&#39;,
+ &#39;callable&#39;,
+ &#39;chr&#39;,
+ &#39;classmethod&#39;,
+ &#39;compile&#39;,
+ &#39;complex&#39;,
+ &#39;copyright&#39;,
+ &#39;credits&#39;,
+ &#39;delattr&#39;,
+ &#39;dict&#39;,
+ &#39;dir&#39;,
+ &#39;display&#39;,
+ &#39;divmod&#39;,
+ &#39;enumerate&#39;,
+ &#39;eval&#39;,
+ &#39;exec&#39;,
+ &#39;filter&#39;,
+ &#39;float&#39;,
+ &#39;format&#39;,
+ &#39;frozenset&#39;,
+ &#39;get_ipython&#39;,
+ &#39;getattr&#39;,
+ &#39;globals&#39;,
+ &#39;hasattr&#39;,
+ &#39;hash&#39;,
+ &#39;help&#39;,
+ &#39;hex&#39;,
+ &#39;id&#39;,
+ &#39;input&#39;,
+ &#39;int&#39;,
+ &#39;isinstance&#39;,
+ &#39;issubclass&#39;,
+ &#39;iter&#39;,
+ &#39;len&#39;,
+ &#39;license&#39;,
+ &#39;list&#39;,
+ &#39;locals&#39;,
+ &#39;map&#39;,
+ &#39;max&#39;,
+ &#39;memoryview&#39;,
+ &#39;min&#39;,
+ &#39;next&#39;,
+ &#39;object&#39;,
+ &#39;oct&#39;,
+ &#39;open&#39;,
+ &#39;ord&#39;,
+ &#39;pow&#39;,
+ &#39;print&#39;,
+ &#39;property&#39;,
+ &#39;range&#39;,
+ &#39;repr&#39;,
+ &#39;reversed&#39;,
+ &#39;round&#39;,
+ &#39;set&#39;,
+ &#39;setattr&#39;,
+ &#39;slice&#39;,
+ &#39;sorted&#39;,
+ &#39;staticmethod&#39;,
+ &#39;str&#39;,
+ &#39;sum&#39;,
+ &#39;super&#39;,
+ &#39;tuple&#39;,
+ &#39;type&#39;,
+ &#39;vars&#39;,
+ &#39;zip&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12739,9 +13044,226 @@ you!!!
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Note: Python will search for variable in this order (LEGB rule)<ul>
+<li>Local function</li>
+<li>Enclosing functions (if the local function is a nested function)</li>
+<li>Global scope</li>
+<li>Built-in</li>
+</ul>
+</li>
+<li>Changing a variable name will only change the local variable unless <code>global</code> or <code>nonlocal</code> statements are used</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>One reason to use nested functions is to perform a computation many times. Rather than writting out the computation on each variable passed in, we define a function and call it on each variable.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[57]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">mod2plus5</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the remainder plus 5 of three values.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the remainder plus 5 of a value.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">5</span>
+    
+    <span class="k">return</span><span class="p">(</span><span class="n">inner</span><span class="p">(</span><span class="n">x1</span><span class="p">),</span> <span class="n">inner</span><span class="p">(</span><span class="n">x2</span><span class="p">),</span> <span class="n">inner</span><span class="p">(</span><span class="n">x3</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">mod2plus5</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(6, 5, 6)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here we use a nested function to create a function...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[59]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">raise_val</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the inner function&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Raise x to the power of n.&quot;&quot;&quot;</span>
+        <span class="n">raised</span> <span class="o">=</span> <span class="n">x</span> <span class="o">**</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="n">raised</span>
+    
+    <span class="k">return</span> <span class="n">inner</span>
+
+<span class="n">square</span> <span class="o">=</span> <span class="n">raise_val</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">raise_val</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">square</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">cube</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>9 27
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>nonlocal</code> lets you access values in the enclosing function, similar to <code>global</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[54]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">outer</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Prints the value of n&quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">n</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    
+    <span class="n">inner</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    
+<span class="n">outer</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2
+2
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Nested-Functions-I">Nested Functions I<a class="anchor-link" href="#Nested-Functions-I">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[60]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define three_shouts</span>
+<span class="k">def</span> <span class="nf">three_shouts</span><span class="p">(</span><span class="n">word1</span><span class="p">,</span> <span class="n">word2</span><span class="p">,</span> <span class="n">word3</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a tuple of strings</span>
+<span class="sd">    concatenated with &#39;!!!&#39;.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Define inner</span>
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a string concatenated with &#39;!!!&#39;.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">word</span> <span class="o">+</span> <span class="s1">&#39;!!!&#39;</span>
+
+    <span class="c1"># Return a tuple of strings</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">inner</span><span class="p">(</span><span class="n">word1</span><span class="p">),</span> <span class="n">inner</span><span class="p">(</span><span class="n">word2</span><span class="p">),</span> <span class="n">inner</span><span class="p">(</span><span class="n">word3</span><span class="p">))</span>
+
+<span class="c1"># Call three_shouts() and print</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">three_shouts</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(&#39;a!!!&#39;, &#39;b!!!&#39;, &#39;c!!!&#39;)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12755,9 +13277,131 @@ you!!!
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>One other pretty cool reason for nesting functions is the idea of a closure. </li>
+<li>This means that the nested or inner function remembers the state of its enclosing scope when called. </li>
+<li>Thus, anything defined locally in the enclosing scope is available to the inner function even when the outer function has finished execution.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[61]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define echo</span>
+<span class="k">def</span> <span class="nf">echo</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the inner_echo function.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Define inner_echo</span>
+    <span class="k">def</span> <span class="nf">inner_echo</span><span class="p">(</span><span class="n">word1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Concatenate n copies of word1.&quot;&quot;&quot;</span>
+        <span class="n">echo_word</span> <span class="o">=</span> <span class="n">word1</span> <span class="o">*</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="n">echo_word</span>
+
+    <span class="c1"># Return inner_echo</span>
+    <span class="k">return</span> <span class="n">inner_echo</span>
+
+<span class="c1"># Call echo: twice</span>
+<span class="n">twice</span> <span class="o">=</span> <span class="n">echo</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Call echo: thrice</span>
+<span class="n">thrice</span> <span class="o">=</span> <span class="n">echo</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Call twice() and thrice() then print</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">twice</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">),</span> <span class="n">thrice</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>hellohello hellohellohello
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="The-keyword-nonlocal-and-nested-functions">The keyword nonlocal and nested functions<a class="anchor-link" href="#The-keyword-nonlocal-and-nested-functions">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[62]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define echo_shout()</span>
+<span class="k">def</span> <span class="nf">echo_shout</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Change the value of a nonlocal variable&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Concatenate word with itself: echo_word</span>
+    <span class="n">echo_word</span> <span class="o">=</span> <span class="n">word</span> <span class="o">+</span> <span class="n">word</span>
+    
+    <span class="c1">#Print echo_word</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">echo_word</span><span class="p">)</span>
+    
+    <span class="c1"># Define inner function shout()</span>
+    <span class="k">def</span> <span class="nf">shout</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;Alter a variable in the enclosing scope&quot;&quot;&quot;</span>    
+        <span class="c1">#Use echo_word in nonlocal scope</span>
+        <span class="k">nonlocal</span> <span class="n">echo_word</span>
+        
+        <span class="c1">#Change echo_word to echo_word concatenated with &#39;!!!&#39;</span>
+        <span class="n">echo_word</span> <span class="o">=</span> <span class="n">echo_word</span> <span class="o">+</span> <span class="s1">&#39;!!!&#39;</span>
+    
+    <span class="c1"># Call function shout()</span>
+    <span class="n">shout</span><span class="p">()</span>
+    
+    <span class="c1">#Print echo_word</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">echo_word</span><span class="p">)</span>
+
+<span class="c1">#Call function echo_shout() with argument &#39;hello&#39;    </span>
+<span class="n">echo_shout</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>hellohello
+hellohello!!!
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12771,9 +13415,223 @@ you!!!
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>A simple default argument example...</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[64]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">power</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="nb">pow</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Raise number to the power of pow&quot;&quot;&quot;</span>
+    <span class="n">new_value</span> <span class="o">=</span> <span class="n">number</span> <span class="o">**</span> <span class="nb">pow</span>
+    <span class="k">return</span> <span class="n">new_value</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">power</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">power</span><span class="p">(</span><span class="mi">9</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>81
+9
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>An example of flexible arguments:</p>
+<ul>
+<li>*args creates a tuple with all of the arguments passed into the function by the user</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">add_all</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sum all values in *args together&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Initialize sum</span>
+    <span class="n">sum_all</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># Accumulate the sum</span>
+    <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">sum_all</span> <span class="o">+=</span> <span class="n">num</span>
+    
+    <span class="k">return</span> <span class="n">sum_all</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">add_all</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">add_all</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">add_all</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">add_all</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1
+3
+6
+10
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>keyword arguments (kwargs) use <code>**</code></li>
+<li>kwargs is a dictionary</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[67]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">print_all</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print out key-value pairs in **kwargs.&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Print out the key-value pairs</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span>
+        
+<span class="n">print_all</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Hugo Browne-Anderson&quot;</span><span class="p">,</span> <span class="n">employer</span> <span class="o">=</span> <span class="s2">&quot;DataCamp&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>name: Hugo Browne-Anderson
+employer: DataCamp
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Functions-with-one-default-argument">Functions with one default argument<a class="anchor-link" href="#Functions-with-one-default-argument">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[68]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define shout_echo</span>
+<span class="k">def</span> <span class="nf">shout_echo</span><span class="p">(</span><span class="n">word1</span><span class="p">,</span> <span class="n">echo</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Concatenate echo copies of word1 and three</span>
+<span class="sd">     exclamation marks at the end of the string.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Concatenate echo copies of word1 using *: echo_word</span>
+    <span class="n">echo_word</span> <span class="o">=</span> <span class="n">word1</span> <span class="o">*</span> <span class="n">echo</span>
+
+    <span class="c1"># Concatenate &#39;!!!&#39; to echo_word: shout_word</span>
+    <span class="n">shout_word</span> <span class="o">=</span> <span class="n">echo_word</span> <span class="o">+</span> <span class="s1">&#39;!!!&#39;</span>
+
+    <span class="c1"># Return shout_word</span>
+    <span class="k">return</span> <span class="n">shout_word</span>
+
+<span class="c1"># Call shout_echo() with &quot;Hey&quot;: no_echo</span>
+<span class="n">no_echo</span> <span class="o">=</span> <span class="n">shout_echo</span><span class="p">(</span><span class="s2">&quot;Hey&quot;</span><span class="p">)</span>
+
+<span class="c1"># Call shout_echo() with &quot;Hey&quot; and echo=5: with_echo</span>
+<span class="n">with_echo</span> <span class="o">=</span> <span class="n">shout_echo</span><span class="p">(</span><span class="s2">&quot;Hey&quot;</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Print no_echo and with_echo</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">no_echo</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">with_echo</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Hey!!!
+HeyHeyHeyHeyHey!!!
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12783,6 +13641,65 @@ you!!!
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[69]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define shout_echo</span>
+<span class="k">def</span> <span class="nf">shout_echo</span><span class="p">(</span><span class="n">word1</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">intense</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Concatenate echo copies of word1 and three</span>
+<span class="sd">    exclamation marks at the end of the string.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Concatenate echo copies of word1 using *: echo_word</span>
+    <span class="n">echo_word</span> <span class="o">=</span> <span class="n">word1</span> <span class="o">*</span> <span class="n">echo</span>
+
+    <span class="c1"># Capitalize echo_word if intense is True</span>
+    <span class="k">if</span> <span class="n">intense</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># Capitalize and concatenate &#39;!!!&#39;: echo_word_new</span>
+        <span class="n">echo_word_new</span> <span class="o">=</span> <span class="n">echo_word</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;!!!&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Concatenate &#39;!!!&#39; to echo_word: echo_word_new</span>
+        <span class="n">echo_word_new</span> <span class="o">=</span> <span class="n">echo_word</span> <span class="o">+</span> <span class="s1">&#39;!!!&#39;</span>
+
+    <span class="c1"># Return echo_word_new</span>
+    <span class="k">return</span> <span class="n">echo_word_new</span>
+
+<span class="c1"># Call shout_echo() with &quot;Hey&quot;, echo=5 and intense=True: with_big_echo</span>
+<span class="n">with_big_echo</span> <span class="o">=</span> <span class="n">shout_echo</span><span class="p">(</span><span class="s2">&quot;Hey&quot;</span><span class="p">,</span> <span class="n">echo</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">intense</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Call shout_echo() with &quot;Hey&quot; and intense=True: big_no_echo</span>
+<span class="n">big_no_echo</span> <span class="o">=</span> <span class="n">shout_echo</span><span class="p">(</span><span class="s2">&quot;Hey&quot;</span><span class="p">,</span> <span class="n">intense</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Print values</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">with_big_echo</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">big_no_echo</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>HEYHEYHEYHEYHEY!!!
+HEY!!!
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12791,6 +13708,60 @@ you!!!
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[70]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define gibberish</span>
+<span class="k">def</span> <span class="nf">gibberish</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Concatenate strings in *args together.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Initialize an empty string: hodgepodge</span>
+    <span class="n">hodgepodge</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="c1"># Concatenate the strings in args</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">hodgepodge</span> <span class="o">+=</span> <span class="n">word</span>
+
+    <span class="c1"># Return hodgepodge</span>
+    <span class="k">return</span> <span class="n">hodgepodge</span>
+
+<span class="c1"># Call gibberish() with one string: one_word</span>
+<span class="n">one_word</span> <span class="o">=</span> <span class="n">gibberish</span><span class="p">(</span><span class="s2">&quot;luke&quot;</span><span class="p">)</span>
+
+<span class="c1"># Call gibberish() with five strings: many_words</span>
+<span class="n">many_words</span> <span class="o">=</span> <span class="n">gibberish</span><span class="p">(</span><span class="s2">&quot;luke&quot;</span><span class="p">,</span> <span class="s2">&quot;leia&quot;</span><span class="p">,</span> <span class="s2">&quot;han&quot;</span><span class="p">,</span> <span class="s2">&quot;obi&quot;</span><span class="p">,</span> <span class="s2">&quot;darth&quot;</span><span class="p">)</span>
+
+<span class="c1"># Print one_word and many_words</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">one_word</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">many_words</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>luke
+lukeleiahanobidarth
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -12798,6 +13769,69 @@ you!!!
 <h3 id="Function-with-variable-length-keyword-arguments-(**kwargs)">Function with variable-length keyword arguments (**kwargs)<a class="anchor-link" href="#Function-with-variable-length-keyword-arguments-(**kwargs)">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[71]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define report_status</span>
+<span class="k">def</span> <span class="nf">report_status</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Print out the status of a movie character.&quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">BEGIN: REPORT</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Iterate over the key-value pairs of kwargs</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Print out the keys and values, separated by a colon &#39;:&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">END REPORT&quot;</span><span class="p">)</span>
+
+<span class="c1"># First call to report_status()</span>
+<span class="n">report_status</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;luke&quot;</span><span class="p">,</span> <span class="n">affiliation</span><span class="o">=</span><span class="s2">&quot;jedi&quot;</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;missing&quot;</span><span class="p">)</span>
+
+<span class="c1"># Second call to report_status()</span>
+<span class="n">report_status</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;anakin&quot;</span><span class="p">,</span> <span class="n">affiliation</span><span class="o">=</span><span class="s2">&quot;sith lord&quot;</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;deceased&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+BEGIN: REPORT
+
+name: luke
+affiliation: jedi
+status: missing
+
+END REPORT
+
+BEGIN: REPORT
+
+name: anakin
+affiliation: sith lord
+status: deceased
+
+END REPORT
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
