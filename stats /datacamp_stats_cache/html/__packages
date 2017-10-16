@@ -1,0 +1,7 @@
+base
+googlesheets
+dplyr
+lubridate
+stringr
+rCharts
+bindrcpp

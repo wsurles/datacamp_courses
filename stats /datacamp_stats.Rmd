@@ -1,0 +1,101 @@
+---
+title: "Data Camp Statistics"
+author: "William Surles"
+output: 
+ html_document:
+  self_contained: true
+  theme: flatly
+  highlight: tango
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+```
+
+```{r}
+
+library(googlesheets)
+library(dplyr)
+library(lubridate)
+library(stringr)
+library(rCharts)
+
+```
+
+# Cha bra
+
+## Get data from google spreadsheet
+
+Just run this once to update the data in the directory when needed
+
+```{r, eval=F}
+# list spreadsheets in google account
+# I will need to authenticate 
+gs_ls()
+
+# choose spreadsheet
+gs <- gs_title("datacamp_statistics")
+
+# list worksheets
+gs_ws_ls(gs)
+
+# load data from worksheet
+df_william <- gs_read(ss = gs, ws = "william")
+saveRDS(df_william, file = "data_william")
+
+df_russell <- gs_read(ss = gs, ws = "russell")
+saveRDS(df_russell, file = "data_russell")
+
+```
+
+## Crunch data by month
+
+```{r, crunch_data}
+
+crunch_data <- function(df) {
+  
+  df2 <- df %>%
+    mutate(
+      date = as.Date(Date, "%m/%d/%Y"),
+      year = year(date),
+      month = str_pad(month(date), 2, pad = "0"),
+      mday = mday(date),
+      exercises_cumsum = cumsum(Exercises)
+    ) %>%
+    group_by(month) %>%
+    mutate(
+      exercises_cumsum_month = cumsum(Exercises)
+    )
+}
+
+```
+
+## Chart total exercises by month
+
+```{r, dependson = 'crunch_data', results = 'asis'}
+
+df_william <- readRDS('data_william')
+df_william2 <- crunch_data(df_william)
+
+n <- nPlot(exercises_cumsum_month ~ mday, data = df_william2, group = "month", type = 'lineChart')
+n$print('inline', include_assets = TRUE)
+
+```
+
+test text
+
+***
+
+
+```{r, dependson = 'crunch_data', results = 'asis'}
+
+df_russell <- readRDS('data_russell')
+df_russell2 <- crunch_data(df_russell)
+
+n <- nPlot(exercises_cumsum_month ~ mday, data = df_russell2, group = "month", type = 'lineChart')
+n$print('iframesrc', include_assets = TRUE)
+
+```
+
+# char brah brah
