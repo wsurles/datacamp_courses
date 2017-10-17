@@ -10,7 +10,7 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(eval=T, echo=T, cache=T, message=F, warning=F)
+knitr::opts_chunk$set(eval=T, echo=T, cache=F, message=F, warning=F)
 ```
 
 ```{r}
