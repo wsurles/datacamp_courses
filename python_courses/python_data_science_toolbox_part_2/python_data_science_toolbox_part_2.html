@@ -11789,10 +11789,12 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[61]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">chained_assignment</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># default=&#39;warn&#39;</span>
 </pre></div>
 
 </div>
@@ -15183,6 +15185,64 @@ True
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Open a connection to the file</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;world_ind_pop_data.csv&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+
+    <span class="c1"># Skip the column names</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+    <span class="c1"># Initialize an empty dictionary: counts_dict</span>
+    <span class="n">counts_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Process only the first 1000 rows</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+
+        <span class="c1"># Split the current line into a list: line</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Get the value for the first column: first_col</span>
+        <span class="n">first_col</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># If the column value is in the dict, increment its value</span>
+        <span class="k">if</span> <span class="n">first_col</span> <span class="ow">in</span> <span class="n">counts_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">counts_dict</span><span class="p">[</span><span class="n">first_col</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Else, add to the dict and set value to 1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">counts_dict</span><span class="p">[</span><span class="n">first_col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># Print the resulting dictionary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">counts_dict</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;Arab World&#39;: 5, &#39;Caribbean small states&#39;: 5, &#39;Central Europe and the Baltics&#39;: 5, &#39;East Asia &amp; Pacific (all income levels)&#39;: 5, &#39;East Asia &amp; Pacific (developing only)&#39;: 5, &#39;Euro area&#39;: 5, &#39;Europe &amp; Central Asia (all income levels)&#39;: 5, &#39;Europe &amp; Central Asia (developing only)&#39;: 5, &#39;European Union&#39;: 5, &#39;Fragile and conflict affected situations&#39;: 5, &#39;Heavily indebted poor countries (HIPC)&#39;: 5, &#39;High income&#39;: 5, &#39;High income: nonOECD&#39;: 5, &#39;High income: OECD&#39;: 5, &#39;Latin America &amp; Caribbean (all income levels)&#39;: 5, &#39;Latin America &amp; Caribbean (developing only)&#39;: 5, &#39;Least developed countries: UN classification&#39;: 5, &#39;Low &amp; middle income&#39;: 5, &#39;Low income&#39;: 5, &#39;Lower middle income&#39;: 5, &#39;Middle East &amp; North Africa (all income levels)&#39;: 5, &#39;Middle East &amp; North Africa (developing only)&#39;: 5, &#39;Middle income&#39;: 5, &#39;North America&#39;: 5, &#39;OECD members&#39;: 5, &#39;Other small states&#39;: 5, &#39;Pacific island small states&#39;: 5, &#39;Small states&#39;: 5, &#39;South Asia&#39;: 5, &#39;Sub-Saharan Africa (all income levels)&#39;: 5, &#39;Sub-Saharan Africa (developing only)&#39;: 5, &#39;Upper middle income&#39;: 5, &#39;World&#39;: 4, &#39;Afghanistan&#39;: 4, &#39;Albania&#39;: 4, &#39;Algeria&#39;: 4, &#39;American Samoa&#39;: 4, &#39;Andorra&#39;: 4, &#39;Angola&#39;: 4, &#39;Antigua and Barbuda&#39;: 4, &#39;Argentina&#39;: 4, &#39;Armenia&#39;: 4, &#39;Aruba&#39;: 4, &#39;Australia&#39;: 4, &#39;Austria&#39;: 4, &#39;Azerbaijan&#39;: 4, &#39;&#34;Bahamas&#39;: 4, &#39;Bahrain&#39;: 4, &#39;Bangladesh&#39;: 4, &#39;Barbados&#39;: 4, &#39;Belarus&#39;: 4, &#39;Belgium&#39;: 4, &#39;Belize&#39;: 4, &#39;Benin&#39;: 4, &#39;Bermuda&#39;: 4, &#39;Bhutan&#39;: 4, &#39;Bolivia&#39;: 4, &#39;Bosnia and Herzegovina&#39;: 4, &#39;Botswana&#39;: 4, &#39;Brazil&#39;: 4, &#39;Brunei Darussalam&#39;: 4, &#39;Bulgaria&#39;: 4, &#39;Burkina Faso&#39;: 4, &#39;Burundi&#39;: 4, &#39;Cabo Verde&#39;: 4, &#39;Cambodia&#39;: 4, &#39;Cameroon&#39;: 4, &#39;Canada&#39;: 4, &#39;Cayman Islands&#39;: 4, &#39;Central African Republic&#39;: 4, &#39;Chad&#39;: 4, &#39;Channel Islands&#39;: 4, &#39;Chile&#39;: 4, &#39;China&#39;: 4, &#39;Colombia&#39;: 4, &#39;Comoros&#39;: 4, &#39;&#34;Congo&#39;: 8, &#39;Costa Rica&#39;: 4, &#34;Cote d&#39;Ivoire&#34;: 4, &#39;Croatia&#39;: 4, &#39;Cuba&#39;: 4, &#39;Curacao&#39;: 4, &#39;Cyprus&#39;: 4, &#39;Czech Republic&#39;: 4, &#39;Denmark&#39;: 4, &#39;Djibouti&#39;: 4, &#39;Dominica&#39;: 4, &#39;Dominican Republic&#39;: 4, &#39;Ecuador&#39;: 4, &#39;&#34;Egypt&#39;: 4, &#39;El Salvador&#39;: 4, &#39;Equatorial Guinea&#39;: 4, &#39;Eritrea&#39;: 4, &#39;Estonia&#39;: 4, &#39;Ethiopia&#39;: 4, &#39;Faeroe Islands&#39;: 4, &#39;Fiji&#39;: 4, &#39;Finland&#39;: 4, &#39;France&#39;: 4, &#39;French Polynesia&#39;: 4, &#39;Gabon&#39;: 4, &#39;&#34;Gambia&#39;: 4, &#39;Georgia&#39;: 4, &#39;Germany&#39;: 4, &#39;Ghana&#39;: 4, &#39;Greece&#39;: 4, &#39;Greenland&#39;: 4, &#39;Grenada&#39;: 4, &#39;Guam&#39;: 4, &#39;Guatemala&#39;: 4, &#39;Guinea&#39;: 4, &#39;Guinea-Bissau&#39;: 4, &#39;Guyana&#39;: 4, &#39;Haiti&#39;: 4, &#39;Honduras&#39;: 4, &#39;&#34;Hong Kong SAR&#39;: 4, &#39;Hungary&#39;: 4, &#39;Iceland&#39;: 4, &#39;India&#39;: 4, &#39;Indonesia&#39;: 4, &#39;&#34;Iran&#39;: 4, &#39;Iraq&#39;: 4, &#39;Ireland&#39;: 4, &#39;Isle of Man&#39;: 4, &#39;Israel&#39;: 4, &#39;Italy&#39;: 4, &#39;Jamaica&#39;: 4, &#39;Japan&#39;: 4, &#39;Jordan&#39;: 4, &#39;Kazakhstan&#39;: 4, &#39;Kenya&#39;: 4, &#39;Kiribati&#39;: 4, &#39;&#34;Korea&#39;: 8, &#39;Kuwait&#39;: 4, &#39;Kyrgyz Republic&#39;: 4, &#39;Lao PDR&#39;: 4, &#39;Latvia&#39;: 4, &#39;Lebanon&#39;: 4, &#39;Lesotho&#39;: 4, &#39;Liberia&#39;: 4, &#39;Libya&#39;: 4, &#39;Liechtenstein&#39;: 4, &#39;Lithuania&#39;: 4, &#39;Luxembourg&#39;: 4, &#39;&#34;Macao SAR&#39;: 4, &#39;&#34;Macedonia&#39;: 4, &#39;Madagascar&#39;: 4, &#39;Malawi&#39;: 4, &#39;Malaysia&#39;: 4, &#39;Maldives&#39;: 4, &#39;Mali&#39;: 4, &#39;Malta&#39;: 4, &#39;Marshall Islands&#39;: 4, &#39;Mauritania&#39;: 4, &#39;Mauritius&#39;: 4, &#39;Mexico&#39;: 4, &#39;&#34;Micronesia&#39;: 4, &#39;Moldova&#39;: 4, &#39;Monaco&#39;: 4, &#39;Mongolia&#39;: 4, &#39;Montenegro&#39;: 4, &#39;Morocco&#39;: 4, &#39;Mozambique&#39;: 4, &#39;Myanmar&#39;: 4, &#39;Namibia&#39;: 4, &#39;Nepal&#39;: 4, &#39;Netherlands&#39;: 4, &#39;New Caledonia&#39;: 4, &#39;New Zealand&#39;: 4, &#39;Nicaragua&#39;: 4, &#39;Niger&#39;: 4, &#39;Nigeria&#39;: 4, &#39;Northern Mariana Islands&#39;: 4, &#39;Norway&#39;: 4, &#39;Oman&#39;: 4, &#39;Pakistan&#39;: 4, &#39;Palau&#39;: 4, &#39;Panama&#39;: 4, &#39;Papua New Guinea&#39;: 4, &#39;Paraguay&#39;: 4, &#39;Peru&#39;: 4, &#39;Philippines&#39;: 4, &#39;Poland&#39;: 4, &#39;Portugal&#39;: 4, &#39;Puerto Rico&#39;: 4, &#39;Qatar&#39;: 4, &#39;Romania&#39;: 4, &#39;Russian Federation&#39;: 4, &#39;Rwanda&#39;: 4, &#39;Samoa&#39;: 4, &#39;San Marino&#39;: 4, &#39;Sao Tome and Principe&#39;: 4, &#39;Saudi Arabia&#39;: 4, &#39;Senegal&#39;: 4, &#39;Seychelles&#39;: 4, &#39;Sierra Leone&#39;: 4, &#39;Singapore&#39;: 4, &#39;Slovak Republic&#39;: 4, &#39;Slovenia&#39;: 4, &#39;Solomon Islands&#39;: 4, &#39;Somalia&#39;: 4, &#39;South Africa&#39;: 4, &#39;South Sudan&#39;: 4, &#39;Spain&#39;: 4, &#39;Sri Lanka&#39;: 4, &#39;St. Kitts and Nevis&#39;: 4, &#39;St. Lucia&#39;: 4, &#39;St. Vincent and the Grenadines&#39;: 4, &#39;Sudan&#39;: 4, &#39;Suriname&#39;: 4, &#39;Swaziland&#39;: 4, &#39;Sweden&#39;: 4, &#39;Switzerland&#39;: 4, &#39;Syrian Arab Republic&#39;: 4, &#39;Tajikistan&#39;: 4, &#39;Tanzania&#39;: 4, &#39;Thailand&#39;: 4, &#39;Timor-Leste&#39;: 4, &#39;Togo&#39;: 4, &#39;Tonga&#39;: 4, &#39;Trinidad and Tobago&#39;: 4, &#39;Tunisia&#39;: 4, &#39;Turkey&#39;: 4, &#39;Turkmenistan&#39;: 4, &#39;Turks and Caicos Islands&#39;: 4, &#39;Tuvalu&#39;: 4, &#39;Uganda&#39;: 4, &#39;Ukraine&#39;: 4, &#39;United Arab Emirates&#39;: 4, &#39;United Kingdom&#39;: 4, &#39;United States&#39;: 4, &#39;Uruguay&#39;: 4, &#39;Uzbekistan&#39;: 4, &#39;Vanuatu&#39;: 4, &#39;&#34;Venezuela&#39;: 4, &#39;Vietnam&#39;: 4, &#39;Virgin Islands (U.S.)&#39;: 4, &#39;&#34;Yemen&#39;: 4, &#39;Zambia&#39;: 4, &#39;Zimbabwe&#39;: 4}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -15195,9 +15255,140 @@ True
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>In this case, it would be useful to use generators. Generators allow users to lazily evaluate data. </li>
+<li>This concept of lazy evaluation is useful when you have to deal with very large datasets because it lets you generate values in an efficient manner by yielding only chunks of data at a time instead of the whole thing at once.</li>
+<li>Note that when you open a connection to a file, the resulting file object is already a generator! <ul>
+<li>So out in the wild, you won't have to explicitly create generator objects in cases such as this. </li>
+<li>However, for pedagogical reasons, we are having you practice how to do this here.</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define read_large_file()</span>
+<span class="k">def</span> <span class="nf">read_large_file</span><span class="p">(</span><span class="n">file_object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A generator function to read a large file lazily.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Loop indefinitely until the end of the file</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+
+        <span class="c1"># Read a line from the file: data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">file_object</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+        <span class="c1"># Break if this is the end of the file</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="c1"># Yield the line of data</span>
+        <span class="k">yield</span> <span class="n">data</span>
+        
+<span class="c1"># Open a connection to the file</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;world_ind_pop_data.csv&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+
+    <span class="c1"># Create a generator object for the file: gen_file</span>
+    <span class="n">gen_file</span> <span class="o">=</span> <span class="n">read_large_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="c1"># Print the first three lines of the file</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">gen_file</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">gen_file</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">gen_file</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CountryName,CountryCode,Year,Total Population,Urban population (% of total)
+
+Arab World,ARB,1960,92495902.0,31.285384211605397
+
+Caribbean small states,CSS,1960,4190810.0,31.5974898513652
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Writing-a-generator-to-load-data-in-chunks-(3)">Writing a generator to load data in chunks (3)<a class="anchor-link" href="#Writing-a-generator-to-load-data-in-chunks-(3)">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Initialize an empty dictionary: counts_dict</span>
+<span class="n">counts_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># Open a connection to the file</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;world_ind_pop_data.csv&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    
+    <span class="c1"># skip the column names</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+
+    <span class="c1"># Iterate over the generator from read_large_file()</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">read_large_file</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">first_col</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">first_col</span> <span class="ow">in</span> <span class="n">counts_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">counts_dict</span><span class="p">[</span><span class="n">first_col</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">counts_dict</span><span class="p">[</span><span class="n">first_col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># Print            </span>
+<span class="nb">print</span><span class="p">(</span><span class="n">counts_dict</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;Arab World&#39;: 55, &#39;Caribbean small states&#39;: 55, &#39;Central Europe and the Baltics&#39;: 55, &#39;East Asia &amp; Pacific (all income levels)&#39;: 55, &#39;East Asia &amp; Pacific (developing only)&#39;: 55, &#39;Euro area&#39;: 55, &#39;Europe &amp; Central Asia (all income levels)&#39;: 55, &#39;Europe &amp; Central Asia (developing only)&#39;: 55, &#39;European Union&#39;: 55, &#39;Fragile and conflict affected situations&#39;: 55, &#39;Heavily indebted poor countries (HIPC)&#39;: 55, &#39;High income&#39;: 55, &#39;High income: nonOECD&#39;: 55, &#39;High income: OECD&#39;: 55, &#39;Latin America &amp; Caribbean (all income levels)&#39;: 55, &#39;Latin America &amp; Caribbean (developing only)&#39;: 55, &#39;Least developed countries: UN classification&#39;: 55, &#39;Low &amp; middle income&#39;: 55, &#39;Low income&#39;: 55, &#39;Lower middle income&#39;: 55, &#39;Middle East &amp; North Africa (all income levels)&#39;: 55, &#39;Middle East &amp; North Africa (developing only)&#39;: 55, &#39;Middle income&#39;: 55, &#39;North America&#39;: 55, &#39;OECD members&#39;: 55, &#39;Other small states&#39;: 55, &#39;Pacific island small states&#39;: 55, &#39;Small states&#39;: 55, &#39;South Asia&#39;: 55, &#39;Sub-Saharan Africa (all income levels)&#39;: 55, &#39;Sub-Saharan Africa (developing only)&#39;: 55, &#39;Upper middle income&#39;: 55, &#39;World&#39;: 55, &#39;Afghanistan&#39;: 55, &#39;Albania&#39;: 55, &#39;Algeria&#39;: 55, &#39;American Samoa&#39;: 55, &#39;Andorra&#39;: 55, &#39;Angola&#39;: 55, &#39;Antigua and Barbuda&#39;: 55, &#39;Argentina&#39;: 55, &#39;Armenia&#39;: 55, &#39;Aruba&#39;: 55, &#39;Australia&#39;: 55, &#39;Austria&#39;: 55, &#39;Azerbaijan&#39;: 55, &#39;&#34;Bahamas&#39;: 55, &#39;Bahrain&#39;: 55, &#39;Bangladesh&#39;: 55, &#39;Barbados&#39;: 55, &#39;Belarus&#39;: 55, &#39;Belgium&#39;: 55, &#39;Belize&#39;: 55, &#39;Benin&#39;: 55, &#39;Bermuda&#39;: 55, &#39;Bhutan&#39;: 55, &#39;Bolivia&#39;: 55, &#39;Bosnia and Herzegovina&#39;: 55, &#39;Botswana&#39;: 55, &#39;Brazil&#39;: 55, &#39;Brunei Darussalam&#39;: 55, &#39;Bulgaria&#39;: 55, &#39;Burkina Faso&#39;: 55, &#39;Burundi&#39;: 55, &#39;Cabo Verde&#39;: 55, &#39;Cambodia&#39;: 55, &#39;Cameroon&#39;: 55, &#39;Canada&#39;: 55, &#39;Cayman Islands&#39;: 55, &#39;Central African Republic&#39;: 55, &#39;Chad&#39;: 55, &#39;Channel Islands&#39;: 55, &#39;Chile&#39;: 55, &#39;China&#39;: 55, &#39;Colombia&#39;: 55, &#39;Comoros&#39;: 55, &#39;&#34;Congo&#39;: 110, &#39;Costa Rica&#39;: 55, &#34;Cote d&#39;Ivoire&#34;: 55, &#39;Croatia&#39;: 55, &#39;Cuba&#39;: 55, &#39;Curacao&#39;: 55, &#39;Cyprus&#39;: 55, &#39;Czech Republic&#39;: 55, &#39;Denmark&#39;: 55, &#39;Djibouti&#39;: 55, &#39;Dominica&#39;: 55, &#39;Dominican Republic&#39;: 55, &#39;Ecuador&#39;: 55, &#39;&#34;Egypt&#39;: 55, &#39;El Salvador&#39;: 55, &#39;Equatorial Guinea&#39;: 55, &#39;Eritrea&#39;: 55, &#39;Estonia&#39;: 55, &#39;Ethiopia&#39;: 55, &#39;Faeroe Islands&#39;: 55, &#39;Fiji&#39;: 55, &#39;Finland&#39;: 55, &#39;France&#39;: 55, &#39;French Polynesia&#39;: 55, &#39;Gabon&#39;: 55, &#39;&#34;Gambia&#39;: 55, &#39;Georgia&#39;: 55, &#39;Germany&#39;: 55, &#39;Ghana&#39;: 55, &#39;Greece&#39;: 55, &#39;Greenland&#39;: 55, &#39;Grenada&#39;: 55, &#39;Guam&#39;: 55, &#39;Guatemala&#39;: 55, &#39;Guinea&#39;: 55, &#39;Guinea-Bissau&#39;: 55, &#39;Guyana&#39;: 55, &#39;Haiti&#39;: 55, &#39;Honduras&#39;: 55, &#39;&#34;Hong Kong SAR&#39;: 55, &#39;Hungary&#39;: 55, &#39;Iceland&#39;: 55, &#39;India&#39;: 55, &#39;Indonesia&#39;: 55, &#39;&#34;Iran&#39;: 55, &#39;Iraq&#39;: 55, &#39;Ireland&#39;: 55, &#39;Isle of Man&#39;: 55, &#39;Israel&#39;: 55, &#39;Italy&#39;: 55, &#39;Jamaica&#39;: 55, &#39;Japan&#39;: 55, &#39;Jordan&#39;: 55, &#39;Kazakhstan&#39;: 55, &#39;Kenya&#39;: 55, &#39;Kiribati&#39;: 55, &#39;&#34;Korea&#39;: 110, &#39;Kuwait&#39;: 52, &#39;Kyrgyz Republic&#39;: 55, &#39;Lao PDR&#39;: 55, &#39;Latvia&#39;: 55, &#39;Lebanon&#39;: 55, &#39;Lesotho&#39;: 55, &#39;Liberia&#39;: 55, &#39;Libya&#39;: 55, &#39;Liechtenstein&#39;: 55, &#39;Lithuania&#39;: 55, &#39;Luxembourg&#39;: 55, &#39;&#34;Macao SAR&#39;: 55, &#39;&#34;Macedonia&#39;: 55, &#39;Madagascar&#39;: 55, &#39;Malawi&#39;: 55, &#39;Malaysia&#39;: 55, &#39;Maldives&#39;: 55, &#39;Mali&#39;: 55, &#39;Malta&#39;: 55, &#39;Marshall Islands&#39;: 55, &#39;Mauritania&#39;: 55, &#39;Mauritius&#39;: 55, &#39;Mexico&#39;: 55, &#39;&#34;Micronesia&#39;: 55, &#39;Moldova&#39;: 55, &#39;Monaco&#39;: 55, &#39;Mongolia&#39;: 55, &#39;Montenegro&#39;: 55, &#39;Morocco&#39;: 55, &#39;Mozambique&#39;: 55, &#39;Myanmar&#39;: 55, &#39;Namibia&#39;: 55, &#39;Nepal&#39;: 55, &#39;Netherlands&#39;: 55, &#39;New Caledonia&#39;: 55, &#39;New Zealand&#39;: 55, &#39;Nicaragua&#39;: 55, &#39;Niger&#39;: 55, &#39;Nigeria&#39;: 55, &#39;Northern Mariana Islands&#39;: 55, &#39;Norway&#39;: 55, &#39;Oman&#39;: 55, &#39;Pakistan&#39;: 55, &#39;Palau&#39;: 55, &#39;Panama&#39;: 55, &#39;Papua New Guinea&#39;: 55, &#39;Paraguay&#39;: 55, &#39;Peru&#39;: 55, &#39;Philippines&#39;: 55, &#39;Poland&#39;: 55, &#39;Portugal&#39;: 55, &#39;Puerto Rico&#39;: 55, &#39;Qatar&#39;: 55, &#39;Romania&#39;: 55, &#39;Russian Federation&#39;: 55, &#39;Rwanda&#39;: 55, &#39;Samoa&#39;: 55, &#39;San Marino&#39;: 55, &#39;Sao Tome and Principe&#39;: 55, &#39;Saudi Arabia&#39;: 55, &#39;Senegal&#39;: 55, &#39;Seychelles&#39;: 55, &#39;Sierra Leone&#39;: 55, &#39;Singapore&#39;: 55, &#39;Slovak Republic&#39;: 55, &#39;Slovenia&#39;: 55, &#39;Solomon Islands&#39;: 55, &#39;Somalia&#39;: 55, &#39;South Africa&#39;: 55, &#39;South Sudan&#39;: 55, &#39;Spain&#39;: 55, &#39;Sri Lanka&#39;: 55, &#39;St. Kitts and Nevis&#39;: 55, &#39;St. Lucia&#39;: 55, &#39;St. Vincent and the Grenadines&#39;: 55, &#39;Sudan&#39;: 55, &#39;Suriname&#39;: 55, &#39;Swaziland&#39;: 55, &#39;Sweden&#39;: 55, &#39;Switzerland&#39;: 55, &#39;Syrian Arab Republic&#39;: 55, &#39;Tajikistan&#39;: 55, &#39;Tanzania&#39;: 55, &#39;Thailand&#39;: 55, &#39;Timor-Leste&#39;: 55, &#39;Togo&#39;: 55, &#39;Tonga&#39;: 55, &#39;Trinidad and Tobago&#39;: 55, &#39;Tunisia&#39;: 55, &#39;Turkey&#39;: 55, &#39;Turkmenistan&#39;: 55, &#39;Turks and Caicos Islands&#39;: 55, &#39;Tuvalu&#39;: 55, &#39;Uganda&#39;: 55, &#39;Ukraine&#39;: 55, &#39;United Arab Emirates&#39;: 55, &#39;United Kingdom&#39;: 55, &#39;United States&#39;: 55, &#39;Uruguay&#39;: 55, &#39;Uzbekistan&#39;: 55, &#39;Vanuatu&#39;: 55, &#39;&#34;Venezuela&#39;: 55, &#39;Vietnam&#39;: 55, &#39;Virgin Islands (U.S.)&#39;: 55, &#39;&#34;Yemen&#39;: 55, &#39;Zambia&#39;: 55, &#39;Zimbabwe&#39;: 55, &#39;Serbia&#39;: 25, &#39;West Bank and Gaza&#39;: 25, &#39;Sint Maarten (Dutch part)&#39;: 17}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -15215,6 +15406,100 @@ True
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file_wb</span> <span class="o">=</span> <span class="s1">&#39;https://assets.datacamp.com/production/course_1531/datasets/world_ind_pop_data.csv&#39;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Initialize reader object: df_reader</span>
+<span class="n">df_reader</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_wb</span><span class="p">,</span> <span class="n">chunksize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Print two chunks</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">df_reader</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">df_reader</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                                 CountryName CountryCode  Year  \
+0                                 Arab World         ARB  1960   
+1                     Caribbean small states         CSS  1960   
+2             Central Europe and the Baltics         CEB  1960   
+3    East Asia &amp; Pacific (all income levels)         EAS  1960   
+4      East Asia &amp; Pacific (developing only)         EAP  1960   
+5                                  Euro area         EMU  1960   
+6  Europe &amp; Central Asia (all income levels)         ECS  1960   
+7    Europe &amp; Central Asia (developing only)         ECA  1960   
+8                             European Union         EUU  1960   
+9   Fragile and conflict affected situations         FCS  1960   
+
+   Total Population  Urban population (% of total)  
+0      9.249590e+07                      31.285384  
+1      4.190810e+06                      31.597490  
+2      9.140158e+07                      44.507921  
+3      1.042475e+09                      22.471132  
+4      8.964930e+08                      16.917679  
+5      2.653965e+08                      62.096947  
+6      6.674890e+08                      55.378977  
+7      1.553174e+08                      38.066129  
+8      4.094985e+08                      61.212898  
+9      1.203546e+08                      17.891972  
+                                      CountryName CountryCode  Year  \
+10         Heavily indebted poor countries (HIPC)         HPC  1960   
+11                                    High income         HIC  1960   
+12                           High income: nonOECD         NOC  1960   
+13                              High income: OECD         OEC  1960   
+14  Latin America &amp; Caribbean (all income levels)         LCN  1960   
+15    Latin America &amp; Caribbean (developing only)         LAC  1960   
+16   Least developed countries: UN classification         LDC  1960   
+17                            Low &amp; middle income         LMY  1960   
+18                                     Low income         LIC  1960   
+19                            Lower middle income         LMC  1960   
+
+    Total Population  Urban population (% of total)  
+10      1.624912e+08                      12.236046  
+11      9.075975e+08                      62.680332  
+12      1.866767e+08                      56.107863  
+13      7.209208e+08                      64.285435  
+14      2.205642e+08                      49.284688  
+15      1.776822e+08                      44.863308  
+16      2.410728e+08                       9.616261  
+17      2.127373e+09                      21.272894  
+18      1.571884e+08                      11.498396  
+19      9.429116e+08                      19.810513  
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -15223,6 +15508,98 @@ True
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[54]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Initialize reader object: urb_pop_reader</span>
+<span class="n">urb_pop_reader</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_wb</span><span class="p">,</span> <span class="n">chunksize</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># Get the first DataFrame chunk: df_urb_pop</span>
+<span class="n">df_urb_pop</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">urb_pop_reader</span><span class="p">)</span>
+
+<span class="c1"># Check out the head of the DataFrame</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_urb_pop</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                               CountryName CountryCode  Year  \
+0                               Arab World         ARB  1960   
+1                   Caribbean small states         CSS  1960   
+2           Central Europe and the Baltics         CEB  1960   
+3  East Asia &amp; Pacific (all income levels)         EAS  1960   
+4    East Asia &amp; Pacific (developing only)         EAP  1960   
+
+   Total Population  Urban population (% of total)  
+0      9.249590e+07                      31.285384  
+1      4.190810e+06                      31.597490  
+2      9.140158e+07                      44.507921  
+3      1.042475e+09                      22.471132  
+4      8.964930e+08                      16.917679  
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[55]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Check out specific country: df_pop_ceb</span>
+<span class="n">df_pop_ceb</span> <span class="o">=</span> <span class="n">df_urb_pop</span><span class="p">[</span><span class="n">df_urb_pop</span><span class="p">[</span><span class="s1">&#39;CountryCode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;CEB&#39;</span><span class="p">]</span>
+
+<span class="c1"># Zip DataFrame columns of interest: pops</span>
+<span class="n">pops</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_pop_ceb</span><span class="p">[</span><span class="s1">&#39;Total Population&#39;</span><span class="p">],</span> 
+           <span class="n">df_pop_ceb</span><span class="p">[</span><span class="s1">&#39;Urban population (</span><span class="si">% o</span><span class="s1">f total)&#39;</span><span class="p">])</span>
+
+<span class="c1"># Turn zip object into list: pops_list</span>
+<span class="n">pops_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pops</span><span class="p">)</span>
+
+<span class="c1"># Print pops_list</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pops_list</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[(91401583.0, 44.507921139002597), (92237118.0, 45.206665319194002), (93014890.0, 45.866564696018003), (93845749.0, 46.5340927663649), (94722599.0, 47.208742980352604)]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -15230,6 +15607,224 @@ True
 <h3 id="Writing-an-iterator-to-load-data-in-chunks-(3)">Writing an iterator to load data in chunks (3)<a class="anchor-link" href="#Writing-an-iterator-to-load-data-in-chunks-(3)">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[57]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">df_pop_ceb</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[57]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>pandas.core.frame.DataFrame</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[62]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Use list comprehension to create new DataFrame column &#39;Total Urban Population&#39;</span>
+<span class="n">df_pop_ceb</span><span class="p">[</span><span class="s1">&#39;Total Urban Population&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">pops_list</span><span class="p">]</span>
+
+<span class="c1"># Plot urban population data</span>
+<span class="n">df_pop_ceb</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;scatter&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Total Urban Population&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+/zNWFLPZ8ryTAAAAAElFTkSuQmCC
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -15243,6 +15838,221 @@ True
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we will loop through the file chunks and append the data to get all of the data points</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[63]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Initialize reader object: urb_pop_reader</span>
+<span class="n">urb_pop_reader</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_wb</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># Initialize empty DataFrame: data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+<span class="c1"># Iterate over each DataFrame chunk</span>
+<span class="k">for</span> <span class="n">df_urb_pop</span> <span class="ow">in</span> <span class="n">urb_pop_reader</span><span class="p">:</span>
+
+    <span class="c1"># Check out specific country: df_pop_ceb</span>
+    <span class="n">df_pop_ceb</span> <span class="o">=</span> <span class="n">df_urb_pop</span><span class="p">[</span><span class="n">df_urb_pop</span><span class="p">[</span><span class="s1">&#39;CountryCode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;CEB&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Zip DataFrame columns of interest: pops</span>
+    <span class="n">pops</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_pop_ceb</span><span class="p">[</span><span class="s1">&#39;Total Population&#39;</span><span class="p">],</span>
+                <span class="n">df_pop_ceb</span><span class="p">[</span><span class="s1">&#39;Urban population (</span><span class="si">% o</span><span class="s1">f total)&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Turn zip object into list: pops_list</span>
+    <span class="n">pops_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pops</span><span class="p">)</span>
+
+    <span class="c1"># Use list comprehension to create new DataFrame column &#39;Total Urban Population&#39;</span>
+    <span class="n">df_pop_ceb</span><span class="p">[</span><span class="s1">&#39;Total Urban Population&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">pops_list</span><span class="p">]</span>
+    
+    <span class="c1"># Append DataFrame chunk to data: data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_pop_ceb</span><span class="p">)</span>
+
+<span class="c1"># Plot urban population data</span>
+<span class="n">data</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;scatter&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Total Urban Population&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+VX+2ufeLmMD9rTt1rKKwtY8k9QN3Awsi4h5JlwLPRcSFmXNmAIMRsVnSCcClEXFYo9f12kc2kTZs
+3saCi2+pu/6O9Y5aX8bV6zVVvtCrj1cuQW3atnt3oel7TOZLpx/J4q8PjPj3VVn3qZmxivEmi05Y
++2gNsCYi7kkfXwNckD0hIp7L3P+JpMskzYqIpwqMy2yIK42solX7W1e2LN2+M/9YRSvnVhS29lFE
+/BfwuKSXp4feCgzbkknSiyQpvX9UGs+GomIyq+ZKIxvNhO9vvWuQqZOGz63IjlVUH88OeLdi3+ui
+q48+BHwzrTxaDbxf0tkAEXE5cArwPyTtBJ4HTouyreVtpeKlK6wo492ytNZYRaMB76J6s4UmhYhY
+DlRfw7o88/wXgS8WGYNZhZeusKKNZ8vSQw+Y3tSAd1G9WW+yYz3BA8rWaZqpPqo34N2MThhoNusY
+HlC2TlOv5LmZAe8iOClYT/CAspVdq+bNeOc160rVO3HVqw5xL8FsOPcUrOt4QNls7JwUrKt4LwSz
+8fHlI+sqlQHlrMqAspmNzknBuooHlM3Gx0nBuooHlM3Gx2MKVnreC8Fs4jgpWKl5LwSzieXLR1Za
+2UqjVqweadYLnBSstFxpZDbxnBSstFxpZDbxnBSstFxpZDbxcg00S3oRMDd7fkTcVVRQZrXUWlLY
+lUZmE2vUpCDpc8AZwG+AXenhAE4oMC6zYRptaO5KI7OJk6ensAh4WURsLToYs1pGW8/IzCZOnjGF
+3+Y8z6wQrjIya508PYVNwH2SbgKGCsAj4mOFRWWW4Sojs9bJkxRuSG9mbVGpMqreo9aXjswm3qhJ
+ISK+KmkycGh6aFVE7Cw2LLPhXGVk1hp5qo/eBHwdeAIQ8CJJ74mIO4sOznpXrfJTVxmZFS/P5aN/
+AU6IiAcBJL2SJEn0FxmY9a5G5admVqw8VUVTKwkBICIeAqYWF5L1Mi9yZ9ZeeXoK90r6CknvAOB0
+4L7iQrJeVik/rcxHgN3lp750ZFa8PEnhbODDwPkkYwq3A/+nyKCsd7n81Ky9Rr18FBFbI2JJRCyM
+iL+MiP+dd3azpH0kXSPpN5IekvSGqucl6QuSVklaKenIsTbEuoMXuTNrr7o9BUnfjoh3S7qPZK2j
+YSIizxf4pcANEXGKpKnAC6qefztwWHp7PfDl9Kf1MJefmrVPo8tHH09/njKWF5Y0AzgGOBMgIrYD
+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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Writing-an-iterator-to-load-data-in-chunks-(5)">Writing an iterator to load data in chunks (5)<a class="anchor-link" href="#Writing-an-iterator-to-load-data-in-chunks-(5)">&#182;</a></h3>
 </div>
 </div>
@@ -15251,9 +16061,404 @@ True
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Final-thoughts">Final thoughts<a class="anchor-link" href="#Final-thoughts">&#182;</a></h2>
+<p>And this is how we sould put this into a funciton and use it repeatedly</p>
+
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[64]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define plot_pop()</span>
+<span class="k">def</span> <span class="nf">plot_pop</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">country_code</span><span class="p">):</span>
+
+    <span class="c1"># Initialize reader object: urb_pop_reader</span>
+    <span class="n">urb_pop_reader</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+    <span class="c1"># Initialize empty DataFrame: data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    
+    <span class="c1"># Iterate over each DataFrame chunk</span>
+    <span class="k">for</span> <span class="n">df_urb_pop</span> <span class="ow">in</span> <span class="n">urb_pop_reader</span><span class="p">:</span>
+        <span class="c1"># Check out specific country: df_pop_ceb</span>
+        <span class="n">df_pop_ceb</span> <span class="o">=</span> <span class="n">df_urb_pop</span><span class="p">[</span><span class="n">df_urb_pop</span><span class="p">[</span><span class="s1">&#39;CountryCode&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">country_code</span><span class="p">]</span>
+
+        <span class="c1"># Zip DataFrame columns of interest: pops</span>
+        <span class="n">pops</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_pop_ceb</span><span class="p">[</span><span class="s1">&#39;Total Population&#39;</span><span class="p">],</span>
+                    <span class="n">df_pop_ceb</span><span class="p">[</span><span class="s1">&#39;Urban population (</span><span class="si">% o</span><span class="s1">f total)&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Turn zip object into list: pops_list</span>
+        <span class="n">pops_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pops</span><span class="p">)</span>
+
+        <span class="c1"># Use list comprehension to create new DataFrame column &#39;Total Urban Population&#39;</span>
+        <span class="n">df_pop_ceb</span><span class="p">[</span><span class="s1">&#39;Total Urban Population&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">pops_list</span><span class="p">]</span>
+    
+        <span class="c1"># Append DataFrame chunk to data: data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_pop_ceb</span><span class="p">)</span>
+
+    <span class="c1"># Plot urban population data</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;scatter&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;Total Urban Population&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Set the filename: fn</span>
+<span class="n">fn</span> <span class="o">=</span> <span class="s1">&#39;https://assets.datacamp.com/production/course_1531/datasets/world_ind_pop_data.csv&#39;</span>
+
+<span class="c1"># Call plot_pop for country code &#39;CEB&#39;</span>
+<span class="n">plot_pop</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;CEB&#39;</span><span class="p">)</span>
+
+<span class="c1"># Call plot_pop for country code &#39;ARB&#39;</span>
+<span class="n">plot_pop</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;ARB&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+VX+2ufeLmMD9rTt1rKKwtY8k9QN3Awsi4h5JlwLPRcSFmXNmAIMRsVnSCcClEXFYo9f12kc2kTZs
+3saCi2+pu/6O9Y5aX8bV6zVVvtCrj1cuQW3atnt3oel7TOZLpx/J4q8PjPj3VVn3qZmxivEmi05Y
++2gNsCYi7kkfXwNckD0hIp7L3P+JpMskzYqIpwqMy2yIK42solX7W1e2LN2+M/9YRSvnVhS29lFE
+/BfwuKSXp4feCgzbkknSiyQpvX9UGs+GomIyq+ZKIxvNhO9vvWuQqZOGz63IjlVUH88OeLdi3+ui
+q48+BHwzrTxaDbxf0tkAEXE5cArwPyTtBJ4HTouyreVtpeKlK6wo492ytNZYRaMB76J6s4UmhYhY
+DlRfw7o88/wXgS8WGYNZhZeusKKNZ8vSQw+Y3tSAd1G9WW+yYz3BA8rWaZqpPqo34N2MThhoNusY
+HlC2TlOv5LmZAe8iOClYT/CAspVdq+bNeOc160rVO3HVqw5xL8FsOPcUrOt4QNls7JwUrKt4LwSz
+8fHlI+sqlQHlrMqAspmNzknBuooHlM3Gx0nBuooHlM3Gx2MKVnreC8Fs4jgpWKl5LwSzieXLR1Za
+2UqjVqweadYLnBSstFxpZDbxnBSstFxpZDbxnBSstFxpZDbxcg00S3oRMDd7fkTcVVRQZrXUWlLY
+lUZmE2vUpCDpc8AZwG+AXenhAE4oMC6zYRptaO5KI7OJk6ensAh4WURsLToYs1pGW8/IzCZOnjGF
+3+Y8z6wQrjIya508PYVNwH2SbgKGCsAj4mOFRWWW4Sojs9bJkxRuSG9mbVGpMqreo9aXjswm3qhJ
+ISK+KmkycGh6aFVE7Cw2LLPhXGVk1hp5qo/eBHwdeAIQ8CJJ74mIO4sOznpXrfJTVxmZFS/P5aN/
+AU6IiAcBJL2SJEn0FxmY9a5G5admVqw8VUVTKwkBICIeAqYWF5L1Mi9yZ9ZeeXoK90r6CknvAOB0
+4L7iQrJeVik/rcxHgN3lp750ZFa8PEnhbODDwPkkYwq3A/+nyKCsd7n81Ky9Rr18FBFbI2JJRCyM
+iL+MiP+dd3azpH0kXSPpN5IekvSGqucl6QuSVklaKenIsTbEuoMXuTNrr7o9BUnfjoh3S7qPZK2j
+YSIizxf4pcANEXGKpKnAC6qefztwWHp7PfDl9Kf1MJefmrVPo8tHH09/njKWF5Y0AzgGOBMgIrYD
+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
+"
+>
+</div>
+
+</div>
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+AABJRU5ErkJggg==
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
     </div>
   </div>
