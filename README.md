@@ -39,3 +39,4 @@ Data Science Career Trak for Python:
  - [Intermediate Python for Data Science](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/intermediate_python_for_data_science/intermediate_python_for_data_science.html)
  - [Python Data Science Toolbox (Part 1)](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/python_data_science_toolbox_part_1/python_data_science_toolbox_part_1.html)
  - [Python Data Science Toolbox (Part 2)](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/python_data_science_toolbox_part_2/python_data_science_toolbox_part_2.html)
+ - [Importing Data in Python (Part 1)](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/importing_data_in_python_part_1/importing_data_in_python_part_1.html)
