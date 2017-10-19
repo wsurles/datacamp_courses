@@ -150,33 +150,10 @@ $(document).ready(function () {
 </div>
 
 
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googlesheets)
-<span class="kw">library</span>(dplyr)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
 <span class="kw">library</span>(lubridate)
 <span class="kw">library</span>(stringr)
 <span class="kw">library</span>(rCharts)</code></pre></div>
-<div id="cha-bra" class="section level1">
-<h1>Cha bra</h1>
-<div id="get-data-from-google-spreadsheet" class="section level2">
-<h2>Get data from google spreadsheet</h2>
-<p>Just run this once to update the data in the directory when needed</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># list spreadsheets in google account</span>
-<span class="co"># I will need to authenticate </span>
-<span class="kw">gs_ls</span>()
-
-<span class="co"># choose spreadsheet</span>
-gs &lt;-<span class="st"> </span><span class="kw">gs_title</span>(<span class="st">&quot;datacamp_statistics&quot;</span>)
-
-<span class="co"># list worksheets</span>
-<span class="kw">gs_ws_ls</span>(gs)
-
-<span class="co"># load data from worksheet</span>
-df_william &lt;-<span class="st"> </span><span class="kw">gs_read</span>(<span class="dt">ss =</span> gs, <span class="dt">ws =</span> <span class="st">&quot;william&quot;</span>)
-<span class="kw">saveRDS</span>(df_william, <span class="dt">file =</span> <span class="st">&quot;data_william&quot;</span>)
-
-df_russell &lt;-<span class="st"> </span><span class="kw">gs_read</span>(<span class="dt">ss =</span> gs, <span class="dt">ws =</span> <span class="st">&quot;russell&quot;</span>)
-<span class="kw">saveRDS</span>(df_russell, <span class="dt">file =</span> <span class="st">&quot;data_russell&quot;</span>)</code></pre></div>
-</div>
 <div id="crunch-data-by-month" class="section level2">
 <h2>Crunch data by month</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">crunch_data &lt;-<span class="st"> </span>function(df) {
@@ -1317,13 +1294,13 @@ n$<span class="kw">print</span>(<span class="st">'inline'</span>, <span class="d
 },
 {
  "Date": "10/17/2017",
-"Exercises": 19,
+"Exercises": 36,
 "date":          17456,
 "year":           2017,
 "month": "10",
 "mday": 17,
-"exercises_cumsum": 1211,
-"exercises_cumsum_month": 89 
+"exercises_cumsum": 1228,
+"exercises_cumsum_month": 106 
 },
 {
  "Date": "10/18/2017",
@@ -3246,23 +3223,23 @@ n$<span class="kw">print</span>(<span class="st">'iframesrc'</span>, <span class
 },
 {
  "Date": "10/17/2017",
-"Exercises": null,
+"Exercises": 1,
 "date":          17456,
 "year":           2017,
 "month": "10",
 "mday": 17,
-"exercises_cumsum": null,
-"exercises_cumsum_month": null 
+"exercises_cumsum": 509,
+"exercises_cumsum_month": 76 
 },
 {
  "Date": "10/18/2017",
-"Exercises": null,
+"Exercises": 14,
 "date":          17457,
 "year":           2017,
 "month": "10",
 "mday": 18,
-"exercises_cumsum": null,
-"exercises_cumsum_month": null 
+"exercises_cumsum": 523,
+"exercises_cumsum_month": 90 
 },
 {
  "Date": "10/19/2017",
@@ -4053,7 +4030,6 @@ n$<span class="kw">print</span>(<span class="st">'iframesrc'</span>, <span class
       });
     };
 </script>
-</div>
 </div>
 <div id="char-brah-brah" class="section level1">
 <h1>char brah brah</h1>
