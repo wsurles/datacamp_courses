@@ -9,3 +9,5 @@ Things I want to do:
 - show the # of exercise completed on a given day as well as the total count
 - maybe remove the html and things from git tracking.
  - I don't want to commit every time i update the stats
+- could also show a bar chart of each week. That would be interesting
+ - This would show me what is reasonable/typical in a week. Then I can beat it. 

@@ -9,3 +9,5 @@
 
 *rsconnect/
 .Rproj.user
+
+*_creds*
