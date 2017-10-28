@@ -42,3 +42,4 @@ Data Science Career Trak for Python:
  - [Importing Data in Python (Part 1)](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/importing_data_in_python_part_1/importing_data_in_python_part_1.html)
  - [Importing Data in Python (Part 2)](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/importing_data_in_python_part_2/importing_data_in_python_part_2.html)
  - [Cleaning Data in Python](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/cleaning_data_in_python/cleaning_data_in_python.html)
+ - [pandas Foundations](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/pandas_foundations/pandas_foundations.html)
