@@ -39009,17 +39009,109 @@ SUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="What-method-should-we-use-to-read-the-data?">What method should we use to read the data?<a class="anchor-link" href="#What-method-should-we-use-to-read-the-data?">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Reading-in-a-data-file">Reading in a data file<a class="anchor-link" href="#Reading-in-a-data-file">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[574]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;https://assets.datacamp.com/production/course_1639/datasets/NOAA_QCLCD_2011_hourly_13904.txt&#39;</span>
+
+<span class="c1"># Read in the data file: df</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="c1"># Print the output of df.head()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>   13904  20110101  0053  12  OVC045     10.00  .1  .2  .3 ...   .18  .19  \
+0  13904  20110101   153  12  OVC049     10.00             ...              
+1  13904  20110101   253  12  OVC060     10.00             ...   030        
+2  13904  20110101   353  12  OVC065     10.00             ...              
+3  13904  20110101   453  12  BKN070     10.00             ...              
+4  13904  20110101   553  12  BKN065     10.00             ...   015        
+
+   29.95  .20  AA  .21  .22  .23 29.95.1  .24  
+0  30.01       AA                  30.02       
+1  30.01       AA                  30.02       
+2  30.03       AA                  30.04       
+3  30.04       AA                  30.04       
+4  30.06       AA                  30.06       
+
+[5 rows x 44 columns]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[575]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read in the data file with header=None: df_headers</span>
+<span class="n">df_headers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Print the output of df_headers.head()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_headers</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>      0         1    2   3       4  5      6  7  8  9  ...   34 35     36 37  \
+0  13904  20110101   53  12  OVC045     10.00          ...          29.95      
+1  13904  20110101  153  12  OVC049     10.00          ...          30.01      
+2  13904  20110101  253  12  OVC060     10.00          ...  030     30.01      
+3  13904  20110101  353  12  OVC065     10.00          ...          30.03      
+4  13904  20110101  453  12  BKN070     10.00          ...          30.04      
+
+   38 39 40 41     42 43  
+0  AA           29.95     
+1  AA           30.02     
+2  AA           30.02     
+3  AA           30.04     
+4  AA           30.04     
+
+[5 rows x 44 columns]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -39029,6 +39121,133 @@ SUVORK5CYII=
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[576]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">column_labels</span> <span class="o">=</span> <span class="s1">&#39;Wban,date,Time,StationType,sky_condition,sky_conditionFlag,</span><span class="se">\</span>
+<span class="s1">visibility,visibilityFlag,wx_and_obst_to_vision,wx_and_obst_to_visionFlag,</span><span class="se">\</span>
+<span class="s1">dry_bulb_faren,dry_bulb_farenFlag,dry_bulb_cel,dry_bulb_celFlag,wet_bulb_faren,</span><span class="se">\</span>
+<span class="s1">wet_bulb_farenFlag,wet_bulb_cel,wet_bulb_celFlag,dew_point_faren,dew_point_farenFlag,</span><span class="se">\</span>
+<span class="s1">dew_point_cel,dew_point_celFlag,relative_humidity,relative_humidityFlag,wind_speed,</span><span class="se">\</span>
+<span class="s1">wind_speedFlag,wind_direction,wind_directionFlag,value_for_wind_character,</span><span class="se">\</span>
+<span class="s1">value_for_wind_characterFlag,station_pressure,station_pressureFlag,pressure_tendency,</span><span class="se">\</span>
+<span class="s1">pressure_tendencyFlag,presschange,presschangeFlag,sea_level_pressure,sea_level_pressureFlag,</span><span class="se">\</span>
+<span class="s1">record_type,hourly_precip,hourly_precipFlag,altimeter,altimeterFlag,junk&#39;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[577]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">list_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sky_conditionFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;visibilityFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;wx_and_obst_to_vision&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;wx_and_obst_to_visionFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;dry_bulb_farenFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;dry_bulb_celFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;wet_bulb_farenFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;wet_bulb_celFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;dew_point_farenFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;dew_point_celFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;relative_humidityFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;wind_speedFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;wind_directionFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value_for_wind_character&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;value_for_wind_characterFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;station_pressureFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;pressure_tendencyFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;pressure_tendency&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;presschange&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;presschangeFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;sea_level_pressureFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;hourly_precip&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;hourly_precipFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;altimeter&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;record_type&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;altimeterFlag&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;junk&#39;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[578]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Split on the comma to create a list: column_labels_list</span>
+<span class="n">column_labels_list</span> <span class="o">=</span> <span class="n">column_labels</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+<span class="c1"># Assign the new column labels to the DataFrame: df.columns</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">column_labels_list</span>
+
+<span class="c1"># Remove the appropriate columns: df_dropped</span>
+<span class="n">df_dropped</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">list_to_drop</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+
+<span class="c1"># Print the output of df_dropped.head()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_dropped</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>    Wban      date  Time  StationType sky_condition visibility dry_bulb_faren  \
+0  13904  20110101   153           12        OVC049      10.00             51   
+1  13904  20110101   253           12        OVC060      10.00             51   
+2  13904  20110101   353           12        OVC065      10.00             50   
+3  13904  20110101   453           12        BKN070      10.00             50   
+4  13904  20110101   553           12        BKN065      10.00             49   
+
+  dry_bulb_cel wet_bulb_faren wet_bulb_cel dew_point_faren dew_point_cel  \
+0         10.6             37          3.0              14         -10.0   
+1         10.6             37          2.9              13         -10.6   
+2         10.0             38          3.1              17          -8.3   
+3         10.0             37          2.8              15          -9.4   
+4          9.4             37          2.8              17          -8.3   
+
+  relative_humidity wind_speed wind_direction station_pressure  \
+0                23         10            340            29.49   
+1                22         15            010            29.49   
+2                27          7            350            29.51   
+3                25         11            020            29.51   
+4                28          6            010            29.53   
+
+  sea_level_pressure  
+0              30.01  
+1              30.01  
+2              30.03  
+3              30.04  
+4              30.06  
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -39037,6 +39256,86 @@ SUVORK5CYII=
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[579]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Convert the date column to string: df_dropped[&#39;date&#39;]</span>
+<span class="n">df_dropped</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_dropped</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># Pad leading zeros to the Time column: df_dropped[&#39;Time&#39;]</span>
+<span class="n">df_dropped</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_dropped</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="s1">&#39;</span><span class="si">{:0&gt;4}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c1"># Concatenate the new date and Time columns: date_string</span>
+<span class="n">date_string</span> <span class="o">=</span> <span class="n">df_dropped</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">df_dropped</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+
+<span class="c1"># Convert the date_string Series to datetime: date_times</span>
+<span class="n">date_times</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date_string</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H%M&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set the index to be the new date_times container: df_clean</span>
+<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df_dropped</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">date_times</span><span class="p">)</span>
+
+<span class="c1"># Print the output of df_clean.head()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_clean</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                      Wban      date  Time  StationType sky_condition  \
+2011-01-01 01:53:00  13904  20110101  0153           12        OVC049   
+2011-01-01 02:53:00  13904  20110101  0253           12        OVC060   
+2011-01-01 03:53:00  13904  20110101  0353           12        OVC065   
+2011-01-01 04:53:00  13904  20110101  0453           12        BKN070   
+2011-01-01 05:53:00  13904  20110101  0553           12        BKN065   
+
+                    visibility dry_bulb_faren dry_bulb_cel wet_bulb_faren  \
+2011-01-01 01:53:00      10.00             51         10.6             37   
+2011-01-01 02:53:00      10.00             51         10.6             37   
+2011-01-01 03:53:00      10.00             50         10.0             38   
+2011-01-01 04:53:00      10.00             50         10.0             37   
+2011-01-01 05:53:00      10.00             49          9.4             37   
+
+                    wet_bulb_cel dew_point_faren dew_point_cel  \
+2011-01-01 01:53:00          3.0              14         -10.0   
+2011-01-01 02:53:00          2.9              13         -10.6   
+2011-01-01 03:53:00          3.1              17          -8.3   
+2011-01-01 04:53:00          2.8              15          -9.4   
+2011-01-01 05:53:00          2.8              17          -8.3   
+
+                    relative_humidity wind_speed wind_direction  \
+2011-01-01 01:53:00                23         10            340   
+2011-01-01 02:53:00                22         15            010   
+2011-01-01 03:53:00                27          7            350   
+2011-01-01 04:53:00                25         11            020   
+2011-01-01 05:53:00                28          6            010   
+
+                    station_pressure sea_level_pressure  
+2011-01-01 01:53:00            29.49              30.01  
+2011-01-01 02:53:00            29.49              30.01  
+2011-01-01 03:53:00            29.51              30.03  
+2011-01-01 04:53:00            29.51              30.04  
+2011-01-01 05:53:00            29.53              30.06  
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -39044,6 +39343,73 @@ SUVORK5CYII=
 <h3 id="Cleaning-the-numeric-columns">Cleaning the numeric columns<a class="anchor-link" href="#Cleaning-the-numeric-columns">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[580]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print the dry_bulb_faren temperature between 8 AM and 9 AM on June 20, 2011</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_clean</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2011-06-20 08:00:00&#39;</span><span class="p">:</span><span class="s1">&#39;2011-06-20 09:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;dry_bulb_faren&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-------------------------&#39;</span><span class="p">)</span>
+
+<span class="c1"># Convert the dry_bulb_faren column to numeric values: df_clean[&#39;dry_bulb_faren&#39;]</span>
+<span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;dry_bulb_faren&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;dry_bulb_faren&#39;</span><span class="p">],</span> <span class="n">errors</span> <span class="o">=</span> <span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+
+<span class="c1"># Print the transformed dry_bulb_faren temperature between 8 AM and 9 AM on June 20, 2011</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_clean</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2011-06-20 08:00:00&#39;</span><span class="p">:</span><span class="s1">&#39;2011-06-20 09:00:00&#39;</span><span class="p">,</span> <span class="s1">&#39;dry_bulb_faren&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-------------------------&#39;</span><span class="p">)</span>
+
+<span class="c1"># Convert the wind_speed and dew_point_faren columns to numeric values</span>
+<span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;wind_speed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;wind_speed&#39;</span><span class="p">],</span> <span class="n">errors</span> <span class="o">=</span> <span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+<span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;dew_point_faren&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;dew_point_faren&#39;</span><span class="p">],</span> <span class="n">errors</span> <span class="o">=</span> <span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2011-06-20 08:27:00     M
+2011-06-20 08:28:00     M
+2011-06-20 08:29:00     M
+2011-06-20 08:30:00     M
+2011-06-20 08:31:00     M
+2011-06-20 08:32:00     M
+2011-06-20 08:33:00     M
+2011-06-20 08:34:00     M
+2011-06-20 08:35:00     M
+2011-06-20 08:53:00    83
+Name: dry_bulb_faren, dtype: object
+-------------------------
+2011-06-20 08:27:00     NaN
+2011-06-20 08:28:00     NaN
+2011-06-20 08:29:00     NaN
+2011-06-20 08:30:00     NaN
+2011-06-20 08:31:00     NaN
+2011-06-20 08:32:00     NaN
+2011-06-20 08:33:00     NaN
+2011-06-20 08:34:00     NaN
+2011-06-20 08:35:00     NaN
+2011-06-20 08:53:00    83.0
+Name: dry_bulb_faren, dtype: float64
+-------------------------
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -39061,21 +39427,1375 @@ SUVORK5CYII=
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[581]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print the median of the dry_bulb_faren column</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;dry_bulb_faren&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">())</span>
+
+<span class="c1"># Print the median of the dry_bulb_faren column for the time range &#39;2011-Apr&#39;:&#39;2011-Jun&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_clean</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2011-Apr&#39;</span><span class="p">:</span><span class="s1">&#39;2011-Jun&#39;</span><span class="p">,</span> <span class="s1">&#39;dry_bulb_faren&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">())</span>
+
+<span class="c1"># Print the median of the dry_bulb_faren column for the month of January</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_clean</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2011-Jan&#39;</span><span class="p">,</span> <span class="s1">&#39;dry_bulb_faren&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>72.0
+78.0
+48.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Signal-variance">Signal variance<a class="anchor-link" href="#Signal-variance">&#182;</a></h3>
+<h3 id="Signal-variance">Signal variance<a class="anchor-link" href="#Signal-variance">&#182;</a></h3><ul>
+<li>On average, how much hotter was every day in 2011 than expected from the 30-year average?</li>
+</ul>
+
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[582]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_clean</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[582]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Wban</th>
+      <th>date</th>
+      <th>Time</th>
+      <th>StationType</th>
+      <th>sky_condition</th>
+      <th>visibility</th>
+      <th>dry_bulb_faren</th>
+      <th>dry_bulb_cel</th>
+      <th>wet_bulb_faren</th>
+      <th>wet_bulb_cel</th>
+      <th>dew_point_faren</th>
+      <th>dew_point_cel</th>
+      <th>relative_humidity</th>
+      <th>wind_speed</th>
+      <th>wind_direction</th>
+      <th>station_pressure</th>
+      <th>sea_level_pressure</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2011-01-01 01:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>0153</td>
+      <td>12</td>
+      <td>OVC049</td>
+      <td>10.00</td>
+      <td>51.0</td>
+      <td>10.6</td>
+      <td>37</td>
+      <td>3.0</td>
+      <td>14.0</td>
+      <td>-10.0</td>
+      <td>23</td>
+      <td>10.0</td>
+      <td>340</td>
+      <td>29.49</td>
+      <td>30.01</td>
+    </tr>
+    <tr>
+      <th>2011-01-01 02:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>0253</td>
+      <td>12</td>
+      <td>OVC060</td>
+      <td>10.00</td>
+      <td>51.0</td>
+      <td>10.6</td>
+      <td>37</td>
+      <td>2.9</td>
+      <td>13.0</td>
+      <td>-10.6</td>
+      <td>22</td>
+      <td>15.0</td>
+      <td>010</td>
+      <td>29.49</td>
+      <td>30.01</td>
+    </tr>
+    <tr>
+      <th>2011-01-01 03:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>0353</td>
+      <td>12</td>
+      <td>OVC065</td>
+      <td>10.00</td>
+      <td>50.0</td>
+      <td>10.0</td>
+      <td>38</td>
+      <td>3.1</td>
+      <td>17.0</td>
+      <td>-8.3</td>
+      <td>27</td>
+      <td>7.0</td>
+      <td>350</td>
+      <td>29.51</td>
+      <td>30.03</td>
+    </tr>
+    <tr>
+      <th>2011-01-01 04:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>0453</td>
+      <td>12</td>
+      <td>BKN070</td>
+      <td>10.00</td>
+      <td>50.0</td>
+      <td>10.0</td>
+      <td>37</td>
+      <td>2.8</td>
+      <td>15.0</td>
+      <td>-9.4</td>
+      <td>25</td>
+      <td>11.0</td>
+      <td>020</td>
+      <td>29.51</td>
+      <td>30.04</td>
+    </tr>
+    <tr>
+      <th>2011-01-01 05:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>0553</td>
+      <td>12</td>
+      <td>BKN065</td>
+      <td>10.00</td>
+      <td>49.0</td>
+      <td>9.4</td>
+      <td>37</td>
+      <td>2.8</td>
+      <td>17.0</td>
+      <td>-8.3</td>
+      <td>28</td>
+      <td>6.0</td>
+      <td>010</td>
+      <td>29.53</td>
+      <td>30.06</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[585]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_climate</span> <span class="o">=</span> <span class="n">weather</span>
+<span class="n">df_climate</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[585]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Temperature</th>
+      <th>DewPoint</th>
+      <th>Pressure</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2010-01-01 00:00:00</th>
+      <td>46.2</td>
+      <td>37.5</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2010-01-01 01:00:00</th>
+      <td>44.6</td>
+      <td>37.1</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2010-01-01 02:00:00</th>
+      <td>44.1</td>
+      <td>36.9</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2010-01-01 03:00:00</th>
+      <td>43.8</td>
+      <td>36.9</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2010-01-01 04:00:00</th>
+      <td>43.5</td>
+      <td>36.8</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[586]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Downsample df_clean by day and aggregate by mean: daily_mean_2011</span>
+<span class="n">daily_mean_2011</span> <span class="o">=</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">daily_mean_2011</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[586]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Wban</th>
+      <th>StationType</th>
+      <th>dry_bulb_faren</th>
+      <th>dew_point_faren</th>
+      <th>wind_speed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2011-01-01</th>
+      <td>13904</td>
+      <td>12</td>
+      <td>50.130435</td>
+      <td>20.739130</td>
+      <td>10.913043</td>
+    </tr>
+    <tr>
+      <th>2011-01-02</th>
+      <td>13904</td>
+      <td>12</td>
+      <td>39.416667</td>
+      <td>19.708333</td>
+      <td>4.166667</td>
+    </tr>
+    <tr>
+      <th>2011-01-03</th>
+      <td>13904</td>
+      <td>12</td>
+      <td>46.846154</td>
+      <td>35.500000</td>
+      <td>2.653846</td>
+    </tr>
+    <tr>
+      <th>2011-01-04</th>
+      <td>13904</td>
+      <td>12</td>
+      <td>53.367347</td>
+      <td>50.408163</td>
+      <td>2.510204</td>
+    </tr>
+    <tr>
+      <th>2011-01-05</th>
+      <td>13904</td>
+      <td>12</td>
+      <td>57.965517</td>
+      <td>40.068966</td>
+      <td>4.689655</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[587]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Extract the dry_bulb_faren column from daily_mean_2011 using .values: daily_temp_2011</span>
+<span class="n">daily_temp_2011</span> <span class="o">=</span> <span class="n">daily_mean_2011</span><span class="p">[</span><span class="s1">&#39;dry_bulb_faren&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">daily_temp_2011</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[587]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([ 50.13043478,  39.41666667,  46.84615385,  53.36734694,
+        57.96551724,  46.95833333])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[588]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Downsample df_climate by day and aggregate by mean: daily_climate</span>
+<span class="n">daily_climate</span> <span class="o">=</span> <span class="n">df_climate</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">daily_climate</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[588]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Temperature</th>
+      <th>DewPoint</th>
+      <th>Pressure</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2010-01-01</th>
+      <td>49.337500</td>
+      <td>37.716667</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2010-01-02</th>
+      <td>49.795833</td>
+      <td>38.370833</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2010-01-03</th>
+      <td>49.900000</td>
+      <td>38.279167</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2010-01-04</th>
+      <td>49.729167</td>
+      <td>38.008333</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2010-01-05</th>
+      <td>49.841667</td>
+      <td>38.087500</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[589]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Extract the Temperature column from daily_climate using .reset_index(): daily_temp_climate</span>
+<span class="n">daily_temp_climate</span> <span class="o">=</span> <span class="n">daily_climate</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()[</span><span class="s1">&#39;Temperature&#39;</span><span class="p">]</span>
+<span class="n">daily_temp_climate</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[589]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0    49.337500
+1    49.795833
+2    49.900000
+3    49.729167
+4    49.841667
+5    49.679167
+Name: Temperature, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[590]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Compute the difference between the two arrays and print the mean difference</span>
+<span class="n">difference</span> <span class="o">=</span> <span class="n">daily_temp_2011</span> <span class="o">-</span> <span class="n">daily_temp_climate</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">difference</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1.33008392157
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Sunny-or-cloudy">Sunny or cloudy<a class="anchor-link" href="#Sunny-or-cloudy">&#182;</a></h3>
+<h3 id="Sunny-or-cloudy">Sunny or cloudy<a class="anchor-link" href="#Sunny-or-cloudy">&#182;</a></h3><ul>
+<li>On average, how much hotter is it when the sun is shining?</li>
+</ul>
+
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[591]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select days that are sunny: sunny</span>
+<span class="n">sunny</span> <span class="o">=</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;sky_condition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;CLR&#39;</span><span class="p">]</span>
+<span class="n">sunny</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[591]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Wban</th>
+      <th>date</th>
+      <th>Time</th>
+      <th>StationType</th>
+      <th>sky_condition</th>
+      <th>visibility</th>
+      <th>dry_bulb_faren</th>
+      <th>dry_bulb_cel</th>
+      <th>wet_bulb_faren</th>
+      <th>wet_bulb_cel</th>
+      <th>dew_point_faren</th>
+      <th>dew_point_cel</th>
+      <th>relative_humidity</th>
+      <th>wind_speed</th>
+      <th>wind_direction</th>
+      <th>station_pressure</th>
+      <th>sea_level_pressure</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2011-01-01 13:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>1353</td>
+      <td>12</td>
+      <td>CLR</td>
+      <td>10.00</td>
+      <td>59.0</td>
+      <td>15.0</td>
+      <td>45</td>
+      <td>7.0</td>
+      <td>26.0</td>
+      <td>-3.3</td>
+      <td>28</td>
+      <td>14.0</td>
+      <td>010</td>
+      <td>29.63</td>
+      <td>30.16</td>
+    </tr>
+    <tr>
+      <th>2011-01-01 14:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>1453</td>
+      <td>12</td>
+      <td>CLR</td>
+      <td>10.00</td>
+      <td>59.0</td>
+      <td>15.0</td>
+      <td>45</td>
+      <td>7.2</td>
+      <td>27.0</td>
+      <td>-2.8</td>
+      <td>29</td>
+      <td>16.0</td>
+      <td>360</td>
+      <td>29.63</td>
+      <td>30.16</td>
+    </tr>
+    <tr>
+      <th>2011-01-01 15:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>1553</td>
+      <td>12</td>
+      <td>CLR</td>
+      <td>10.00</td>
+      <td>57.0</td>
+      <td>13.9</td>
+      <td>44</td>
+      <td>6.6</td>
+      <td>27.0</td>
+      <td>-2.8</td>
+      <td>32</td>
+      <td>11.0</td>
+      <td>350</td>
+      <td>29.63</td>
+      <td>30.17</td>
+    </tr>
+    <tr>
+      <th>2011-01-01 16:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>1653</td>
+      <td>12</td>
+      <td>CLR</td>
+      <td>10.00</td>
+      <td>55.0</td>
+      <td>12.8</td>
+      <td>43</td>
+      <td>6.1</td>
+      <td>27.0</td>
+      <td>-2.8</td>
+      <td>34</td>
+      <td>13.0</td>
+      <td>040</td>
+      <td>29.65</td>
+      <td>30.18</td>
+    </tr>
+    <tr>
+      <th>2011-01-01 17:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>1753</td>
+      <td>12</td>
+      <td>CLR</td>
+      <td>10.00</td>
+      <td>50.0</td>
+      <td>10.0</td>
+      <td>40</td>
+      <td>4.5</td>
+      <td>26.0</td>
+      <td>-3.3</td>
+      <td>39</td>
+      <td>10.0</td>
+      <td>040</td>
+      <td>29.66</td>
+      <td>30.21</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[592]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select days that are overcast: overcast</span>
+<span class="n">overcast</span> <span class="o">=</span> <span class="n">df_clean</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;sky_condition&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;OVC&#39;</span><span class="p">)]</span>
+<span class="n">overcast</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[592]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Wban</th>
+      <th>date</th>
+      <th>Time</th>
+      <th>StationType</th>
+      <th>sky_condition</th>
+      <th>visibility</th>
+      <th>dry_bulb_faren</th>
+      <th>dry_bulb_cel</th>
+      <th>wet_bulb_faren</th>
+      <th>wet_bulb_cel</th>
+      <th>dew_point_faren</th>
+      <th>dew_point_cel</th>
+      <th>relative_humidity</th>
+      <th>wind_speed</th>
+      <th>wind_direction</th>
+      <th>station_pressure</th>
+      <th>sea_level_pressure</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2011-01-01 01:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>0153</td>
+      <td>12</td>
+      <td>OVC049</td>
+      <td>10.00</td>
+      <td>51.0</td>
+      <td>10.6</td>
+      <td>37</td>
+      <td>3.0</td>
+      <td>14.0</td>
+      <td>-10.0</td>
+      <td>23</td>
+      <td>10.0</td>
+      <td>340</td>
+      <td>29.49</td>
+      <td>30.01</td>
+    </tr>
+    <tr>
+      <th>2011-01-01 02:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>0253</td>
+      <td>12</td>
+      <td>OVC060</td>
+      <td>10.00</td>
+      <td>51.0</td>
+      <td>10.6</td>
+      <td>37</td>
+      <td>2.9</td>
+      <td>13.0</td>
+      <td>-10.6</td>
+      <td>22</td>
+      <td>15.0</td>
+      <td>010</td>
+      <td>29.49</td>
+      <td>30.01</td>
+    </tr>
+    <tr>
+      <th>2011-01-01 03:53:00</th>
+      <td>13904</td>
+      <td>20110101</td>
+      <td>0353</td>
+      <td>12</td>
+      <td>OVC065</td>
+      <td>10.00</td>
+      <td>50.0</td>
+      <td>10.0</td>
+      <td>38</td>
+      <td>3.1</td>
+      <td>17.0</td>
+      <td>-8.3</td>
+      <td>27</td>
+      <td>7.0</td>
+      <td>350</td>
+      <td>29.51</td>
+      <td>30.03</td>
+    </tr>
+    <tr>
+      <th>2011-01-03 07:53:00</th>
+      <td>13904</td>
+      <td>20110103</td>
+      <td>0753</td>
+      <td>12</td>
+      <td>OVC055</td>
+      <td>10.00</td>
+      <td>37.0</td>
+      <td>2.8</td>
+      <td>35</td>
+      <td>1.4</td>
+      <td>31.0</td>
+      <td>-0.6</td>
+      <td>79</td>
+      <td>0.0</td>
+      <td>000</td>
+      <td>29.68</td>
+      <td>30.24</td>
+    </tr>
+    <tr>
+      <th>2011-01-03 08:53:00</th>
+      <td>13904</td>
+      <td>20110103</td>
+      <td>0853</td>
+      <td>12</td>
+      <td>OVC055</td>
+      <td>10.00</td>
+      <td>41.0</td>
+      <td>5.0</td>
+      <td>38</td>
+      <td>3.1</td>
+      <td>33.0</td>
+      <td>0.6</td>
+      <td>73</td>
+      <td>3.0</td>
+      <td>080</td>
+      <td>29.69</td>
+      <td>30.24</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[593]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Resample sunny and overcast, aggregating by maximum daily temperature</span>
+<span class="n">sunny_daily_max</span> <span class="o">=</span> <span class="n">sunny</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="n">sunny_daily_max</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[593]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Wban</th>
+      <th>date</th>
+      <th>Time</th>
+      <th>StationType</th>
+      <th>sky_condition</th>
+      <th>visibility</th>
+      <th>dry_bulb_faren</th>
+      <th>dry_bulb_cel</th>
+      <th>wet_bulb_faren</th>
+      <th>wet_bulb_cel</th>
+      <th>dew_point_faren</th>
+      <th>dew_point_cel</th>
+      <th>relative_humidity</th>
+      <th>wind_speed</th>
+      <th>wind_direction</th>
+      <th>station_pressure</th>
+      <th>sea_level_pressure</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2011-01-01</th>
+      <td>13904.0</td>
+      <td>20110101</td>
+      <td>2353</td>
+      <td>12.0</td>
+      <td>CLR</td>
+      <td>10.00</td>
+      <td>59.0</td>
+      <td>8.3</td>
+      <td>45</td>
+      <td>7.2</td>
+      <td>28.0</td>
+      <td>-6.1</td>
+      <td>53</td>
+      <td>16.0</td>
+      <td>360</td>
+      <td>29.78</td>
+      <td>30.33</td>
+    </tr>
+    <tr>
+      <th>2011-01-02</th>
+      <td>13904.0</td>
+      <td>20110102</td>
+      <td>2253</td>
+      <td>12.0</td>
+      <td>CLR</td>
+      <td>10.00</td>
+      <td>35.0</td>
+      <td>1.7</td>
+      <td>32</td>
+      <td>0.1</td>
+      <td>28.0</td>
+      <td>-7.2</td>
+      <td>76</td>
+      <td>8.0</td>
+      <td>360</td>
+      <td>29.82</td>
+      <td>30.38</td>
+    </tr>
+    <tr>
+      <th>2011-01-03</th>
+      <td>13904.0</td>
+      <td>20110103</td>
+      <td>0453</td>
+      <td>12.0</td>
+      <td>CLR</td>
+      <td>10.00</td>
+      <td>32.0</td>
+      <td>0.0</td>
+      <td>29</td>
+      <td>-1.9</td>
+      <td>26.0</td>
+      <td>-4.4</td>
+      <td>85</td>
+      <td>0.0</td>
+      <td>000</td>
+      <td>29.71</td>
+      <td>30.27</td>
+    </tr>
+    <tr>
+      <th>2011-01-04</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2011-01-05</th>
+      <td>13904.0</td>
+      <td>20110105</td>
+      <td>2353</td>
+      <td>12.0</td>
+      <td>CLR</td>
+      <td>10.00</td>
+      <td>35.0</td>
+      <td>1.7</td>
+      <td>33</td>
+      <td>0.3</td>
+      <td>29.0</td>
+      <td>-1.7</td>
+      <td>79</td>
+      <td>0.0</td>
+      <td>000</td>
+      <td>29.54</td>
+      <td>30.08</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[594]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">overcast_daily_max</span> <span class="o">=</span> <span class="n">overcast</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="n">overcast_daily_max</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[594]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Wban</th>
+      <th>date</th>
+      <th>Time</th>
+      <th>StationType</th>
+      <th>sky_condition</th>
+      <th>visibility</th>
+      <th>dry_bulb_faren</th>
+      <th>dry_bulb_cel</th>
+      <th>wet_bulb_faren</th>
+      <th>wet_bulb_cel</th>
+      <th>dew_point_faren</th>
+      <th>dew_point_cel</th>
+      <th>relative_humidity</th>
+      <th>wind_speed</th>
+      <th>wind_direction</th>
+      <th>station_pressure</th>
+      <th>sea_level_pressure</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2011-01-01</th>
+      <td>13904.0</td>
+      <td>20110101</td>
+      <td>0353</td>
+      <td>12.0</td>
+      <td>OVC065</td>
+      <td>10.00</td>
+      <td>51.0</td>
+      <td>10.6</td>
+      <td>38</td>
+      <td>3.1</td>
+      <td>17.0</td>
+      <td>-8.3</td>
+      <td>27</td>
+      <td>15.0</td>
+      <td>350</td>
+      <td>29.51</td>
+      <td>30.03</td>
+    </tr>
+    <tr>
+      <th>2011-01-02</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2011-01-03</th>
+      <td>13904.0</td>
+      <td>20110103</td>
+      <td>2353</td>
+      <td>12.0</td>
+      <td>SCT042 OVC055</td>
+      <td>10.00</td>
+      <td>58.0</td>
+      <td>9.4</td>
+      <td>49</td>
+      <td>9.7</td>
+      <td>45.0</td>
+      <td>7.0</td>
+      <td>79</td>
+      <td>10.0</td>
+      <td>200</td>
+      <td>29.70</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <th>2011-01-04</th>
+      <td>13904.0</td>
+      <td>20110104</td>
+      <td>2353</td>
+      <td>12.0</td>
+      <td>SCT010 OVC016</td>
+      <td>10.00</td>
+      <td>57.0</td>
+      <td>8.9</td>
+      <td>56</td>
+      <td>9.4</td>
+      <td>56.0</td>
+      <td>8.9</td>
+      <td>100</td>
+      <td>8.0</td>
+      <td>VR</td>
+      <td>29.59</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <th>2011-01-05</th>
+      <td>13904.0</td>
+      <td>20110105</td>
+      <td>0653</td>
+      <td>12.0</td>
+      <td>SCT006 OVC011</td>
+      <td>10.00</td>
+      <td>57.0</td>
+      <td>14.0</td>
+      <td>56</td>
+      <td>13.5</td>
+      <td>56.0</td>
+      <td>13.3</td>
+      <td>96</td>
+      <td>3.0</td>
+      <td>250</td>
+      <td>29.48</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[595]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print the difference between the mean of sunny_daily_max and overcast_daily_max</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sunny_daily_max</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">overcast_daily_max</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Wban               0.000000
+StationType        0.000000
+dry_bulb_faren     6.504304
+dew_point_faren   -4.339286
+wind_speed        -3.246062
+dtype: float64
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -39097,7 +40817,10 @@ SUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Daily-hours-of-clear-sky">Daily hours of clear sky<a class="anchor-link" href="#Daily-hours-of-clear-sky">&#182;</a></h3>
+<h3 id="Daily-hours-of-clear-sky">Daily hours of clear sky<a class="anchor-link" href="#Daily-hours-of-clear-sky">&#182;</a></h3><ul>
+<li>We will use a box plot to visualize the fraction of days that are sunny.</li>
+</ul>
+
 </div>
 </div>
 </div>
