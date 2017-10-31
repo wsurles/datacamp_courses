@@ -10,7 +10,8 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(eval=T, echo=T, cache=F, message=F, warning=F)
+knitr::opts_chunk$set(eval=T, echo=F, cache=F, message=F, warning=F)
+options(RCHART_WIDTH = 800, RCHART_HEIGHT = 400)
 ```
 
 ```{r}
@@ -19,10 +20,13 @@ library(dplyr)
 library(lubridate)
 library(stringr)
 library(rCharts)
+library(ggplot2)
 
 ```
 
-## Crunch data by month
+***
+# William
+***
 
 ```{r, crunch_data}
 
@@ -44,22 +48,75 @@ crunch_data <- function(df) {
 
 ```
 
-## Chart total exercises by month
+## Cummulative daily exercises by month
 
-```{r, results = 'asis'}
+```{r cumm, results = 'asis'}
 
 df_william <- readRDS('data_william')
 df_william2 <- crunch_data(df_william)
 
 n <- nPlot(exercises_cumsum_month ~ mday, data = df_william2, group = "month", type = 'lineChart')
-n$print('inline', include_assets = TRUE)
+n$print(include_assets=T)
 
 ```
 
-test text
+## Daily exercises completed ranked
+
+```{r cdf, results = 'asis'}
+
+df_plot <- df_william %>%
+  filter(Exercises > 0) %>%
+  arrange(desc(Exercises)) %>%
+  mutate(
+    rank = row_number(-Exercises)
+    )
+
+n2 <- nPlot(Exercises ~ rank, data = df_plot, type = 'multiBarChart')
+n2$print(include_assets=T)
+# n$print('inline', cdn = F, include_assets = F)
+# n2$print('inline', include_assets = F)
+
+
+
+```
+
+## Histogram of daily exercises
+
+```{r}
+
+df_william %>%
+  filter(Exercises > 0) %>%
+  ggplot(aes(Exercises)) +
+  geom_histogram(
+    boundary = 0,
+    alpha = .6,
+    fill = 'blue',
+    binwidth = 5,
+    color = 'black')
+  
+
+```
+
+## Daily exercises completed
+
+```{r}
+
+df_william %>%
+  mutate(date = as.Date(Date, "%m/%d/%Y")) %>%
+  ggplot(aes(x = date, y = Exercises)) +
+  geom_bar(
+    stat = 'identity',
+    alpha = .8,
+    fill = 'blue')
+  
+
+```
 
 ***
+# Russell
+***
 
+## Cummulative daily exercises by month
 
 ```{r, results = 'asis'}
 
@@ -67,8 +124,7 @@ df_russell <- readRDS('data_russell')
 df_russell2 <- crunch_data(df_russell)
 
 n <- nPlot(exercises_cumsum_month ~ mday, data = df_russell2, group = "month", type = 'lineChart')
-n$print('iframesrc', include_assets = TRUE)
+n$print(include_assets=T)
 
 ```
 
-# char brah brah
