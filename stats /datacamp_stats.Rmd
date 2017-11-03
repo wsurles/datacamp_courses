@@ -1,13 +1,11 @@
 ---
 title: "Data Camp Statistics"
-author: "William Surles"
 output: 
  html_document:
   self_contained: true
   theme: flatly
   highlight: tango
 ---
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(eval=T, echo=F, cache=F, message=F, warning=F)
@@ -22,17 +20,32 @@ library(stringr)
 library(rCharts)
 library(ggplot2)
 
+rchart_date_format <- str_c("#!",
+      "function(d){",
+        "f =  d3.time.format.utc('%Y-%m-%d');",
+        "return f(new Date( d*24*60*60*1000 ));",
+      "}",
+    "!#")
+
+if (student == 'william') {
+  work_days = c(2,3,4,5,6)
+} else if (student == 'russell') {
+  work_days = c(2,3,4,5)    
+}
+
 ```
 
+> Datcamp stats for **`r student`**
+
 ***
-# William
+# Tracking
 ***
 
-```{r, crunch_data}
+## Cummulative daily exercises by month
 
-crunch_data <- function(df) {
-  
-  df2 <- df %>%
+```{r chart_month_cum, results = 'asis'}
+
+df_stats2 <- df_stats %>%
     mutate(
       date = as.Date(Date, "%m/%d/%Y"),
       year = year(date),
@@ -44,87 +57,104 @@ crunch_data <- function(df) {
     mutate(
       exercises_cumsum_month = cumsum(Exercises)
     )
-}
 
-```
-
-## Cummulative daily exercises by month
-
-```{r cumm, results = 'asis'}
-
-df_william <- readRDS('data_william')
-df_william2 <- crunch_data(df_william)
-
-n <- nPlot(exercises_cumsum_month ~ mday, data = df_william2, group = "month", type = 'lineChart')
+n <- nPlot(exercises_cumsum_month ~ mday, data = df_stats2, group = "month", type = 'lineChart')
 n$print(include_assets=T)
 
 ```
 
-## Daily exercises completed ranked
+## Weekly exercises completed
 
-```{r cdf, results = 'asis'}
+```{r, results = 'asis'}
 
-df_plot <- df_william %>%
-  filter(Exercises > 0) %>%
-  arrange(desc(Exercises)) %>%
+df_stats_week <- df_stats %>%
   mutate(
-    rank = row_number(-Exercises)
-    )
+    date = as.Date(Date, "%m/%d/%Y"),
+    iso_week = isoweek(date)
+    ) %>%
+  group_by(iso_week) %>%
+  summarize(
+    start_day = min(date),
+    total_exercises = sum(Exercises, na.rm=T)
+  )
 
-n2 <- nPlot(Exercises ~ rank, data = df_plot, type = 'multiBarChart')
-n2$print(include_assets=T)
-# n$print('inline', cdn = F, include_assets = F)
-# n2$print('inline', include_assets = F)
+n <- nPlot(total_exercises ~ start_day, data = df_stats_week, type = 'multiBarChart')
+n$xAxis(tickFormat = rchart_date_format)
+n$print(include_assets=T)
 
-
-
-```
-
-## Histogram of daily exercises
-
-```{r}
-
-df_william %>%
-  filter(Exercises > 0) %>%
-  ggplot(aes(Exercises)) +
-  geom_histogram(
-    boundary = 0,
-    alpha = .6,
-    fill = 'blue',
-    binwidth = 5,
-    color = 'black')
-  
 
 ```
 
 ## Daily exercises completed
 
-```{r}
+```{r, fig.width = 9}
 
-df_william %>%
-  mutate(date = as.Date(Date, "%m/%d/%Y")) %>%
+df_stats %>%
+  mutate(
+    date = as.Date(Date, "%m/%d/%Y")
+    ) %>%
   ggplot(aes(x = date, y = Exercises)) +
   geom_bar(
     stat = 'identity',
     alpha = .8,
-    fill = 'blue')
+    fill = 'blue',
+    color = 'white',
+    linewidth = .2,
+    width = 1)
   
 
 ```
 
 ***
-# Russell
+# Overview
 ***
 
-## Cummulative daily exercises by month
+## Daily exercises completed ordered by most completed (on work days)
 
-```{r, results = 'asis'}
+```{r cdf, results = 'asis'}
 
-df_russell <- readRDS('data_russell')
-df_russell2 <- crunch_data(df_russell)
+df_plot <- df_stats %>%
+  mutate(
+    date = as.Date(Date, "%m/%d/%Y"),
+    wday = wday(date)
+    ) %>%
+  filter(
+    Exercises > 0,
+    wday %in% work_days
+    ) %>%
+  arrange(desc(Exercises)) %>%
+  mutate(
+    rank = row_number(-Exercises)
+    )
 
-n <- nPlot(exercises_cumsum_month ~ mday, data = df_russell2, group = "month", type = 'lineChart')
+n <- nPlot(Exercises ~ rank, data = df_plot, type = 'multiBarChart')
 n$print(include_assets=T)
+
+
 
 ```
 
+## Histogram of daily exercises (on work days)
+
+```{r, fig.width = 9}
+
+df_plot <- df_stats %>%
+  mutate(
+    date = as.Date(Date, "%m/%d/%Y"),
+    wday = wday(date)
+    ) %>%
+  filter(
+    Exercises > 0,
+    wday %in% work_days
+    )
+  
+ggplot(df_plot, aes(Exercises)) +
+  geom_histogram(
+    boundary = 0,
+    alpha = .6,
+    fill = 'blue',
+    binwidth = 5,
+    color = 'white')
+  
+
+```

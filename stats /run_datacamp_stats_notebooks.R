@@ -10,6 +10,7 @@ students <- gs_ws_ls(gs)
 for (student in students) {
 
   ## Load data and run Notebook   
+  # student = 'william'
   df_stats <- gs_read(ss = gs, ws = student)
   
   render(

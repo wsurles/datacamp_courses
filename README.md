@@ -2,6 +2,8 @@ My DataCamp courses
 
 My course docs are hosted on [shinyapps.io](http://www.shinyapps.io) and [RPubs](http://rpubs.com/)
 
+My stats are [here](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/stats%20/datacamp_stats_william.html)
+
 Data Science Career Track for R:
 
  - [Introduction to R](https://surlyanalytics.shinyapps.io/introduction_to_r/)
