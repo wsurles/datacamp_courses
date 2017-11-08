@@ -46,3 +46,4 @@ Data Science Career Trak for Python:
  - [Cleaning Data in Python](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/cleaning_data_in_python/cleaning_data_in_python.html)
  - [pandas Foundations](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/pandas_foundations/pandas_foundations.html)
  - [Manipulating DataFrames with pandas](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/manipulating_dataframes_with_pandas/manipulating_dataframes_with_pandas.html)
+ - [Merging DataFrames with pandas](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/merging_dataframes_with_pandas/merging_dataframes_with_pandas.html)
