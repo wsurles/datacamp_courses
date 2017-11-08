@@ -63,6 +63,19 @@ n$print(include_assets=T)
 
 ```
 
+## Same chart but with ggplot2
+
+```{r, fig.width = 9}
+
+ggplot(df_stats2, aes(mday, exercises_cumsum_month, color = as.factor(month))) + 
+  geom_line(size = 1.5) +
+  theme_minimal() + 
+  theme(legend.position = "top") + 
+  guides(color=guide_legend(title="Month"))
+
+
+```
+
 ## Weekly exercises completed
 
 ```{r, results = 'asis'}

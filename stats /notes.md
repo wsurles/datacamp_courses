@@ -26,4 +26,5 @@ Things I want to do:
  - maybe a per day metric for each week would be neat. and emphasis consistency.
  - we think in exercise per day anyways so getting the average would be insightful
 - I probably want to remove weekends from my analysis or put those exercies onto fridays
- - same for russ. He should only be analyzed on mon-thur days. 
+ - same for russ. He should only be analyzed on mon-thur days.
+- move published html stats docs to rpubs so that they are not always messing up github
