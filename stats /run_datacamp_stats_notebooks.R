@@ -3,6 +3,7 @@ library(googlesheets)
 library(rmarkdown)
 library(dplyr)
 library(lubridate)
+library(stringr)
 
 gs <- gs_title("datacamp_statistics")
 students <- gs_ws_ls(gs)
