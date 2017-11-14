@@ -48,4 +48,4 @@ Data Science Career Trak for Python:
  - [Manipulating DataFrames with pandas](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/manipulating_dataframes_with_pandas/manipulating_dataframes_with_pandas.html)
  - [Merging DataFrames with pandas](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/merging_dataframes_with_pandas/merging_dataframes_with_pandas.html)
  - [Introduction to Databases in Python](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/introduction_to_databases_in_python/introduction_to_databases_in_python.html)
- - [Introduction to Data Visualization with Python](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/introduction_to_data_visualization_with_python/introduction_to_data_visualization_with_python.html)
+ - [Introduction to Data Visualization with Python](https://cdn.rawgit.com/wsurles/datacamp_courses/808e2fb6/python_courses/introduction_to_data_visualization_with_python/introduction_to_data_visualization_with_python.html)
