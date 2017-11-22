@@ -1537,12 +1537,12 @@ pre,
 samp {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
-code {
+.rendered_html code {
   padding: 2px 4px;
   font-size: 90%;
-  color: #c7254e;
-  background-color: #f9f2f4;
-  border-radius: 0;
+  color: #337ab7;
+  background-color: #f1f1f1;
+  border-radius: 4px;
 }
 kbd {
   padding: 2px 4px;
@@ -7067,4 +7067,22 @@ input[type="checkbox"] {
 }
 .modal .close {
   color: #222222;
+}
+
+h1{
+  color: white;
+  padding: 10px;
+  background-color: #3c1e8f
+}
+
+h2{
+  color: white;
+  padding: 10px;
+  background-color: #4b93b5
+}
+
+h3{
+  color: white;
+  padding: 10px;
+  background-color: #27c45b
 }
