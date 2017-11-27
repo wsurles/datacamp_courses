@@ -52,3 +52,4 @@ Data Science Career Trak for Python:
  - [Interactive Data Visualization with Bokeh](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/interactive_data_visualization_with_bokeh/interactive_data_visualization_with_bokeh.html)
  - [Statistical Thinking in Python Part 1](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/statistical_thinking_in_python_part_1/statistical_thinking_in_python_part_1.html)
  - [Statistical Thinking in Python Part 2](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/statistical_thinking_in_python_part_2/statistical_thinking_in_python_part_2.html)
+- [Supervised Learning with scikit-learn](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/supervised_learning_with_scikitlearn/supervised_learning_with_scikitlearn.html)
