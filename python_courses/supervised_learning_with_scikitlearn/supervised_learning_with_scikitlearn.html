@@ -29069,7 +29069,7 @@ Tuned Logistic Regression Accuracy: 0.7673913043478261
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[131]:</div>
+<div class="prompt input_prompt">In&nbsp;[135]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">gapminder</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;life&#39;</span><span class="p">,</span><span class="s1">&#39;Region&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
@@ -29087,11 +29087,11 @@ Tuned Logistic Regression Accuracy: 0.7673913043478261
     <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
 
 <span class="c1"># Create the hyperparameter grid</span>
-<span class="n">l1_space</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">l1_space</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
 <span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;l1_ratio&#39;</span><span class="p">:</span> <span class="n">l1_space</span><span class="p">}</span>
 
 <span class="c1"># Instantiate the ElasticNet regressor: elastic_net</span>
-<span class="n">elastic_net</span> <span class="o">=</span> <span class="n">ElasticNet</span><span class="p">(</span><span class="n">max_iter</span> <span class="o">=</span> <span class="mi">000</span><span class="p">)</span>
+<span class="n">elastic_net</span> <span class="o">=</span> <span class="n">ElasticNet</span><span class="p">()</span>
 
 <span class="c1"># Setup the GridSearchCV object: gm_cv</span>
 <span class="n">gm_cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">elastic_net</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -29142,9 +29142,9 @@ Tuned Logistic Regression Accuracy: 0.7673913043478261
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Tuned ElasticNet l1 ratio: {&#39;l1_ratio&#39;: 0.22222222222222224}
-Tuned ElasticNet R squared: 0.8664390805932286
-Tuned ElasticNet MSE: 10.087479750916035
+<pre>Tuned ElasticNet l1 ratio: {&#39;l1_ratio&#39;: 0.20689655172413793}
+Tuned ElasticNet R squared: 0.8668305372460283
+Tuned ElasticNet MSE: 10.05791413339844
 </pre>
 </div>
 </div>
@@ -29173,9 +29173,1192 @@ Tuned ElasticNet MSE: 10.087479750916035
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Dealing-with-categorical-features">Dealing with categorical features<a class="anchor-link" href="#Dealing-with-categorical-features">&#182;</a></h4><ul>
+<li>Scikit-learn will not accept categorical features by default</li>
+<li>Need to encode categorical features numerically</li>
+<li>Convert to 'dummy variable', 1 for each category with boolean values<ul>
+<li>0: Observation was NOT that category</li>
+<li>1: Observation was that category</li>
+</ul>
+</li>
+</ul>
+<h4 id="Dummy-Variables">Dummy Variables<a class="anchor-link" href="#Dummy-Variables">&#182;</a></h4><ul>
+<li>Example: Lets say we have the cars dataset with an 'origin' field<ul>
+<li>This field has 3 categorical values ('US','Europe','Asia')</li>
+</ul>
+</li>
+<li>We would created 3 columns with headers US, Europ, Asia and boolean values for if the car is made in that continent<ul>
+<li>But we actually are duplicating data here. The origin_Europe column would be redundant.</li>
+<li>So we remove it and just have US and Asia columns</li>
+<li>Some models would get messed up with this duplicate data</li>
+</ul>
+</li>
+</ul>
+<h4 id="Dealing-with-categorical-features-in-Python">Dealing with categorical features in Python<a class="anchor-link" href="#Dealing-with-categorical-features-in-Python">&#182;</a></h4><ul>
+<li>scikit-learn: OneHotEncoder()</li>
+<li>pandas: get_dummies()</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Encoding-dummy-variables">Encoding dummy variables<a class="anchor-link" href="#Encoding-dummy-variables">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[139]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;https://assets.datacamp.com/production/course_1939/datasets/auto.csv&#39;</span>
+<span class="n">auto</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="n">auto</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[139]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mpg</th>
+      <th>displ</th>
+      <th>hp</th>
+      <th>weight</th>
+      <th>accel</th>
+      <th>origin</th>
+      <th>size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>18.0</td>
+      <td>250.0</td>
+      <td>88</td>
+      <td>3139</td>
+      <td>14.5</td>
+      <td>US</td>
+      <td>15.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>9.0</td>
+      <td>304.0</td>
+      <td>193</td>
+      <td>4732</td>
+      <td>18.5</td>
+      <td>US</td>
+      <td>20.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>36.1</td>
+      <td>91.0</td>
+      <td>60</td>
+      <td>1800</td>
+      <td>16.4</td>
+      <td>Asia</td>
+      <td>10.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>18.5</td>
+      <td>250.0</td>
+      <td>98</td>
+      <td>3525</td>
+      <td>19.0</td>
+      <td>US</td>
+      <td>15.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>34.3</td>
+      <td>97.0</td>
+      <td>78</td>
+      <td>2188</td>
+      <td>15.8</td>
+      <td>Europe</td>
+      <td>10.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[141]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">auto_origin</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">auto_origin</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[141]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mpg</th>
+      <th>displ</th>
+      <th>hp</th>
+      <th>weight</th>
+      <th>accel</th>
+      <th>size</th>
+      <th>origin_Asia</th>
+      <th>origin_Europe</th>
+      <th>origin_US</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>18.0</td>
+      <td>250.0</td>
+      <td>88</td>
+      <td>3139</td>
+      <td>14.5</td>
+      <td>15.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>9.0</td>
+      <td>304.0</td>
+      <td>193</td>
+      <td>4732</td>
+      <td>18.5</td>
+      <td>20.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>36.1</td>
+      <td>91.0</td>
+      <td>60</td>
+      <td>1800</td>
+      <td>16.4</td>
+      <td>10.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>18.5</td>
+      <td>250.0</td>
+      <td>98</td>
+      <td>3525</td>
+      <td>19.0</td>
+      <td>15.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>34.3</td>
+      <td>97.0</td>
+      <td>78</td>
+      <td>2188</td>
+      <td>15.8</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[142]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Using drop_first to reduce duplication</span>
+<span class="n">auto_origin</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">auto</span><span class="p">,</span> <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">auto_origin</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[142]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mpg</th>
+      <th>displ</th>
+      <th>hp</th>
+      <th>weight</th>
+      <th>accel</th>
+      <th>size</th>
+      <th>origin_Europe</th>
+      <th>origin_US</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>18.0</td>
+      <td>250.0</td>
+      <td>88</td>
+      <td>3139</td>
+      <td>14.5</td>
+      <td>15.0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>9.0</td>
+      <td>304.0</td>
+      <td>193</td>
+      <td>4732</td>
+      <td>18.5</td>
+      <td>20.0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>36.1</td>
+      <td>91.0</td>
+      <td>60</td>
+      <td>1800</td>
+      <td>16.4</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>18.5</td>
+      <td>250.0</td>
+      <td>98</td>
+      <td>3525</td>
+      <td>19.0</td>
+      <td>15.0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>34.3</td>
+      <td>97.0</td>
+      <td>78</td>
+      <td>2188</td>
+      <td>15.8</td>
+      <td>10.0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[143]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Or you can pick which to drop explicity</span>
+<span class="n">auto_origin</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">auto</span><span class="p">)</span>
+<span class="n">auto_origin</span> <span class="o">=</span> <span class="n">auto_origin</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;origin_Asia&#39;</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">auto_origin</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[143]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mpg</th>
+      <th>displ</th>
+      <th>hp</th>
+      <th>weight</th>
+      <th>accel</th>
+      <th>size</th>
+      <th>origin_Europe</th>
+      <th>origin_US</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>18.0</td>
+      <td>250.0</td>
+      <td>88</td>
+      <td>3139</td>
+      <td>14.5</td>
+      <td>15.0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>9.0</td>
+      <td>304.0</td>
+      <td>193</td>
+      <td>4732</td>
+      <td>18.5</td>
+      <td>20.0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>36.1</td>
+      <td>91.0</td>
+      <td>60</td>
+      <td>1800</td>
+      <td>16.4</td>
+      <td>10.0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>18.5</td>
+      <td>250.0</td>
+      <td>98</td>
+      <td>3525</td>
+      <td>19.0</td>
+      <td>15.0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>34.3</td>
+      <td>97.0</td>
+      <td>78</td>
+      <td>2188</td>
+      <td>15.8</td>
+      <td>10.0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Linear-regression-with-dummy-variables">Linear regression with dummy variables<a class="anchor-link" href="#Linear-regression-with-dummy-variables">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[148]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">Ridge</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">auto_origin</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;mpg&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">auto_origin</span><span class="o">.</span><span class="n">mpg</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> 
+    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
+
+<span class="n">ridge</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">normalize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">ridge</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">ridge</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[148]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.71906451902178947</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Exploring-categorical-features">Exploring categorical features<a class="anchor-link" href="#Exploring-categorical-features">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[150]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gapminder</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[150]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>population</th>
+      <th>fertility</th>
+      <th>HIV</th>
+      <th>CO2</th>
+      <th>BMI_male</th>
+      <th>GDP</th>
+      <th>BMI_female</th>
+      <th>life</th>
+      <th>child_mortality</th>
+      <th>Region</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>34811059.0</td>
+      <td>2.73</td>
+      <td>0.1</td>
+      <td>3.328945</td>
+      <td>24.59620</td>
+      <td>12314.0</td>
+      <td>129.9049</td>
+      <td>75.3</td>
+      <td>29.5</td>
+      <td>Middle East &amp; North Africa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>19842251.0</td>
+      <td>6.43</td>
+      <td>2.0</td>
+      <td>1.474353</td>
+      <td>22.25083</td>
+      <td>7103.0</td>
+      <td>130.1247</td>
+      <td>58.3</td>
+      <td>192.0</td>
+      <td>Sub-Saharan Africa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>40381860.0</td>
+      <td>2.24</td>
+      <td>0.5</td>
+      <td>4.785170</td>
+      <td>27.50170</td>
+      <td>14646.0</td>
+      <td>118.8915</td>
+      <td>75.5</td>
+      <td>15.4</td>
+      <td>America</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2975029.0</td>
+      <td>1.40</td>
+      <td>0.1</td>
+      <td>1.804106</td>
+      <td>25.35542</td>
+      <td>7383.0</td>
+      <td>132.8108</td>
+      <td>72.5</td>
+      <td>20.0</td>
+      <td>Europe &amp; Central Asia</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>21370348.0</td>
+      <td>1.96</td>
+      <td>0.1</td>
+      <td>18.016313</td>
+      <td>27.56373</td>
+      <td>41312.0</td>
+      <td>117.3755</td>
+      <td>81.5</td>
+      <td>5.2</td>
+      <td>East Asia &amp; Pacific</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[151]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create a boxplot of life expectancy per region</span>
+<span class="n">gapminder</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="s1">&#39;life&#39;</span><span class="p">,</span> <span class="s1">&#39;Region&#39;</span><span class="p">,</span> <span class="n">rot</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Show the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -29185,6 +30368,57 @@ Tuned ElasticNet MSE: 10.087479750916035
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[152]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create dummy variables: gapminder_region</span>
+<span class="n">gapminder_region</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">gapminder</span><span class="p">)</span>
+
+<span class="c1"># Print the columns of gapminder_region</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gapminder_region</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="c1"># Create dummy variables with drop_first=True: gapminder_region</span>
+<span class="n">gapminder_region</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span> <span class="n">drop_first</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Print the new columns of gapminder_region</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gapminder_region</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Index([&#39;population&#39;, &#39;fertility&#39;, &#39;HIV&#39;, &#39;CO2&#39;, &#39;BMI_male&#39;, &#39;GDP&#39;,
+       &#39;BMI_female&#39;, &#39;life&#39;, &#39;child_mortality&#39;, &#39;Region_America&#39;,
+       &#39;Region_East Asia &amp; Pacific&#39;, &#39;Region_Europe &amp; Central Asia&#39;,
+       &#39;Region_Middle East &amp; North Africa&#39;, &#39;Region_South Asia&#39;,
+       &#39;Region_Sub-Saharan Africa&#39;],
+      dtype=&#39;object&#39;)
+Index([&#39;population&#39;, &#39;fertility&#39;, &#39;HIV&#39;, &#39;CO2&#39;, &#39;BMI_male&#39;, &#39;GDP&#39;,
+       &#39;BMI_female&#39;, &#39;life&#39;, &#39;child_mortality&#39;, &#39;Region_East Asia &amp; Pacific&#39;,
+       &#39;Region_Europe &amp; Central Asia&#39;, &#39;Region_Middle East &amp; North Africa&#39;,
+       &#39;Region_South Asia&#39;, &#39;Region_Sub-Saharan Africa&#39;],
+      dtype=&#39;object&#39;)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -29192,6 +30426,51 @@ Tuned ElasticNet MSE: 10.087479750916035
 <h3 id="Regression-with-categorical-features">Regression with categorical features<a class="anchor-link" href="#Regression-with-categorical-features">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[153]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">gapminder_region</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;life&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">gapminder_region</span><span class="o">.</span><span class="n">life</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># Import necessary modules</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">Ridge</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">cross_val_score</span>
+
+<span class="c1"># Instantiate a ridge regressor: ridge</span>
+<span class="n">ridge</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">normalize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Perform 5-fold cross-validation: ridge_cv</span>
+<span class="n">ridge_cv</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">ridge</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Print the cross-validated scores</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ridge_cv</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[ 0.86808336  0.80623545  0.84004203  0.7754344   0.87503712]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -29205,7 +30484,18 @@ Tuned ElasticNet MSE: 10.087479750916035
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Dropping-missing-data">Dropping missing data<a class="anchor-link" href="#Dropping-missing-data">&#182;</a></h3>
+<ul>
+<li>Data can be missing in the real world for many reasons<ul>
+<li>no observation was made, recording error, or data corruption</li>
+</ul>
+</li>
+<li>Either way we need to deal with it.</li>
+<li>But watch out. Make sure to explore the data well. Not all missing data is labeled as NaN<ul>
+<li>It could be a 0, -1, 99999 or some string like 'None' </li>
+</ul>
+</li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -29213,9 +30503,969 @@ Tuned ElasticNet MSE: 10.087479750916035
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Imputing-missing-data-in-a-ML-Pipeline-I">Imputing missing data in a ML Pipeline I<a class="anchor-link" href="#Imputing-missing-data-in-a-ML-Pipeline-I">&#182;</a></h3>
+<h4 id="PIMA-Indians-dataset">PIMA Indians dataset<a class="anchor-link" href="#PIMA-Indians-dataset">&#182;</a></h4><ul>
+<li>It looks good when using <code>info</code>, but...</li>
+<li>Whoa, look a those zeros in insulin and tricepts, and bmi. huh</li>
+</ul>
+
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[156]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">diabetes</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 768 entries, 0 to 767
+Data columns (total 9 columns):
+pregnancies    768 non-null int64
+glucose        768 non-null int64
+diastolic      768 non-null int64
+triceps        768 non-null int64
+insulin        768 non-null int64
+bmi            768 non-null float64
+dpf            768 non-null float64
+age            768 non-null int64
+diabetes       768 non-null int64
+dtypes: float64(2), int64(7)
+memory usage: 54.1 KB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[157]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">diabetes</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[157]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pregnancies</th>
+      <th>glucose</th>
+      <th>diastolic</th>
+      <th>triceps</th>
+      <th>insulin</th>
+      <th>bmi</th>
+      <th>dpf</th>
+      <th>age</th>
+      <th>diabetes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>6</td>
+      <td>148</td>
+      <td>72</td>
+      <td>35</td>
+      <td>0</td>
+      <td>33.6</td>
+      <td>0.627</td>
+      <td>50</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>85</td>
+      <td>66</td>
+      <td>29</td>
+      <td>0</td>
+      <td>26.6</td>
+      <td>0.351</td>
+      <td>31</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>8</td>
+      <td>183</td>
+      <td>64</td>
+      <td>0</td>
+      <td>0</td>
+      <td>23.3</td>
+      <td>0.672</td>
+      <td>32</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>89</td>
+      <td>66</td>
+      <td>23</td>
+      <td>94</td>
+      <td>28.1</td>
+      <td>0.167</td>
+      <td>21</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>137</td>
+      <td>40</td>
+      <td>35</td>
+      <td>168</td>
+      <td>43.1</td>
+      <td>2.288</td>
+      <td>33</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>5</td>
+      <td>116</td>
+      <td>74</td>
+      <td>0</td>
+      <td>0</td>
+      <td>25.6</td>
+      <td>0.201</td>
+      <td>30</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>3</td>
+      <td>78</td>
+      <td>50</td>
+      <td>32</td>
+      <td>88</td>
+      <td>31.0</td>
+      <td>0.248</td>
+      <td>26</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>10</td>
+      <td>115</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>35.3</td>
+      <td>0.134</td>
+      <td>29</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2</td>
+      <td>197</td>
+      <td>70</td>
+      <td>45</td>
+      <td>543</td>
+      <td>30.5</td>
+      <td>0.158</td>
+      <td>53</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>8</td>
+      <td>125</td>
+      <td>96</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.232</td>
+      <td>54</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>4</td>
+      <td>110</td>
+      <td>92</td>
+      <td>0</td>
+      <td>0</td>
+      <td>37.6</td>
+      <td>0.191</td>
+      <td>30</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>10</td>
+      <td>168</td>
+      <td>74</td>
+      <td>0</td>
+      <td>0</td>
+      <td>38.0</td>
+      <td>0.537</td>
+      <td>34</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>10</td>
+      <td>139</td>
+      <td>80</td>
+      <td>0</td>
+      <td>0</td>
+      <td>27.1</td>
+      <td>1.441</td>
+      <td>57</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>1</td>
+      <td>189</td>
+      <td>60</td>
+      <td>23</td>
+      <td>846</td>
+      <td>30.1</td>
+      <td>0.398</td>
+      <td>59</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>5</td>
+      <td>166</td>
+      <td>72</td>
+      <td>19</td>
+      <td>175</td>
+      <td>25.8</td>
+      <td>0.587</td>
+      <td>51</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[160]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">diabetes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[160]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>pregnancies    111
+glucose          5
+diastolic       35
+triceps        227
+insulin        374
+bmi             11
+dpf              0
+age              0
+diabetes       500
+dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Dropping-missing-data">Dropping missing data<a class="anchor-link" href="#Dropping-missing-data">&#182;</a></h4><ul>
+<li>pregnancies can be zero. and diabetes</li>
+<li>but the rest should not be zero. </li>
+<li>Looks like we have all the data for age and dpf</li>
+<li>we need to replace zeros with NaN and then we can fugure out what to do with those values</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[163]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">diabetes</span><span class="o">.</span><span class="n">glucose</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">diabetes</span><span class="o">.</span><span class="n">diastolic</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">diabetes</span><span class="o">.</span><span class="n">triceps</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">diabetes</span><span class="o">.</span><span class="n">insulin</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">diabetes</span><span class="o">.</span><span class="n">bmi</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[164]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">diabetes</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 768 entries, 0 to 767
+Data columns (total 9 columns):
+pregnancies    768 non-null int64
+glucose        763 non-null float64
+diastolic      733 non-null float64
+triceps        541 non-null float64
+insulin        394 non-null float64
+bmi            757 non-null float64
+dpf            768 non-null float64
+age            768 non-null int64
+diabetes       768 non-null int64
+dtypes: float64(6), int64(3)
+memory usage: 54.1 KB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>If we just drop all rows where a single value is missinging we will just have half the data left. </li>
+<li>We would be throwing out a lot of good data. Thats not ideal</li>
+<li>Similarly, if we threw away columns with missing data we would drop tons of useful data and most of our features. Also a bad idea</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[167]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">diabetes</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[167]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(392, 9)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Impute-missing-data">Impute missing data<a class="anchor-link" href="#Impute-missing-data">&#182;</a></h4><ul>
+<li>Making an educated guess about the missing values</li>
+<li>Example: Using the mean of the non-missing entries</li>
+<li>Imputers are known as transformers. There are other models that use the <code>transform()</code> method to transform data</li>
+<li>Once we have tranformed the data we can fit a model to it. Or, as we will see, we can do it all at once with pipelines</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[174]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># X = diabetes.drop([&#39;diabetes&#39;], axis = 1).values</span>
+<span class="c1"># y = diabetes.diabetes.values</span>
+<span class="n">diabetes</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 768 entries, 0 to 767
+Data columns (total 9 columns):
+pregnancies    768 non-null int64
+glucose        763 non-null float64
+diastolic      733 non-null float64
+triceps        541 non-null float64
+insulin        394 non-null float64
+bmi            757 non-null float64
+dpf            768 non-null float64
+age            768 non-null int64
+diabetes       768 non-null int64
+dtypes: float64(6), int64(3)
+memory usage: 54.1 KB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[176]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">diabetes</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;diabetes&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">diabetes</span><span class="o">.</span><span class="n">diabetes</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[179]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">Imputer</span>
+
+<span class="n">imp</span> <span class="o">=</span> <span class="n">Imputer</span><span class="p">(</span><span class="n">missing_values</span><span class="o">=</span><span class="s1">&#39;NaN&#39;</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">imp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Imputing-within-a-pipeline">Imputing within a pipeline<a class="anchor-link" href="#Imputing-within-a-pipeline">&#182;</a></h4><ul>
+<li>Note that in a pipeline each step must be a transformer and the last must be an estimator such as a classifier, regressor, or transformer</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[180]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">Imputer</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">diabetes</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;diabetes&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">diabetes</span><span class="o">.</span><span class="n">diabetes</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">imp</span> <span class="o">=</span> <span class="n">Imputer</span><span class="p">(</span><span class="n">missing_values</span> <span class="o">=</span> <span class="s1">&#39;NaN&#39;</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">logreg</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;imputation&#39;</span><span class="p">,</span> <span class="n">imp</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;logistic_regression&#39;</span><span class="p">,</span> <span class="n">logreg</span><span class="p">)]</span>
+
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> 
+    <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> 
+    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
+
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="n">pipeline</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[180]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.74891774891774887</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Dropping-missing-data">Dropping missing data<a class="anchor-link" href="#Dropping-missing-data">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[188]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;https://assets.datacamp.com/production/course_1939/datasets/house-votes-84.csv&#39;</span>
+<span class="n">vote</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">vote_clean_columns</span><span class="p">)</span> 
+<span class="n">vote</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[188]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>party</th>
+      <th>infants</th>
+      <th>water</th>
+      <th>budget</th>
+      <th>physician</th>
+      <th>salvador</th>
+      <th>religious</th>
+      <th>satellite</th>
+      <th>aid</th>
+      <th>missile</th>
+      <th>immigration</th>
+      <th>synfuels</th>
+      <th>education</th>
+      <th>superfund</th>
+      <th>crime</th>
+      <th>duty_free_exports</th>
+      <th>eaa_rsa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>republican</td>
+      <td>n</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+      <td>?</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>republican</td>
+      <td>n</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>?</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>democrat</td>
+      <td>?</td>
+      <td>y</td>
+      <td>y</td>
+      <td>?</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>democrat</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>?</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>democrat</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+      <td>?</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[189]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Convert &#39;?&#39; to NaN</span>
+<span class="n">vote</span><span class="p">[</span><span class="n">vote</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="c1"># Print the number of NaNs</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vote</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>party                  0
+infants               12
+water                 48
+budget                11
+physician             11
+salvador              15
+religious             11
+satellite             14
+aid                   15
+missile               22
+immigration            7
+synfuels              21
+education             31
+superfund             25
+crime                 17
+duty_free_exports     28
+eaa_rsa              104
+dtype: int64
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[190]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Print shape of original DataFrame</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape of Original DataFrame: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vote</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Shape of Original DataFrame: (435, 17)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[191]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Drop missing values and print shape of new DataFrame</span>
+<span class="n">vote</span> <span class="o">=</span> <span class="n">vote</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="c1"># Print shape of new DataFrame</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape of DataFrame After Dropping All Rows with Missing Values: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vote</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Shape of DataFrame After Dropping All Rows with Missing Values: (232, 17)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Imputing-missing-data-in-a-ML-Pipeline-I">Imputing missing data in a ML Pipeline I<a class="anchor-link" href="#Imputing-missing-data-in-a-ML-Pipeline-I">&#182;</a></h3><ul>
+<li>Imputation can be seen as the first step of this machine learning process, the entirety of which can be viewed within the context of a pipeline. </li>
+<li><p>Scikit-learn provides a pipeline constructor that allows you to piece together these steps into one process and thereby simplify your workflow.</p>
+</li>
+<li><p>You'll now practice setting up a pipeline with two steps: the imputation step, followed by the instantiation of a classifier.</p>
+</li>
+<li>You've seen three classifiers in this course so far: k-NN, logistic regression, and the decision tree. </li>
+<li>You will now be introduced to a fourth one - the Support Vector Machine, or SVM. </li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[192]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Import the Imputer module</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">Imputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="k">import</span> <span class="n">SVC</span>
+
+<span class="c1"># Setup the Imputation transformer: imp</span>
+<span class="n">imp</span> <span class="o">=</span> <span class="n">Imputer</span><span class="p">(</span><span class="n">missing_values</span><span class="o">=</span><span class="s1">&#39;NaN&#39;</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;most_frequent&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Instantiate the SVC classifier: clf</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">()</span>
+
+<span class="c1"># Setup the pipeline with the required steps: steps</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;imputation&#39;</span><span class="p">,</span> <span class="n">imp</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;SVM&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="p">)]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -29224,6 +31474,442 @@ Tuned ElasticNet MSE: 10.087479750916035
 <h3 id="Imputing-missing-data-in-a-ML-Pipeline-II">Imputing missing data in a ML Pipeline II<a class="anchor-link" href="#Imputing-missing-data-in-a-ML-Pipeline-II">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[210]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vote</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">vote_clean_columns</span><span class="p">)</span> 
+<span class="n">vote</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[210]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>party</th>
+      <th>infants</th>
+      <th>water</th>
+      <th>budget</th>
+      <th>physician</th>
+      <th>salvador</th>
+      <th>religious</th>
+      <th>satellite</th>
+      <th>aid</th>
+      <th>missile</th>
+      <th>immigration</th>
+      <th>synfuels</th>
+      <th>education</th>
+      <th>superfund</th>
+      <th>crime</th>
+      <th>duty_free_exports</th>
+      <th>eaa_rsa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>republican</td>
+      <td>n</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+      <td>?</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>republican</td>
+      <td>n</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>?</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>democrat</td>
+      <td>?</td>
+      <td>y</td>
+      <td>y</td>
+      <td>?</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>democrat</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>?</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>democrat</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>y</td>
+      <td>y</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>n</td>
+      <td>y</td>
+      <td>?</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+      <td>y</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[211]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vote</span><span class="p">[</span><span class="n">vote</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">vote</span><span class="p">[</span><span class="n">vote</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">vote</span><span class="p">[</span><span class="n">vote</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[212]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">vote</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[212]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>party</th>
+      <th>infants</th>
+      <th>water</th>
+      <th>budget</th>
+      <th>physician</th>
+      <th>salvador</th>
+      <th>religious</th>
+      <th>satellite</th>
+      <th>aid</th>
+      <th>missile</th>
+      <th>immigration</th>
+      <th>synfuels</th>
+      <th>education</th>
+      <th>superfund</th>
+      <th>crime</th>
+      <th>duty_free_exports</th>
+      <th>eaa_rsa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>republican</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>republican</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>democrat</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>democrat</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>democrat</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[213]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">vote_clean</span><span class="p">[</span><span class="s1">&#39;party&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">vote_clean</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;party&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[214]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Import necessary modules</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">Imputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="k">import</span> <span class="n">SVC</span>
+
+<span class="c1"># Setup the pipeline steps: steps</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;imputation&#39;</span><span class="p">,</span> <span class="n">Imputer</span><span class="p">(</span><span class="n">missing_values</span><span class="o">=</span><span class="s1">&#39;NaN&#39;</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;most_frequent&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s1">&#39;SVM&#39;</span><span class="p">,</span> <span class="n">SVC</span><span class="p">())]</span>
+
+<span class="c1"># Create the pipeline: pipeline</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+
+<span class="c1"># Create training and test sets</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Fit the pipeline to the train set</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Predict the labels of the test set</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="c1"># Compute metrics</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>             precision    recall  f1-score   support
+
+   democrat       0.99      0.96      0.98        85
+ republican       0.94      0.98      0.96        46
+
+avg / total       0.97      0.97      0.97       131
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -29237,9 +31923,681 @@ Tuned ElasticNet MSE: 10.087479750916035
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Centering-and-scaling-your-data">Centering and scaling your data<a class="anchor-link" href="#Centering-and-scaling-your-data">&#182;</a></h3>
+<h4 id="Why-scale-your-data?">Why scale your data?<a class="anchor-link" href="#Why-scale-your-data?">&#182;</a></h4><ul>
+<li>Many models use some form of distance to inform them</li>
+<li>Features on larger scales can unduly influence the model</li>
+<li>Example: k-NN uses distance expllicitly when making predictions</li>
+<li>We want features to be on a similar scale</li>
+<li>Normalizing (or scaling and centering)</li>
+</ul>
+<h4 id="Ways-to-normalize-your-data">Ways to normalize your data<a class="anchor-link" href="#Ways-to-normalize-your-data">&#182;</a></h4><ul>
+<li>Standardization: Subtract the mean and divide by variance<ul>
+<li>All features are centered around zero and have variance one</li>
+</ul>
+</li>
+<li>Can also subtract the minimum and divide by the range<ul>
+<li>Minimum zero and maximum one</li>
+</ul>
+</li>
+<li>Can also normalize so the data ranges from -1 to +1</li>
+<li>We will cover standardization:<ul>
+<li>see scikit-learn docs for further details on other approaches</li>
+</ul>
+</li>
+</ul>
+
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Scaling-in-scikit-learn">Scaling in scikit-learn<a class="anchor-link" href="#Scaling-in-scikit-learn">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[217]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;https://assets.datacamp.com/production/course_1939/datasets/winequality-red.csv&#39;</span>
+<span class="n">redwine</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="n">redwine</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[217]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fixed acidity</th>
+      <th>volatile acidity</th>
+      <th>citric acid</th>
+      <th>residual sugar</th>
+      <th>chlorides</th>
+      <th>free sulfur dioxide</th>
+      <th>total sulfur dioxide</th>
+      <th>density</th>
+      <th>pH</th>
+      <th>sulphates</th>
+      <th>alcohol</th>
+      <th>quality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7.4</td>
+      <td>0.70</td>
+      <td>0.00</td>
+      <td>1.9</td>
+      <td>0.076</td>
+      <td>11.0</td>
+      <td>34.0</td>
+      <td>0.9978</td>
+      <td>3.51</td>
+      <td>0.56</td>
+      <td>9.4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>7.8</td>
+      <td>0.88</td>
+      <td>0.00</td>
+      <td>2.6</td>
+      <td>0.098</td>
+      <td>25.0</td>
+      <td>67.0</td>
+      <td>0.9968</td>
+      <td>3.20</td>
+      <td>0.68</td>
+      <td>9.8</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>7.8</td>
+      <td>0.76</td>
+      <td>0.04</td>
+      <td>2.3</td>
+      <td>0.092</td>
+      <td>15.0</td>
+      <td>54.0</td>
+      <td>0.9970</td>
+      <td>3.26</td>
+      <td>0.65</td>
+      <td>9.8</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11.2</td>
+      <td>0.28</td>
+      <td>0.56</td>
+      <td>1.9</td>
+      <td>0.075</td>
+      <td>17.0</td>
+      <td>60.0</td>
+      <td>0.9980</td>
+      <td>3.16</td>
+      <td>0.58</td>
+      <td>9.8</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>7.4</td>
+      <td>0.70</td>
+      <td>0.00</td>
+      <td>1.9</td>
+      <td>0.076</td>
+      <td>11.0</td>
+      <td>34.0</td>
+      <td>0.9978</td>
+      <td>3.51</td>
+      <td>0.56</td>
+      <td>9.4</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[253]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">redwine</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;quality&#39;</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">redwine</span><span class="o">.</span><span class="n">quality</span><span class="o">.</span><span class="n">values</span> <span class="o">&lt;</span> <span class="mi">5</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[254]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">scale</span>
+
+<span class="n">X_scaled</span> <span class="o">=</span> <span class="n">scale</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>8.13421922452 16.7265339794
+2.54662653149e-15 1.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Scaling-in-a-pipeline">Scaling in a pipeline<a class="anchor-link" href="#Scaling-in-a-pipeline">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[255]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">accuracy_score</span>
+
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;scaler&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+         <span class="p">(</span><span class="s1">&#39;knn&#39;</span><span class="p">,</span> <span class="n">KNeighborsClassifier</span><span class="p">())]</span>
+
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> 
+    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">21</span><span class="p">)</span>
+
+<span class="n">knn_scaled</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[255]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.94999999999999996</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[256]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">knn_unscaled</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">knn_unscaled</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[256]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.94687500000000002</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Cross-Validation-and-scaling-in-a-pipeling">Cross Validation and scaling in a pipeling<a class="anchor-link" href="#Cross-Validation-and-scaling-in-a-pipeling">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[257]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">steps</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;scaler&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+         <span class="p">(</span><span class="s1">&#39;knn&#39;</span><span class="p">,</span> <span class="n">KNeighborsClassifier</span><span class="p">())]</span>
+
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+
+<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;knn__n_neighbors&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)}</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> 
+    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">21</span><span class="p">)</span>
+
+<span class="n">cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">param_grid</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">)</span>
+
+<span class="n">cv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{&#39;knn__n_neighbors&#39;: 10}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[258]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0.946875
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[259]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>             precision    recall  f1-score   support
+
+      False       0.95      1.00      0.97       303
+       True       0.00      0.00      0.00        17
+
+avg / total       0.90      0.95      0.92       320
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/williamsurles/anaconda3/lib/python3.6/site-packages/sklearn/metrics/classification.py:1135: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples.
+  &#39;precision&#39;, &#39;predicted&#39;, average, warn_for)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Centering-and-scaling-your-data">Centering and scaling your data<a class="anchor-link" href="#Centering-and-scaling-your-data">&#182;</a></h3><ul>
+<li>In the video, Hugo demonstrated how significantly the performance of a model can improve if the features are scaled.</li>
+<li>Note that this is not always the case: In the Congressional voting records dataset, for example, all of the features are binary. In such a situation, scaling will have minimal impact.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[260]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;https://assets.datacamp.com/production/course_1939/datasets/white-wine.csv&#39;</span>
+<span class="n">whitewine</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="n">whitewine</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[260]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fixed acidity</th>
+      <th>volatile acidity</th>
+      <th>citric acid</th>
+      <th>residual sugar</th>
+      <th>chlorides</th>
+      <th>free sulfur dioxide</th>
+      <th>total sulfur dioxide</th>
+      <th>density</th>
+      <th>pH</th>
+      <th>sulphates</th>
+      <th>alcohol</th>
+      <th>quality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7.0</td>
+      <td>0.27</td>
+      <td>0.36</td>
+      <td>20.7</td>
+      <td>0.045</td>
+      <td>45.0</td>
+      <td>170.0</td>
+      <td>1.0010</td>
+      <td>3.00</td>
+      <td>0.45</td>
+      <td>8.8</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>6.3</td>
+      <td>0.30</td>
+      <td>0.34</td>
+      <td>1.6</td>
+      <td>0.049</td>
+      <td>14.0</td>
+      <td>132.0</td>
+      <td>0.9940</td>
+      <td>3.30</td>
+      <td>0.49</td>
+      <td>9.5</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>8.1</td>
+      <td>0.28</td>
+      <td>0.40</td>
+      <td>6.9</td>
+      <td>0.050</td>
+      <td>30.0</td>
+      <td>97.0</td>
+      <td>0.9951</td>
+      <td>3.26</td>
+      <td>0.44</td>
+      <td>10.1</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>7.2</td>
+      <td>0.23</td>
+      <td>0.32</td>
+      <td>8.5</td>
+      <td>0.058</td>
+      <td>47.0</td>
+      <td>186.0</td>
+      <td>0.9956</td>
+      <td>3.19</td>
+      <td>0.40</td>
+      <td>9.9</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>7.2</td>
+      <td>0.23</td>
+      <td>0.32</td>
+      <td>8.5</td>
+      <td>0.058</td>
+      <td>47.0</td>
+      <td>186.0</td>
+      <td>0.9956</td>
+      <td>3.19</td>
+      <td>0.40</td>
+      <td>9.9</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[262]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">whitewine</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;quality&#39;</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">whitewine</span><span class="o">.</span><span class="n">quality</span><span class="o">.</span><span class="n">values</span> <span class="o">&gt;</span> <span class="mi">5</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[264]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Import scale</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">scale</span>
+
+<span class="c1"># Scale the features: X_scaled</span>
+<span class="n">X_scaled</span> <span class="o">=</span> <span class="n">scale</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Print the mean and standard deviation of the unscaled features</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean of Unscaled Features: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span> 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Standard Deviation of Unscaled Features: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--------------------------------&#39;</span><span class="p">)</span>
+<span class="c1"># Print the mean and standard deviation of the scaled features</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean of Scaled Features: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">)))</span> 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Standard Deviation of Scaled Features: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">)))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Mean of Unscaled Features: 18.432687072460002
+Standard Deviation of Unscaled Features: 41.54494764094571
+--------------------------------
+Mean of Scaled Features: 2.7314972981668206e-15
+Standard Deviation of Scaled Features: 0.9999999999999999
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -29249,6 +32607,63 @@ Tuned ElasticNet MSE: 10.087479750916035
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[265]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Import the necessary modules</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">StandardScaler</span> 
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">Pipeline</span>
+
+<span class="c1"># Setup the pipeline steps: steps</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;scaler&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s1">&#39;knn&#39;</span><span class="p">,</span> <span class="n">KNeighborsClassifier</span><span class="p">())]</span>
+        
+<span class="c1"># Create the pipeline: pipeline</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+
+<span class="c1"># Create train and test sets</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Fit the pipeline to the training set: knn_scaled</span>
+<span class="n">knn_scaled</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Instantiate and fit a k-NN classifier to the unscaled data</span>
+<span class="n">knn_unscaled</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Compute and print metrics</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Accuracy with Scaling: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">knn_scaled</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Accuracy without Scaling: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">knn_unscaled</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy with Scaling: 0.7700680272108843
+Accuracy without Scaling: 0.6979591836734694
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -29256,6 +32671,77 @@ Tuned ElasticNet MSE: 10.087479750916035
 <h3 id="Bringing-it-all-together-I:-Pipeline-for-classification">Bringing it all together I: Pipeline for classification<a class="anchor-link" href="#Bringing-it-all-together-I:-Pipeline-for-classification">&#182;</a></h3>
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[267]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Setup the pipeline</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;scaler&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+         <span class="p">(</span><span class="s1">&#39;SVM&#39;</span><span class="p">,</span> <span class="n">SVC</span><span class="p">())]</span>
+
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+
+<span class="c1"># Specify the hyperparameter space</span>
+<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;SVM__C&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+              <span class="s1">&#39;SVM__gamma&#39;</span><span class="p">:[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">]}</span>
+
+<span class="c1"># Create train and test sets</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> 
+    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">21</span><span class="p">)</span>
+
+<span class="c1"># Instantiate the GridSearchCV object: cv</span>
+<span class="n">cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">param_grid</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">cv</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Fit to the training set</span>
+<span class="n">cv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Predict the labels of the test set: y_pred</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="c1"># Compute and print metrics</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--------------------------------&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;--------------------------------&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tuned Model Parameters: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cv</span><span class="o">.</span><span class="n">best_params_</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy: 0.7795918367346939
+--------------------------------
+             precision    recall  f1-score   support
+
+      False       0.67      0.63      0.65       318
+       True       0.83      0.85      0.84       662
+
+avg / total       0.78      0.78      0.78       980
+
+--------------------------------
+Tuned Model Parameters: {&#39;SVM__C&#39;: 10, &#39;SVM__gamma&#39;: 0.1}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -29265,11 +32751,115 @@ Tuned ElasticNet MSE: 10.087479750916035
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[268]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gapminder_region</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span> <span class="n">drop_first</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">gapminder_region</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;life&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">gapminder_region</span><span class="o">.</span><span class="n">life</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[269]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Setup the pipeline steps: steps</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;imputation&#39;</span><span class="p">,</span> <span class="n">Imputer</span><span class="p">(</span><span class="n">missing_values</span><span class="o">=</span><span class="s1">&#39;NaN&#39;</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)),</span>
+         <span class="p">(</span><span class="s1">&#39;scaler&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+         <span class="p">(</span><span class="s1">&#39;elasticnet&#39;</span><span class="p">,</span> <span class="n">ElasticNet</span><span class="p">())]</span>
+
+<span class="c1"># Create the pipeline: pipeline </span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+
+<span class="c1"># Specify the hyperparameter space</span>
+<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;elasticnet__l1_ratio&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">30</span><span class="p">)}</span>
+
+<span class="c1"># Create train and test sets</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span>
+    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Create the GridSearchCV object: gm_cv</span>
+<span class="n">gm_cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">param_grid</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">cv</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Fit to the training set</span>
+<span class="n">gm_cv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Compute and print the metrics</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">gm_cv</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tuned ElasticNet Alpha: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gm_cv</span><span class="o">.</span><span class="n">best_params_</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tuned ElasticNet R squared: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r2</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/williamsurles/anaconda3/lib/python3.6/site-packages/sklearn/linear_model/coordinate_descent.py:491: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/williamsurles/anaconda3/lib/python3.6/site-packages/sklearn/linear_model/coordinate_descent.py:491: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+/Users/williamsurles/anaconda3/lib/python3.6/site-packages/sklearn/linear_model/coordinate_descent.py:491: ConvergenceWarning: Objective did not converge. You might want to increase the number of iterations. Fitting data with very small alpha may cause precision problems.
+  ConvergenceWarning)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Tuned ElasticNet Alpha: {&#39;elasticnet__l1_ratio&#39;: 1.0}
+Tuned ElasticNet R squared: 0.8862016549771036
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Final-thoughts">Final thoughts<a class="anchor-link" href="#Final-thoughts">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>For more info checkout:<ul>
+<li>Scikit documentation</li>
+<li>'Introduction to Machine Learning in Python' (has a lizard on it)</li>
+</ul>
+</li>
+</ul>
+
 </div>
 </div>
 </div>
