@@ -54,3 +54,4 @@ Data Science Career Trak for Python:
  - [Statistical Thinking in Python Part 2](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/statistical_thinking_in_python_part_2/statistical_thinking_in_python_part_2.html)
 - [Supervised Learning with scikit-learn](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/supervised_learning_with_scikitlearn/supervised_learning_with_scikitlearn.html)
 - [Machine Learning with the Experts: School Budgets](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/machine_learning_with_the_experts_school_budgets/machine_learning_with_the_experts_school_budgets.html)
+- [Unsupervised Learning in Python](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/unsupervised_learning_in_python/unsupervised_learning_in_python.html)
