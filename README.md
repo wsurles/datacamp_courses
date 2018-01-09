@@ -41,21 +41,37 @@ Data Science Career Trak for Python:
    http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/intro_to_python_for_data_science/intro_to_python_for_data_science.html)
  - [Intermediate Python for Data Science](
    http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/intermediate_python_for_data_science/intermediate_python_for_data_science.html)
- - [Python Data Science Toolbox (Part 1)](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/python_data_science_toolbox_part_1/python_data_science_toolbox_part_1.html)
- - [Python Data Science Toolbox (Part 2)](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/python_data_science_toolbox_part_2/python_data_science_toolbox_part_2.html)
- - [Importing Data in Python (Part 1)](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/importing_data_in_python_part_1/importing_data_in_python_part_1.html)
- - [Importing Data in Python (Part 2)](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/importing_data_in_python_part_2/importing_data_in_python_part_2.html)
- - [Cleaning Data in Python](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/cleaning_data_in_python/cleaning_data_in_python.html)
- - [pandas Foundations](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/pandas_foundations/pandas_foundations.html)
- - [Manipulating DataFrames with pandas](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/manipulating_dataframes_with_pandas/manipulating_dataframes_with_pandas.html)
- - [Merging DataFrames with pandas](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/merging_dataframes_with_pandas/merging_dataframes_with_pandas.html)
- - [Introduction to Databases in Python](http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/introduction_to_databases_in_python/introduction_to_databases_in_python.html)
- - [Introduction to Data Visualization with Python](https://cdn.rawgit.com/wsurles/datacamp_courses/808e2fb6/python_courses/introduction_to_data_visualization_with_python/introduction_to_data_visualization_with_python.html)
- - [Interactive Data Visualization with Bokeh](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/interactive_data_visualization_with_bokeh/interactive_data_visualization_with_bokeh.html)
- - [Statistical Thinking in Python Part 1](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/statistical_thinking_in_python_part_1/statistical_thinking_in_python_part_1.html)
- - [Statistical Thinking in Python Part 2](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/statistical_thinking_in_python_part_2/statistical_thinking_in_python_part_2.html)
-- [Supervised Learning with scikit-learn](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/supervised_learning_with_scikitlearn/supervised_learning_with_scikitlearn.html)
-- [Machine Learning with the Experts: School Budgets](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/machine_learning_with_the_experts_school_budgets/machine_learning_with_the_experts_school_budgets.html)
-- [Unsupervised Learning in Python](https://rawgit.com/wsurles/datacamp_courses/master/python_courses/unsupervised_learning_in_python/unsupervised_learning_in_python.html)
-- [Deep Learning in Python]\
+ - [Python Data Science Toolbox (Part 1)](
+   http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/python_data_science_toolbox_part_1/python_data_science_toolbox_part_1.html)
+ - [Python Data Science Toolbox (Part 2)](
+   http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/python_data_science_toolbox_part_2/python_data_science_toolbox_part_2.html)
+ - [Importing Data in Python (Part 1)](
+   http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/importing_data_in_python_part_1/importing_data_in_python_part_1.html)
+ - [Importing Data in Python (Part 2)](
+   http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/importing_data_in_python_part_2/importing_data_in_python_part_2.html)
+ - [Cleaning Data in Python](
+   http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/cleaning_data_in_python/cleaning_data_in_python.html)
+ - [pandas Foundations](
+   http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/pandas_foundations/pandas_foundations.html)
+ - [Manipulating DataFrames with pandas](
+   http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/manipulating_dataframes_with_pandas/manipulating_dataframes_with_pandas.html)
+ - [Merging DataFrames with pandas](
+   http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/merging_dataframes_with_pandas/merging_dataframes_with_pandas.html)
+ - [Introduction to Databases in Python](
+   http://htmlpreview.github.io/?https://github.com/wsurles/datacamp_courses/blob/master/python_courses/introduction_to_databases_in_python/introduction_to_databases_in_python.html)
+ - [Introduction to Data Visualization with Python](
+   https://cdn.rawgit.com/wsurles/datacamp_courses/808e2fb6/python_courses/introduction_to_data_visualization_with_python/introduction_to_data_visualization_with_python.html)
+ - [Interactive Data Visualization with Bokeh](
+   https://rawgit.com/wsurles/datacamp_courses/master/python_courses/interactive_data_visualization_with_bokeh/interactive_data_visualization_with_bokeh.html)
+ - [Statistical Thinking in Python Part 1](
+   https://rawgit.com/wsurles/datacamp_courses/master/python_courses/statistical_thinking_in_python_part_1/statistical_thinking_in_python_part_1.html)
+ - [Statistical Thinking in Python Part 2](
+   https://rawgit.com/wsurles/datacamp_courses/master/python_courses/statistical_thinking_in_python_part_2/statistical_thinking_in_python_part_2.html)
+ - [Supervised Learning with scikit-learn](
+   https://rawgit.com/wsurles/datacamp_courses/master/python_courses/supervised_learning_with_scikitlearn/supervised_learning_with_scikitlearn.html)
+ - [Machine Learning with the Experts: School Budgets](
+   https://rawgit.com/wsurles/datacamp_courses/master/python_courses/machine_learning_with_the_experts_school_budgets/machine_learning_with_the_experts_school_budgets.html)
+ - [Unsupervised Learning in Python](
+   https://rawgit.com/wsurles/datacamp_courses/master/python_courses/unsupervised_learning_in_python/unsupervised_learning_in_python.html)
+ - [Deep Learning in Python]\
   (https://rawgit.com/wsurles/datacamp_courses/master/python_courses/deep_learning_in_python/deep_learning_in_python.html)
