@@ -75,3 +75,5 @@ Data Science Career Trak for Python:
    https://rawgit.com/wsurles/datacamp_courses/master/python_courses/unsupervised_learning_in_python/unsupervised_learning_in_python.html)
  - [Deep Learning in Python](
    https://rawgit.com/wsurles/datacamp_courses/master/python_courses/deep_learning_in_python/deep_learning_in_python.html)
+  - [Network Analysis in Python Part 1](
+    https://rawgit.com/wsurles/datacamp_courses/master/python_courses/network_analysis_in_python_part_1/network_analysis_in_python_part_1.html)
